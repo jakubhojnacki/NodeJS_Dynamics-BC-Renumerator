@@ -1,0 +1,97 @@
+{
+	"Init": {
+		"prefix": "xinit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = $2.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"ArrayInit": {
+		"prefix": "xarrinit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Array.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"BoolInit": {
+		"prefix": "xboolinit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Boolean.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"NumInit": {
+		"prefix": "xnuminit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"ObjInit": {
+		"prefix": "xobjinit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Object.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"StrInit": {
+		"prefix": "xstrinit",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = String.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"Property": {
+		"prefix": "xprop",
+		"body": [
+			"get $1() { return this.m${1/(.)(.*)/${1:/upcase}$2/}; }",
+			"set $1(pValue) { this.m${1/(.)(.*)/${1:/upcase}$2/} = pValue; }"
+		]
+	},
+	
+	"GetProperty": {
+		"prefix": "xgetprop",
+		"body": [
+			"get $1() { return this.m${1/(.)(.*)/${1:/upcase}$2/}; }"
+		]
+	},
+
+	"StaticProperty": {
+		"prefix": "xstatprop",
+		"body": [
+			"static get $1() { return $2; }"			
+		]
+	},
+
+	"Class": {
+		"prefix": "xclass",
+		"body": [
+			"require(\"./javaScript\");",
+			"",
+			"class $1 {",
+			"    constructor() {",
+			"    }",
+			"}",
+			"",
+			"module.exports = $1;"
+		]
+	},
+
+	"Require": {
+		"prefix": "xrequire",
+		"body": [
+			"const ${1/(.)(.*)/${1:/upcase}$2/} = require(\"./$1\");"
+		]
+	},
+
+	"Module": {
+		"prefix": "xmodule",
+		"body": [
+			"/**",
+			" * @module $1",
+			" * @description $2",
+			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
+			" */"
+		]
+	}
+}
