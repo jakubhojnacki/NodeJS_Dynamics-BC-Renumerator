@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const LoggerType = require("./loggerType");
-const TextLogger = require("./logger");
-require("./javaScript");
+include("/general/javaScript");
+
+const LoggerType = include("/general/logging/loggerType");
+const TextLogger = include("/general/logging/logger");
 
 class ConsoleLogger extends TextLogger {
     get type() { return LoggerType.console; }

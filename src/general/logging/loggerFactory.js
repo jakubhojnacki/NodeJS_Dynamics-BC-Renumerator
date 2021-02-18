@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const ConsoleLogger = require("./consoleLogger");
-const FileLogger = require("./fileLogger");
-const LoggerType = require("./loggerType");
+const ConsoleLogger = include("/general/logging/consoleLogger");
+const FileLogger = include("/general/logging/fileLogger");
+const LoggerType = include("/general/logging/loggerType");
 
 /*static*/ class LoggerFactory {
     static create(pLoggerType, pLoggerFilePath) {

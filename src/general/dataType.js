@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-require("./javaScript");
+include("/general/javaScript");
 
 /*static*/ class DataType {
     static get boolean() { return "boolean"; }

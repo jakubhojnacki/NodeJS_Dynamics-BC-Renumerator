@@ -4,9 +4,8 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const WebServiceType = require("./webServiceType");
-
-require("./javaScript");
+const WebServiceType = include("/webServices/webServiceType");
+include("/general/javaScript");
 
 class WebServiceSettings {
     get url() { return this.mUrl; }

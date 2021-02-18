@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const DataType = require("./dataType");
+include("/general/javaScript");
 
-require("./javaScript");
+const DataType = include("/general/dataType");
 
 class ArgTemplate {
     get tag() { return this.mTag; }

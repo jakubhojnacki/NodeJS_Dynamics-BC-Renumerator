@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const Arg = require("./arg");
-const DataType = require("./dataType");
-require("./javaScript");
+include("/general/javaScript");
+
+const Arg = include("/general/args/arg");
+const DataType = include("/general/dataType");
 
 class Args {
     get items() { return this.mItems; }
@@ -38,7 +39,7 @@ class Args {
     }
 
     get(pName, pDefaultValue) {
-        const item = this.items.find((lItem) => { lItem.name === pName; });
+        const item = this.items.find((lItem) => { return lItem.name === pName; });
         let value = null;
         if (item != null)
             value = item.value;

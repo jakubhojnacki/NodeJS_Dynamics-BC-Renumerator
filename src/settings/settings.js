@@ -6,9 +6,9 @@
 
 const fs = require("fs");
 
-const WebServiceSettings = require("./webServiceSettings");
+include("/general/javaScript");
 
-require("./javaScript");
+const WebServiceSettings = include("/settings/webServiceSettings");
 
 class Settings {
     get webService() { return this.mWebService; }

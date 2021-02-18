@@ -4,7 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const Application = require("./src/application");
+global.srcDirectory = `${__dirname}/src`;
+module.exports = global.include = function(pPath) { return require(global.srcDirectory + pPath); }
+
+const Application = include("/application");
 
 (() => {
     global.application = new Application(process.argv);
