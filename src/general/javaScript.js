@@ -1,7 +1,7 @@
 /**
  * @module JavaScript extensions
  * @description A series of useful language extensions
- * @version 0.0.1 (2021-02-17)
+ * @version 0.0.2 (2021-02-19)
  */
 
 Array.default = function(pValue, pDefault) {
@@ -70,6 +70,16 @@ Date.prototype.toFriendlyDateTimeString = function() {
 
 Date.prototype.toTimeStamp = function() {
 	return this.format("yyyyMMddhhmmsszzz");
+}
+
+Number.compare = function(pNumber) {
+	let result = 0;
+	const thisValue = this.valueof();
+	if (thisValue > pNumber)
+		result = 1
+	else if (thisValue < pNumber)
+		result = -1;
+	return result;
 }
 
 Number.default = function(pValue, pDefault) {
