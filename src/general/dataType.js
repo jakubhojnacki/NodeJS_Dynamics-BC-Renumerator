@@ -1,7 +1,7 @@
 /**
  * @module "DataType" class (static)
  * @description Enumeratos and manages data types
- * @version 0.0.1 (2021-02-17)
+ * @version 0.0.2 (2021-02-19)
  */
 
 include("/general/javaScript");
@@ -11,6 +11,7 @@ include("/general/javaScript");
     static get integer() { return "integer"; }
     static get float() { return "float"; }
     static get string() { return "string"; }
+    static get date() { return "date"; }
 
     static parse(pString) {
         const string = pString ? pString.trim().toLowerCase() : "";
@@ -28,6 +29,9 @@ include("/general/javaScript");
                     break;
                 case "string":
                     value = DataType.string;
+                    break;
+                case "date":
+                    value = DataType.date;
                     break;
                 default:
                     throw new Error(`Unknown data type: ${pString}.`);
@@ -47,6 +51,9 @@ include("/general/javaScript");
                 break;
             case DataType.float:
                 value = Number.tryToParseFloat(pString);
+                break;
+            case DataType.date:
+                value = Date.tryToParse(pString);
                 break;
             case "":
             case DataType.string:
