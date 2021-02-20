@@ -16,9 +16,12 @@ class DynamicsAppIdRange {
     }
 
     static deserialise(pData) {
-        let dynamicsAppIdRange = new DynamicsAppIdRange();
-        dynamicsAppIdRange.mFrom = Number.default(pData.from);
-        dynamicsAppIdRange.mTo = Number.default(pData.to);
+        let dynamicsAppIdRange = null;
+        if (pData != null) {
+            const from = Number.default(pData.from);
+            const to = Number.default(pData.to);
+            dynamicsAppIdRange = new DynamicsAppIdRange(from, to);
+        }
         return dynamicsAppIdRange;
     }
 }

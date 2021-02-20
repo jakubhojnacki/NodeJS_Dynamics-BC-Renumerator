@@ -4,16 +4,16 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-global.srcDirectory = `${__dirname}/src`;
-module.exports = global.include = function(pPath) { return require(global.srcDirectory + pPath); }
+global.__rootDir = __dirname;
+global.__srcDir = `${__rootDir}/src`;
+module.exports = (global.include = (lPath) => { return require(`${global.__srcDir}/${lPath}`); })
 
 const Application = include("/application");
 
 (() => {
     const argv = [ 
-        "-s", "/home/Temp/Source", 
-        "-d", "/home/Temp/Destination"
+        "-f", "/home/Development/Node.js/DynamicsRenumberator/raw/Asset_nHanced-ID-Manager"
     ];
     global.application = new Application(argv);
-    global.application.run();
+    //global.application.run();
 })();

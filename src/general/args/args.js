@@ -13,26 +13,26 @@ class Args extends Array {
     constructor() {
     }
 
-    static parse(pInputs, pTemplates, pInvalidHandler) {
+    static parse(pArgV, pArgTemplates, pOnError) {
         let args = new Args();
         let tag = "";
-        let template = null;
-        for (let input of pInputs) {
-            input = input.trim().removeIfStartsWith("\"").removeIfEndsWith("\"");
-            if (input.startsWith("-")) {
-                tag = input.substr(1);
-                template = pTemplates.find((lTemplate) => { return lTemplate.tag === tag; });
-            } else if (template != null) {
-                const value = DataType.parseValue(input, template.dataType);
-                this.push(new Arg(template.name, value));
-                template = null; 
+        let argTemplate = null;
+        for (let argV of pArgV) {
+            argV = argV.trim().removeIfStartsWith("\"").removeIfEndsWith("\"");
+            if (argV.startsWith("-")) {
+                tag = argV.substr(1);
+                argTemplate = pArgTemplates.find((lArgTemplate) => { return lArgTemplate.tag === tag; });
+            } else if (argTemplate != null) {
+                const value = DataType.parseValue(argV, argTemplate.dataType);
+                this.push(new Arg(argTemplate.name, value));
+                argTemplate = null; 
             }
         }
-        args.validate(pInvalidHandler);
+        args.validate(pArgTemplates, pOnError);
         return args;
     }
 
-    validate(pInvalidHandler) {
+    validate(pArgTemplates, pOnError) {
         let result = true;
         for (const arg of this) {
             let mandatory = false;
@@ -51,7 +51,7 @@ class Args extends Array {
             }
         }
         if (!result)
-            pInvalidHandler(this);
+            pOnError(pArgTemplates, this);
     }
 
     get(pName, pDefaultValue) {

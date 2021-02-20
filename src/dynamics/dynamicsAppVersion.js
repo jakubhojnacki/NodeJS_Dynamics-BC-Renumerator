@@ -1,6 +1,12 @@
+/**
+ * @module "DynamicsAppVersion" class
+ * @description Represents Dynamics application version
+ * @version 0.0.1 (2021-02-20)
+ */
+
 include("/general/javaScript");
 
-class AppVersion {
+class DynamicsAppVersion {
     get major() { return this.mMajor; }
     get minor() { return this.mMinor; }
     get build() { return this.mBuild; }
@@ -14,49 +20,44 @@ class AppVersion {
     }
 
     static parse(pString) {
-        const appVersion = new AppVersion();
         const stringParts = pString.split(".");
-        if (stringParts.length >= 1)
-            appVersion.mMajor = Number.tryToParseInt(stringParts[0]);
-        if (stringParts.length >= 2)
-            appVersion.mMinor = Number.tryToParseInt(stringParts[1]);
-        if (stringParts.length >= 3)
-            appVersion.mBuild = Number.tryToParseInt(stringParts[2]);
-        if (stringParts.length >= 4)
-            appVersion.mRevision = Number.tryToParseInt(stringParts[3]);
-        return appVersion;
+        const major = (stringParts.length >= 1 ? Number.tryToParseInt(stringParts[0]) : 0);
+        const minor = (stringParts.length >= 2 ? Number.tryToParseInt(stringParts[1]) : 0);
+        const build = (stringParts.length >= 3 ? Number.tryToParseInt(stringParts[2]) : 0);
+        const revision = (stringParts.length >= 4 ? Number.tryToParseInt(stringParts[3]) : 0);
+        return new DynamicsAppVersion(major, minor, build, revision);
     }
 
     default(pValue, pDefault) {
-        return pValue != null ? pValue : (pDefault != null ? pDefault : new AppVersion());
+        return pValue != null ? pValue : (pDefault != null ? pDefault : new DynamicsAppVersion());
     }
 
     toString() {
         return `${this.major}.${this.minor}.${this.build}.${this.revision}`;
     }
 
-    compare(pAppVersion) {
-        let result = this.major.compare(pAppVersion.major);
+    compare(pDynamicsAppVersion) {
+        let result = this.major.compare(pDynamicsAppVersion.major);
         if (result === 0)
-            result = this.minor.compare(pAppVersion.minor);
+            result = this.minor.compare(pDynamicsAppVersion.minor);
         if (result === 0) 
-            result = this.build.compare(pAppVersion.build);
+            result = this.build.compare(pDynamicsAppVersion.build);
         if (result === 0) 
-            result = this.revision.compare(pAppVersion.revision);
+            result = this.revision.compare(pDynamicsAppVersion.revision);
         return result;
     }
 
-    isEqual(pAppVersion) {
-        return (this.compare(pAppVersion) === 0);
+    isEqual(pDynamicsAppVersion) {
+        return (this.compare(pDynamicsAppVersion) === 0);
     }
 
-    isGreater(pAppVersion) {
-        return (this.compare(pAppVersion) === 1);
+    isGreater(pDynamicsAppVersion) {
+        return (this.compare(pDynamicsAppVersion) === 1);
     }
 
-    isLower(pAppVersion) {
-        return (this.compare(pAppVersion) === -1);
+    isLower(pDynamicsAppVersion) {
+        return (this.compare(pDynamicsAppVersion) === -1);
     }
 }
 
-module.exports = AppVersion;
+module.exports = DynamicsAppVersion;

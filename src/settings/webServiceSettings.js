@@ -23,10 +23,11 @@ class WebServiceSettings {
     static deserialise(pData) {
         let webServiceSettings = new WebServiceSettings();
         if (pData != null) {
-            webServiceSettings.mUrl = String.default(pData.url);
-            webServiceSettings.mUser = String.default(pData.user);
-            webServiceSettings.mPassword = String.default(pData.password);
-            webServiceSettings.mType = WebServiceType.parse(pData.type);
+            const url = String.default(pData.url);
+            const user = String.default(pData.user);
+            const password = String.default(pData.password);
+            const type = WebServiceType.parse(pData.type);
+            webServiceSettings = new WebServiceSettings(url, user, password, type);
         }
         return webServiceSettings;
     }    
@@ -34,7 +35,7 @@ class WebServiceSettings {
     log(pIndentation) {
         const logger = global.application.logger;
         logger.writeText("WebService:", pIndentation);
-        const indentation = pIndentation + 2;
+        const indentation = pIndentation + logger.tab;
         logger.writeText(`URL = ${this.url}`, indentation);
         logger.writeText(`User = ${this.user}`, indentation);
         logger.writeText(`Password = ${this.password ? "*****" : ""}`, indentation);

@@ -15,8 +15,8 @@ class FileLogger extends Logger {
     get type() { return LoggerType.file; }
     get file() { return this.mFile; }
 
-    constructor(pFilePath, pWidth) {
-        super(pWidth);
+    constructor(pFilePath, pWidth, pTab) {
+        super(pWidth, pTab);
         this.mFile = fs.createWriteStream(pFilePath);
     }
 

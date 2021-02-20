@@ -1,20 +1,33 @@
 /**
  * @module "DynamicsAppIdRanges" class (static)
- * @description Used only to manipulate an array of ID ranges
+ * @description Represents an array of ID ranges
  * @version 0.0.1 (2021-02-19)
  */
 
+include("/general/javaScript");
+
 const DynamicsAppIdRange = include("/dynamics/dynamicsAppIdRange");
 
-class DynamicsAppIdRanges {
+class DynamicsAppIdRanges extends Array {
+    constructor() {                
+    }
+
+    log(pIndentation) {
+        const logger = global.application.logger;
+        logger.writeText("ID Ranges:", pIndentation);
+        for (const dynamicsAppIdRange in this)
+            logger.writeText(dynamicsAppIdRange.toString(), pIndentation + logger.tab);
+    }
+
     static default(pValue, pDefault) {
         return pValue != null ? pValue : (pDefault != null ? pDefault : []);
     } 
     
     static deserialise(pData) {
-        let dynamicsAppIdRanges = [];
-        for (const data of pData)
-            dynamicsAppIdRanges.push(DynamicsAppIdRange.deserialise(data));
+        let dynamicsAppIdRanges = new DynamicsAppIdRanges();
+        if (pData != null)
+            for (const data of pData)
+                dynamicsAppIdRanges.push(DynamicsAppIdRange.deserialise(data));
         return dynamicsAppIdRanges;
     }
 }

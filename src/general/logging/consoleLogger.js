@@ -12,8 +12,8 @@ const TextLogger = include("/general/logging/logger");
 class ConsoleLogger extends TextLogger {
     get type() { return LoggerType.console; }
 
-    constructor(pWidth) {
-        super(pWidth);
+    constructor(pWidth, pTab) {
+        super(pWidth, pTab);
     }
 
     log(pText) {

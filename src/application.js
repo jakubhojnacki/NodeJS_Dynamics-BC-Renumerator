@@ -10,6 +10,7 @@ const ApplicationInformation = include("/applicationInformation");
 const ArgName = include("/general/args/argName");
 const Args = include("/general/args/args");
 const ArgTemplate = include("/general/args/argTemplate");
+const ArgTemplates = include("/general/args/argTemplates");
 const DataType = include("/general/dataType");
 const LoggerFactory = include("/general/logging/loggerFactory");
 const LoggerType = include("/general/logging/loggerType");
@@ -25,26 +26,32 @@ class Application {
         "February 2021"
     ); }
 
-    get logger() { return this.mLogger; }
     get args() { return this.mArgs; }
     get settings() { return this.mSettings; }
+    get logger() { return this.mLogger; }
 
     constructor(pArgV) {
-        this.mLogger = this.createLogger();            
         this.mArgs = this.parseArgs(pArgV);
         this.mSettings = this.readSettings();
+        this.mLogger = this.createLogger();            
     }
 
     parseArgs(pArgV) {
-        const templates = [
-            new ArgTemplate("b", ArgName.backupMode, DataType.string),
-            new ArgTemplate("f", ArgName.folderPath, DataType.string),
-            new ArgTemplate("l", ArgName.logger, DataType.string),
-            new ArgTemplate("lp", ArgName.loggerFilePath, DataType.string),
-            new ArgTemplate("r", ArgName.range, DataType.string),
-            new ArgTemplate("sp", ArgName.settingsFilePath, DataType.string)
-        ];
-        return Args.parse(pArgV, templates);
+        const __this = this;
+        const argTemplates = new ArgTemplates([
+            new ArgTemplate("f", ArgName.folderPath, DataType.string, true),
+            new ArgTemplate("r", ArgName.range, DataType.string, true),
+            new ArgTemplate("sp", ArgName.settingsFilePath, DataType.string, false),
+            new ArgTemplate("b", ArgName.backupMode, DataType.string, false),
+            new ArgTemplate("l", ArgName.logger, DataType.string, false),
+            new ArgTemplate("lp", ArgName.loggerFilePath, DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); })
+        ]);
+        return Args.parse(pArgV, argTemplates, (lArgTemplates, lArgs) => { __this.parseArgs_onError(lArgTemplates, lArgs); });
+    }
+
+    parseArgs_onError(pArgTemplates, pArgs) {
+        const logger = LoggerFactory.create(LoggerType.console);
+        pArgTemplates.log(logger, pArgs);
     }
 
     readSettings() {
@@ -74,11 +81,16 @@ class Application {
     }
 
     renumber() {
+        const __this = this;
         this.logger.writeText("Renumbering:");
-        const sourceFolderPath = this.args.get(ArgName.sourceFolderPath);
-        const destinationFolderPath = this.args.get(ArgName.destinationFolderPath);
-        const renumberator = new Renumberator(sourceFolderPath, destinationFolderPath);
+        const folderPath = this.args.get(ArgName.folderPath);
+        const renumberator = new Renumberator(folderPath, (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); });
         renumberator.run();
+
+    }
+
+    renumber_onDynamicsApp(pDynamicsApp) {
+        pDynamicsApp.log();
     }
 
     finalise() {

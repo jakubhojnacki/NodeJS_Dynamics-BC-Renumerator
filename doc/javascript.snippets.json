@@ -13,28 +13,28 @@
 		]
 	},
 
-	"BoolInit": {
+	"BooleanInit": {
 		"prefix": "xbooini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Boolean.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
-	"NumInit": {
+	"NumberInit": {
 		"prefix": "xnumini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
-	"ObjInit": {
+	"ObjectInit": {
 		"prefix": "xobjini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Object.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
-	"StrInit": {
+	"StringInit": {
 		"prefix": "xstrini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = String.default(p${1/(.)(.*)/${1:/upcase}$2/});"
@@ -71,6 +71,7 @@
 			" * @description $2",
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
+			"",
 			"include(\"/general/javaScript\");",
 			"",
 			"class $1 {",
@@ -86,6 +87,15 @@
 		"prefix": "xinc",
 		"body": [
 			"const ${1/(.)(.*)/${1:/upcase}$2/} = include(\"/$1\");"
+		]
+	},
+
+	"IncludeDefinition": {
+		"prefix": "xincdef",
+		"body": [
+			"global.__rootDir = __dirname;",
+			"global.__srcDir = `${__rootDir}/src`;",
+			"module.exports = (global.include = (lPath) => { return require(`${global.__srcDir}/${lPath}`); })"
 		]
 	},
 

@@ -29,15 +29,28 @@ class DynamicsApp {
     }
 
     static deserialise(pData) {
-        let dynamicsApp = new DynamicsApp();
-        dynamicsApp.mId = Guid.default(pData.id);
-        dynamicsApp.mName = String.default(pData.name);
-        dynamicsApp.mPublisher = String.default(pData.publisher);
-        dynamicsApp.mVersion = AppVersion.parse(pData.version);
-        dynamicsApp.mDependencies = DynamicsAppDependencies.deserialise(pData.dependencies);
-        dynamicsApp.mIdRanges = DynamcisAppIdRanges.deserialise(pData.idRanges);
+        let dynamicsApp = null;
+        if (pData != null) {
+            const id = Guid.default(pData.id);
+            const name = String.default(pData.name);
+            const publisher = String.default(pData.publisher);
+            const version = DynamicsAppVersion.parse(pData.version);
+            const dependencies = DynamicsAppDependencies.deserialise(pData.dependencies);
+            const idRanges = DynamicsAppIdRanges.deserialise(pData.idRanges);
+            dynamicsApp = new DynamicsApp(id, name, publisher, version, dependencies, idRanges);
+        }
         return dynamicsApp;
     }
+
+    log() {
+        const logger = global.application.logger;
+        logger.writeText("Dynamics App:");
+        logger.writeText(`ID = ${this.id}`, 2);
+        logger.writeText(`Name = ${this.name}`, 2);
+        logger.writeText(`Publisher = ${this.publisher}`, 2);
+        logger.writeText(`Version = ${this.version.toString()}`, 2);
+        this.webService.log(2);
+    }        
 }
 
 module.exports = DynamicsApp;

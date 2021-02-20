@@ -8,9 +8,11 @@ include("/general/javaScript");
 
 /*abstract*/ class Logger {
     get width() { return this.mWidth; }
+    get tab() { return this.mTab; }
     
-    constructor(pWidth) {
+    constructor(pWidth, pTab) {
         this.mWidth = Number.default(pWidth, 80);
+        this.mTab = Number.default(pTab, 2);
     }
 
     newLine() {
