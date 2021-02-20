@@ -25,24 +25,23 @@ class Application {
         "February 2021"
     ); }
 
+    get logger() { return this.mLogger; }
     get args() { return this.mArgs; }
     get settings() { return this.mSettings; }
-    get logger() { return this.mLogger; }
 
     constructor(pArgV) {
+        this.mLogger = this.createLogger();            
         this.mArgs = this.parseArgs(pArgV);
         this.mSettings = this.readSettings();
-        this.mLogger = this.createLogger();            
     }
 
     parseArgs(pArgV) {
         const templates = [
-            new ArgTemplate("c", ArgName.leaveComments, DataType.boolean),
-            new ArgTemplate("d", ArgName.destinationFolderPath, DataType.string),
+            new ArgTemplate("b", ArgName.backupMode, DataType.string),
+            new ArgTemplate("f", ArgName.folderPath, DataType.string),
             new ArgTemplate("l", ArgName.logger, DataType.string),
             new ArgTemplate("lp", ArgName.loggerFilePath, DataType.string),
             new ArgTemplate("r", ArgName.range, DataType.string),
-            new ArgTemplate("s", ArgName.sourceFolderPath, DataType.string),
             new ArgTemplate("sp", ArgName.settingsFilePath, DataType.string)
         ];
         return Args.parse(pArgV, templates);

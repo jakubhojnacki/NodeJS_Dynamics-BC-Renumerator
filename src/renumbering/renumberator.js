@@ -16,7 +16,11 @@ class Renumberator {
     }
 
     run() {
+        this.readDynamicsApplicationManifest();
+    }
 
+    readDynamicsApplicationManifest() {
+        //TODO - Not implemented
     }
 }
 

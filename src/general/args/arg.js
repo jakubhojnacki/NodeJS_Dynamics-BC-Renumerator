@@ -9,10 +9,13 @@ include("/general/javaScript");
 class Arg {
     get name() { return this.mName; }
     get value() { return this.mValue; }
+    get valid() { return this.mValid; }
+    set valid(pValue) { this.mValid = pValue; }
 
     constructor(pName, pValue) {
         this.mName = String.default(pName);
         this.mValue = pValue;
+        this.mValid = Boolean.default(pValid);
     }
 
     toString() {

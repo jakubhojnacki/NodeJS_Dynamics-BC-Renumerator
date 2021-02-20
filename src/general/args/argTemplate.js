@@ -12,11 +12,13 @@ class ArgTemplate {
     get tag() { return this.mTag; }
     get name() { return this.mName; }
     get dataType() { return this.mDataType; }
+    get mandatory() { return this.mMandatory; }
 
-    constructor(pTag, pName, pDataType) {
+    constructor(pTag, pName, pDataType, pMandatory) {
         this.mTag = String.default(pTag);
         this.mName = String.default(pName);
         this.mDataType = DataType.parse(pDataType);
+        this.mMandatory = Boolean.default(pMandatory);
     }
 }
 

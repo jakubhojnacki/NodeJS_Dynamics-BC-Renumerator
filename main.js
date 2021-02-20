@@ -5,7 +5,7 @@
  */
 
 global.srcDirectory = `${__dirname}/src`;
-module.exports = global.include = function(pPath) { return require(global.srcDirectory + pPath); }
+module.exports = (global.include = (pPath) => { return require(global.srcDirectory + pPath); })
 
 const Application = include("/application");
 

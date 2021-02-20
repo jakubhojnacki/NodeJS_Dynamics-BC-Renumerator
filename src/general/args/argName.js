@@ -5,13 +5,12 @@
  */
 
 /*static*/ class ArgName {
-    static get destinationFolderPath() { return "DestinationFolderPath"; }
-    static get leaveComments() { return "LeaveComments"; }
+    static get folderPath() { return "FolderPath"; }
+    static get backupMode() { return "BackupMode"; }
     static get logger() { return "Logger"; }
     static get loggerFilePath() { return "LoggerFilePath"; }
     static get range() { return "Range"; }
     static get settingsFilePath() { return "SettingsFilePath"; }
-    static get sourceFolderPath() { return "SourceFolderPath"; }
 }
 
 module.exports = ArgName;

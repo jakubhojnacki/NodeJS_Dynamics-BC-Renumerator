@@ -4,14 +4,12 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-include("/dynamics/dynamicsAppDependencies");
-include("/dynamics/dynamicsAppDependency");
-include("/dynamics/dynamicsAppIdRange");
-include("/dynamics/dynamicsAppIdRanges");
-include("/dynamics/dynamicsAppVersion");
-include("/general/javaScript");
-
+const DynamicsAppDependencies = include("/dynamics/dynamicsAppDependencies");
+const DynamicsAppIdRanges = include("/dynamics/dynamicsAppIdRanges");
+const DynamicsAppVersion = include("/dynamics/dynamicsAppVersion");
 const Guid = include("/general/guid");
+
+include("/general/javaScript");
 
 class DynamicsApp {
     get id() { return this.mId; }

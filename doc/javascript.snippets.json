@@ -1,48 +1,48 @@
 {
 	"Init": {
-		"prefix": "xinit",
+		"prefix": "xini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = $2.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"ArrayInit": {
-		"prefix": "xarrinit",
+		"prefix": "xarrini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Array.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"BoolInit": {
-		"prefix": "xboolinit",
+		"prefix": "xbooini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Boolean.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"NumInit": {
-		"prefix": "xnuminit",
+		"prefix": "xnumini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"ObjInit": {
-		"prefix": "xobjinit",
+		"prefix": "xobjini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Object.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"StrInit": {
-		"prefix": "xstrinit",
+		"prefix": "xstrini",
 		"body": [
 			"this.m${1/(.)(.*)/${1:/upcase}$2/} = String.default(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"Property": {
-		"prefix": "xprop",
+		"prefix": "xpro",
 		"body": [
 			"get $1() { return this.m${1/(.)(.*)/${1:/upcase}$2/}; }",
 			"set $1(pValue) { this.m${1/(.)(.*)/${1:/upcase}$2/} = pValue; }"
@@ -50,23 +50,28 @@
 	},
 	
 	"GetProperty": {
-		"prefix": "xgetprop",
+		"prefix": "xgetpro",
 		"body": [
 			"get $1() { return this.m${1/(.)(.*)/${1:/upcase}$2/}; }"
 		]
 	},
 
 	"StaticProperty": {
-		"prefix": "xstatprop",
+		"prefix": "xstapro",
 		"body": [
 			"static get $1() { return $2; }"			
 		]
 	},
 
 	"Class": {
-		"prefix": "xclass",
+		"prefix": "xcla",
 		"body": [
-			"require(\"./javaScript\");",
+			"/**",
+			" * @module \"$1\" class",
+			" * @description $2",
+			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
+			" */",
+			"include(\"/general/javaScript\");",
 			"",
 			"class $1 {",
 			"    constructor() {",
@@ -77,18 +82,25 @@
 		]
 	},
 
-	"Require": {
-		"prefix": "xrequire",
+	"Include": {
+		"prefix": "xinc",
 		"body": [
-			"const ${1/(.)(.*)/${1:/upcase}$2/} = require(\"./$1\");"
+			"const ${1/(.)(.*)/${1:/upcase}$2/} = include(\"/$1\");"
+		]
+	},
+
+	"JavaScript": {
+		"prefix": "xjavscr",
+		"body": [
+			"include(\"/general/javaScript\");"
 		]
 	},
 
 	"Module": {
-		"prefix": "xmodule",
+		"prefix": "xmod",
 		"body": [
 			"/**",
-			" * @module $1",
+			" * @module \"$1\" class",
 			" * @description $2",
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */"
