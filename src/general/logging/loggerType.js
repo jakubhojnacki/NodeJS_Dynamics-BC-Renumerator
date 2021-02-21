@@ -4,10 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("/general/javaScript");
-
-const Enum = __require("/general/enum");
-const EnumValue = __require("/general/enumValue");
+__require("general/javaScript");
+const Enum = __require("general/enum");
+const EnumValue = __require("general/enumValue");
 
 /*static*/ class LoggerType {
     static get console() { return "console"; }

@@ -4,9 +4,7 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-const { logger } = require("./argName");
-
-__require("/general/javaScript");
+__require("general/javaScript");
 
 class ArgTemplates extends Array {
     constructor(pArgTemplateArray) {

@@ -4,10 +4,9 @@
  * @version 0.0.2 (2021-02-19)
  */
 
-__require("/general/javaScript");
-
-const Enum = __require("/general/enum");
-const EnumValue = __require("/general/enumValue");
+__require("general/javaScript");
+const Enum = __require("general/enum");
+const EnumValue = __require("general/enumValue");
 
 /*static*/ class DataType {
     static get boolean() { return "boolean"; }

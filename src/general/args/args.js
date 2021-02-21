@@ -4,10 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("/general/javaScript");
-
-const Arg = __require("/general/args/arg");
-const DataType = __require("/general/dataType");
+__require("general/javaScript");
+const Arg = __require("general/args/arg");
+const DataType = __require("general/dataType");
 
 class Args extends Array {
     constructor() {

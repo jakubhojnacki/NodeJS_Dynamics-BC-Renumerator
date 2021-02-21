@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-__require("/general/javaScript");
+__require("general/javaScript");
 
 class StringBuilder {
     get multiLine() { return this.mMultiLine; }

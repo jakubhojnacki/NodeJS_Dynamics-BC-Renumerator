@@ -4,9 +4,8 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("/general/javaScript");
-
-const DynamicsAppIdRange = __require("/dynamics/dynamicsAppIdRange");
+__require("general/javaScript");
+const DynamicsAppIdRange = __require("dynamics/dynamicsAppIdRange");
 
 class DynamicsAppIdRanges extends Array {
     constructor() {      

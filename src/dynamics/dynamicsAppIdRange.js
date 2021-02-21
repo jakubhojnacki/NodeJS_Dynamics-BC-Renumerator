@@ -4,9 +4,8 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("/general/javaScript");
-
-const StringBuilder = __require("/general/stringBuilder");
+__require("general/javaScript");
+const StringBuilder = __require("general/stringBuilder");
 
 class DynamicsAppIdRange {
     get from() { return this.mFrom; }

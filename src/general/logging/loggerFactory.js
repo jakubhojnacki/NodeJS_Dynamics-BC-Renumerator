@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const ConsoleLogger = __require("/general/logging/consoleLogger");
-const FileLogger = __require("/general/logging/fileLogger");
-const LoggerType = __require("/general/logging/loggerType");
+const ConsoleLogger = __require("general/logging/consoleLogger");
+const FileLogger = __require("general/logging/fileLogger");
+const LoggerType = __require("general/logging/loggerType");
 
 /*static*/ class LoggerFactory {
     static create(pLoggerType, pLoggerFilePath) {

@@ -4,11 +4,10 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-__require("/general/javaScript");
-
-const DynamicsAppVersion = __require("/dynamics/dynamicsAppVersion");
-const Guid = __require("/general/guid");
-const StringBuilder = __require("/general/stringBuilder");
+__require("general/javaScript");
+const DynamicsAppVersion = __require("dynamics/dynamicsAppVersion");
+const Guid = __require("general/guid");
+const StringBuilder = __require("general/stringBuilder");
 
 class DynamicsAppDependency {
     get id() { return this.mId; }

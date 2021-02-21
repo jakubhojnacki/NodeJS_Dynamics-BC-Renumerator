@@ -4,9 +4,8 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("/general/javaScript");
-
-const DynamicsAppDependency = __require("/dynamics/dynamicsAppDependency");
+__require("general/javaScript");
+const DynamicsAppDependency = __require("dynamics/dynamicsAppDependency");
 
 class DynamicsAppDependencies extends Array {
     constructor() {        

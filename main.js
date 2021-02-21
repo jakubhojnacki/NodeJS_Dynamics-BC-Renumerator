@@ -8,7 +8,7 @@ global.__rootFolderPath = __dirname;
 global.__srcFolderPath = `${__rootFolderPath}/src`;
 module.exports = (global.__require = (lPath) => { return require(`${global.__srcFolderPath}/${lPath}`); })
 
-const Application = __require("/application");
+const Application = __require("application");
 
 (() => {
     global.application = new Application(process.argv);

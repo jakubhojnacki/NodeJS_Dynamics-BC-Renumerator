@@ -4,9 +4,8 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("/general/javaScript");
-
-const DataType = __require("/general/dataType");
+__require("general/javaScript");
+const DataType = __require("general/dataType");
 
 class ArgTemplate {
     get tag() { return this.mTag; }

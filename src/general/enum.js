@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-21)
  */
 
-__require("/general/javaScript");
+__require("general/javaScript");
 
 /*static*/ class Enum {
     static parse(pString, pEnumValues, pEnumName, pDefaultValue) {

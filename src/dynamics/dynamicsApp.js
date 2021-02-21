@@ -4,13 +4,12 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("/general/javaScript");
-
-const DynamicsAppDependencies = __require("/dynamics/dynamicsAppDependencies");
-const DynamicsAppIdRanges = __require("/dynamics/dynamicsAppIdRanges");
-const DynamicsAppVersion = __require("/dynamics/dynamicsAppVersion");
-const Guid = __require("/general/guid");
-const StringBuilder = __require("/general/stringBuilder");
+__require("general/javaScript");
+const DynamicsAppDependencies = __require("dynamics/dynamicsAppDependencies");
+const DynamicsAppIdRanges = __require("dynamics/dynamicsAppIdRanges");
+const DynamicsAppVersion = __require("dynamics/dynamicsAppVersion");
+const Guid = __require("general/guid");
+const StringBuilder = __require("general/stringBuilder");
 
 class DynamicsApp {
     get id() { return this.mId; }

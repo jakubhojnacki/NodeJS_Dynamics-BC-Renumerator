@@ -5,11 +5,9 @@
  */
 
 const fs = require("fs");
-
-__require("/general/javaScript");
-
-const Logger = __require("/general/logging/logger");
-const LoggerType = __require("/general/logging/loggerType");
+__require("general/javaScript");
+const Logger = __require("general/logging/logger");
+const LoggerType = __require("general/logging/loggerType");
 
 class FileLogger extends Logger {
     get type() { return LoggerType.file; }
