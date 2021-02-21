@@ -23,6 +23,7 @@ class DynamicsAlRenumberator extends Renumberator {
 
     renumber(pFilePath) {
         this.createNewFile(pFilePath);
+        this.renumberFile(pFilePath);
         this.overwriteFileWithNewFile(pFilePath);
     }
 
