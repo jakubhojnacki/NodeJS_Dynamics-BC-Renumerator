@@ -16,16 +16,17 @@ class ArgTemplates extends Array {
                 this.push(argTemplate);
     }
 
-    log(pLogger, pArgs) {
-        pLogger.writeText("Arguments:");
-        const indentation = pLogger.tab;
+    log(pArgs) {
+        const logger = global.application.logger;
+        logger.writeText("Application args are invalid:");
+        const indentation = logger.tab;
         for (const argTemplate of this) {
-            pLogger.writeText(argTemplate.toString(pArgs), indentation);
+            logger.writeText(argTemplate.toString(pArgs), indentation);
             const arg = pArgs.find((lArg) => { return lArg.name === argTemplate.name; });
             if (arg != null)
-                pLogger.writeText(`Passed: ${arg.value}; Correct: ${arg.valid}.`, indentation + pLogger.tab);
+                logger.writeText(`Passed: ${arg.value}; Valid: ${arg.valid}.`, indentation + logger.tab);
             else
-                pLogger.writeText("Not passed.", indentation + pLogger.tab);
+                logger.writeText("Not passed.", indentation + logger.tab);
         }
     }
 }

@@ -12,7 +12,8 @@ const Application = include("/application");
 
 (() => {
     const argv = [ 
-        "-f", "/home/Development/Node.js/DynamicsRenumberator/raw/Asset_nHanced-ID-Manager"
+        "-f", "/home/Development/Node.js/DynamicsRenumberator/raw/Asset_nHanced-ID-Manager",
+        "-r", "SAAS"
     ];
     global.application = new Application(argv);
     global.application.run();

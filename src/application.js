@@ -26,33 +26,25 @@ class Application {
         "February 2021"
     ); }
 
-    get args() { return this.mArgs; }
-    get settings() { return this.mSettings; }
-    get logger() { return this.mLogger; }
-
-    constructor(pArgV) {
-        this.mArgs = this.parseArgs(pArgV);
-        this.mSettings = this.readSettings();
-        this.mLogger = this.createLogger();            
-    }
-
-    parseArgs(pArgV) {
-        const __this = this;
-        const argTemplates = new ArgTemplates([
+    static get argTemplates() {
+        return new ArgTemplates([
             new ArgTemplate("f", ArgName.folderPath, "Path of the folder to process", DataType.string, true),
             new ArgTemplate("r", ArgName.range, "Range code to use for new objects", DataType.string, true),
             new ArgTemplate("sp", ArgName.settingsFilePath, "Path of application settings file", DataType.string, false),
             new ArgTemplate("b", ArgName.backupMode, "Application backup mode (\"none\", \"line\" or \"file\")", DataType.string, false),
             new ArgTemplate("l", ArgName.logger, "Type of logger used (\"console\" or \"file\")", DataType.string, false),
             new ArgTemplate("lp", ArgName.loggerFilePath, "File path for logger (if required)", DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); })
-        ]);
-        return Args.parse(pArgV, argTemplates, (lArgTemplates, lArgs) => { __this.parseArgs_onError(lArgTemplates, lArgs); });
+        ]);        
     }
 
-    parseArgs_onError(pArgTemplates, pArgs) {
-        const logger = LoggerFactory.create(LoggerType.console);
-        pArgTemplates.log(logger, pArgs);
-        throw new Error("Arguments passed to the application are invalid.");
+    get args() { return this.mArgs; }
+    get settings() { return this.mSettings; }
+    get logger() { return this.mLogger; }
+
+    constructor(pArgV) {
+        this.mArgs = Args.parse(pArgV, Application.argTemplates);
+        this.mSettings = this.readSettings();
+        this.mLogger = this.createLogger();            
     }
 
     readSettings() {
@@ -68,7 +60,8 @@ class Application {
 
     run() {
         this.initialise();
-        this.renumber();
+        if (this.validate())
+            this.renumber();
         this.finalise();
     }
 
@@ -81,13 +74,26 @@ class Application {
         this.logger.writeSeparator();
     }
 
+    validate() {
+        let result = true;
+        const __this = this;
+        if (!this.args.validate(Application.argTemplates, (lArgTemplates, lArgs) => { lArgTemplates.log(lArgs); }))
+            result = false;
+        return result;
+    }
+
+    parseArgs_onError(pArgTemplates, pArgs) {
+        const logger = LoggerFactory.create(LoggerType.console);
+        pArgTemplates.log(logger, pArgs);
+        throw new Error("Arguments passed to the application are invalid.");
+    }
+
     renumber() {
         const __this = this;
         this.logger.writeText("Renumbering:");
         const folderPath = this.args.get(ArgName.folderPath);
         const renumberator = new Renumberator(folderPath, (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); });
         renumberator.run();
-
     }
 
     renumber_onDynamicsApp(pDynamicsApp) {

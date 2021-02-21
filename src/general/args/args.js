@@ -14,7 +14,7 @@ class Args extends Array {
         super();
     }
 
-    static parse(pArgV, pArgTemplates, pOnError) {
+    static parse(pArgV, pArgTemplates) {
         let args = new Args();
         let tag = "";
         let argTemplate = null;
@@ -29,11 +29,10 @@ class Args extends Array {
                 argTemplate = null; 
             }
         }
-        args.validate(pArgTemplates, pOnError);
         return args;
     }
 
-    validate(pArgTemplates, pOnError) {
+    validate(pArgTemplates, pOnInvalid) {
         let result = true;
         for (const argTemplate of pArgTemplates)
             if (argTemplate.isMandatory(this)) {
@@ -45,7 +44,8 @@ class Args extends Array {
                     result = false;
             }
         if (!result)
-            pOnError(pArgTemplates, this);
+            pOnInvalid(pArgTemplates, this);
+        return result;
     }
 
     get(pName, pDefaultValue) {
