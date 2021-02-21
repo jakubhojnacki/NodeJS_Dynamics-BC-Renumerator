@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
 class DynamicsAppVersion {
     get major() { return this.mMajor; }
@@ -28,7 +28,7 @@ class DynamicsAppVersion {
         return new DynamicsAppVersion(major, minor, build, revision);
     }
 
-    default(pValue, pDefault) {
+    static default(pValue, pDefault) {
         return pValue != null ? pValue : (pDefault != null ? pDefault : new DynamicsAppVersion());
     }
 

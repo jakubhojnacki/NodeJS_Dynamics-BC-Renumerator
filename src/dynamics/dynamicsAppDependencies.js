@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
-const DynamicsAppDependency = include("/dynamics/dynamicsAppDependency");
+const DynamicsAppDependency = __require("/dynamics/dynamicsAppDependency");
 
 class DynamicsAppDependencies extends Array {
     constructor() {        
@@ -15,9 +15,10 @@ class DynamicsAppDependencies extends Array {
 
     log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("Dependencies:", pIndentation);
+        let indentation = Number.default(pIndentation);
+        logger.writeText("Dependencies:", indentation);
         for (const dynamicsAppDependency of this)
-            logger.writeText(dynamicsAppDependency.toString(), pIndentation + logger.tab);
+            logger.writeText(dynamicsAppDependency.toString(), indentation + logger.tab);
     }
 
     static default(pValue, pDefault) {

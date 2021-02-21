@@ -4,7 +4,9 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
+
+const StringBuilder = __require("/general/stringBuilder");
 
 class DynamicsAppIdRange {
     get from() { return this.mFrom; }
@@ -23,6 +25,13 @@ class DynamicsAppIdRange {
             dynamicsAppIdRange = new DynamicsAppIdRange(from, to);
         }
         return dynamicsAppIdRange;
+    }
+
+    toString() {
+        const stringBuilder = new StringBuilder();
+        stringBuilder.addNameValue("From", this.from);
+        stringBuilder.addNameValue("To", this.to);
+        return stringBuilder.toString();        
     }
 }
 

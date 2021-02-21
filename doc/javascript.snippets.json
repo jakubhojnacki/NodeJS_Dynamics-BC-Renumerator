@@ -72,7 +72,7 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"include(\"/general/javaScript\");",
+			"__require(\"/general/javaScript\");",
 			"",
 			"class $1 {",
 			"    constructor() {",
@@ -83,26 +83,26 @@
 		]
 	},
 
-	"Include": {
-		"prefix": "xinc",
+	"Require": {
+		"prefix": "xreq",
 		"body": [
-			"const ${1/(.)(.*)/${1:/upcase}$2/} = include(\"/$1\");"
+			"const ${1/(.)(.*)/${1:/upcase}$2/} = __require(\"/${1/(.)(.*)/${1:/downcase}$2/}\");"
 		]
 	},
 
-	"IncludeDefinition": {
-		"prefix": "xincdef",
+	"RequireDefinition": {
+		"prefix": "xreqdef",
 		"body": [
-			"global.__rootDir = __dirname;",
-			"global.__srcDir = `${__rootDir}/src`;",
-			"module.exports = (global.include = (lPath) => { return require(`${global.__srcDir}/${lPath}`); })"
+			"global.__rootFolderPath = __dirname;",
+			"global.__srcFolderPath = `${__rootFolderPath}/src`;",
+			"module.exports = (global.__require = (lPath) => { return require(`${global.__srcFolderPath}/${lPath}`); })"
 		]
 	},
 
 	"JavaScript": {
 		"prefix": "xjavscr",
 		"body": [
-			"include(\"/general/javaScript\");"
+			"__require(\"/general/javaScript\");"
 		]
 	},
 

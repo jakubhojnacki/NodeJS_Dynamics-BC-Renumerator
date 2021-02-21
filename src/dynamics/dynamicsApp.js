@@ -4,12 +4,13 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-const DynamicsAppDependencies = include("/dynamics/dynamicsAppDependencies");
-const DynamicsAppIdRanges = include("/dynamics/dynamicsAppIdRanges");
-const DynamicsAppVersion = include("/dynamics/dynamicsAppVersion");
-const Guid = include("/general/guid");
+__require("/general/javaScript");
 
-include("/general/javaScript");
+const DynamicsAppDependencies = __require("/dynamics/dynamicsAppDependencies");
+const DynamicsAppIdRanges = __require("/dynamics/dynamicsAppIdRanges");
+const DynamicsAppVersion = __require("/dynamics/dynamicsAppVersion");
+const Guid = __require("/general/guid");
+const StringBuilder = __require("/general/stringBuilder");
 
 class DynamicsApp {
     get id() { return this.mId; }
@@ -42,14 +43,17 @@ class DynamicsApp {
         return dynamicsApp;
     }
 
-    log() {
+    log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("Dynamics App:");
-        logger.writeText(`ID = ${this.id}`, 2);
-        logger.writeText(`Name = ${this.name}`, 2);
-        logger.writeText(`Publisher = ${this.publisher}`, 2);
-        logger.writeText(`Version = ${this.version.toString()}`, 2);
-        this.webService.log(2);
+        let indentation = Number.default(pIndentation);
+        logger.writeText("Dynamics App:", pIndentation);
+        indentation += logger.tab;
+        logger.writeText(StringBuilder.nameValue("ID", this.id), indentation);
+        logger.writeText(StringBuilder.nameValue("Name", this.name), indentation);
+        logger.writeText(StringBuilder.nameValue("Publisher", this.publisher), indentation);
+        logger.writeText(StringBuilder.nameValue("Version", this.version.toString()), indentation);
+        this.dependencies.log(indentation);
+        this.idRanges.log(indentation);
     }        
 }
 

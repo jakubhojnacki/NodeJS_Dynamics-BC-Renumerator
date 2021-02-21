@@ -10,7 +10,7 @@ class Guid {
     constructor() {
     }
 
-    default(pValue, pDefault) {
+    static default(pValue, pDefault) {
         return pValue != null ? pValue : (pDefault != null ? pDefault : Guid.empty);
     }
 }

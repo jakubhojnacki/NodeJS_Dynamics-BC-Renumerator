@@ -4,7 +4,10 @@
  * @version 0.0.2 (2021-02-19)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
+
+const Enum = __require("/general/enum");
+const EnumValue = __require("/general/enumValue");
 
 /*static*/ class DataType {
     static get boolean() { return "boolean"; }
@@ -13,31 +16,16 @@ include("/general/javaScript");
     static get string() { return "string"; }
     static get date() { return "date"; }
 
+    static get values() { return [
+        new EnumValue(DataType.boolean),
+        new EnumValue(DataType.integer),
+        new EnumValue(DataType.float),
+        new EnumValue(DataType.string, true),
+        new EnumValue(DataType.date)
+    ]; }
+
     static parse(pString) {
-        const string = pString ? pString.trim().toLowerCase() : "";
-        let value = "";
-        if (string)
-            switch (string) {
-                case "boolean":
-                    value = DataType.boolean;
-                    break;
-                case "integer":
-                    value = DataType.integer;
-                    break;
-                case "float":
-                    value = DataType.float;
-                    break;
-                case "string":
-                    value = DataType.string;
-                    break;
-                case "date":
-                    value = DataType.date;
-                    break;
-                default:
-                    throw new Error(`Unknown data type: ${pString}.`);
-                    break;
-            }
-        return value;
+        return Enum.parse(pString, DataType.values, DataType.name);
     }
 
     static parseValue(pString, pDataType) {

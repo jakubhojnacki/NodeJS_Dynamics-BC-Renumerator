@@ -3,33 +3,25 @@
  * @description Enumerates backup modes
  * @version 0.0.1 (2021-02-20)
  */
-include("/general/javaScript");
 
-class BackupMode {
-    static get none() { return "none"; }
-    static get line() { return "line"; }
+__require("/general/javaScript");
+
+const Enum = __require("/general/enum");
+const EnumValue = __require("/general/enumValue");
+
+/*static*/ class BackupMode {
     static get file() { return "file"; }
+    static get line() { return "line"; }
+    static get none() { return "none"; }
+
+    static get values() { return [
+        new EnumValue(BackupMode.file),
+        new EnumValue(BackupMode.line),
+        new EnumValue(BackupMode.none, true)
+    ]; }
 
     static parse(pString) {
-        const string = pString ? pString.trim().toLowerCase() : "";
-        let value = "";
-        if (string)
-            switch (string) {
-                case "line":
-                    value = BackupMode.line;
-                    break;
-                case "file":
-                    value = BackupMode.file;
-                    break;
-                case "":
-                case "none":
-                    value = BackupMode.none;
-                    break;
-                default:
-                    throw new Error(`Unknown backup mode: ${pString}.`);
-                    break;
-            }
-        return value;
+        return Enum.parse(pString, BackupMode.values, BackupMode.name);
     }
 }
 

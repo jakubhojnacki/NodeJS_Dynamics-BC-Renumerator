@@ -6,9 +6,9 @@
 
 const fs = require("fs");
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
-const WebServiceSettings = include("/settings/webServiceSettings");
+const WebServiceSettings = __require("/settings/webServiceSettings");
 
 class Settings {
     get webService() { return this.mWebService; }
@@ -30,10 +30,12 @@ class Settings {
         return settings;
     }
 
-    log() {
+    log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("Settings:");
-        this.webService.log(2);
+        let indentation = Number.default(pIndentation);
+        logger.writeText("Settings:", indentation);
+        indentation += logger.tab;
+        this.webService.log(indentation);
     }    
 }
 

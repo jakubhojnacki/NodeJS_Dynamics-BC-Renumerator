@@ -4,24 +4,33 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
 class StringBuilder {
+    get multiLine() { return this.mMultiLine; }
     get content() { return this.mContent; }
     set content(pValue) { this.mContent = pValue; }
 
-    constructor(pContent) {
+    constructor(pMultiLine, pContent) {
+        this.mMultiLine = Boolean.default(pMultiLine);
         this.mContent = String.default(pContent);
     }
 
+    static nameValue(pName, pValue) {
+        return `${pName}: ${pValue ? pValue: "null"}`;
+    }
+
     addText(pText) {
-        if (content)
-            content += "\r\n";
-        content += pText;
+        if (this.content)
+            if (this.multiLine)
+                this.content += "\r\n";
+            else
+                this.content += "; ";
+        this.content += pText;
     }
 
     addNameValue(pName, pValue) {
-        this.addText(`${pName}: ${pValue ? pValue: "null"}`);
+        this.addText(StringBuilder.nameValue(pName, pValue));
     }
 
     toString() {

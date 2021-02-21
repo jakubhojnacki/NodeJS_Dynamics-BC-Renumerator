@@ -4,26 +4,22 @@
  * @version 0.0.1 (2021-02-17)
  */
 
+__require("/general/javaScript");
+
+const Enum = __require("/general/enum");
+const EnumValue = __require("/general/enumValue");
+
 /*static*/ class LoggerType {
     static get console() { return "console"; }
     static get file() { return "file"; }
 
+    static get values() { return [
+        new EnumValue(LoggerType.console, true),
+        new EnumValue(LoggerType.file)
+    ]; }
+
     static parse(pString) {
-        const string = pString ? pString.trim().toLowerCase() : "";
-        let value = "";
-        if (string)
-            switch (string) {
-                case "console":
-                    value = LoggerType.console;
-                    break;
-                case "file":
-                    value = LoggerType.file;
-                    break;
-                default:
-                    throw new Error(`Unknown logger type: ${pString}.`);
-                    break;
-            }
-        return value;
+        return Enum.parse(pString, LoggerType.values, LoggerType.name);
     }
 }
 

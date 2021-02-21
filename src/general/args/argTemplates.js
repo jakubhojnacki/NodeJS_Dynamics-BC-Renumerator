@@ -6,7 +6,7 @@
 
 const { logger } = require("./argName");
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
 class ArgTemplates extends Array {
     constructor(pArgTemplateArray) {
@@ -16,10 +16,11 @@ class ArgTemplates extends Array {
                 this.push(argTemplate);
     }
 
-    log(pArgs) {
+    reportInvalid(pArgs, pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("Application args are invalid:");
-        const indentation = logger.tab;
+        let indentation = Number.default(pIndentation);
+        logger.writeText("Application args are invalid:", indentation);
+        indentation += logger.tab;
         for (const argTemplate of this) {
             logger.writeText(argTemplate.toString(pArgs), indentation);
             const arg = pArgs.find((lArg) => { return lArg.name === argTemplate.name; });

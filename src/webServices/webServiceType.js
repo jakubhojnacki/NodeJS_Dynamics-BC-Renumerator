@@ -4,26 +4,20 @@
  * @version 0.0.1 (2021-02-17)
  */
 
+const Enum = __require("/general/enum");
+const EnumValue = __require("/general/enumValue");
+
 /*static*/ class WebServiceType {
-    static get soap() { return "soap"; }
     static get rest() { return "rest"; }
+    static get soap() { return "soap"; }
+
+    static get values() { return [
+        new EnumValue(WebServiceType.rest, true),
+        new EnumValue(WebServiceType.soap)
+    ]; }
 
     static parse(pString) {
-        const string = pString ? pString.trim().toLowerCase() : "";
-        let value = "";
-        if (string)
-            switch (string) {
-                case "soap":
-                    value = WebServiceType.soap;
-                    break;
-                case "rest":
-                    value = WebServiceType.rest;
-                    break;
-                default:
-                    throw new Error(`Unknown web service type: ${pString}.`);
-                    break;
-            }
-        return value;
+        return Enum.parse(pString, WebServiceType.values, WebServiceType.name);
     }
 }
 

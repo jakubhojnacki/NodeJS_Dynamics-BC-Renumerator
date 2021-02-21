@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
-const DynamicsAppIdRange = include("/dynamics/dynamicsAppIdRange");
+const DynamicsAppIdRange = __require("/dynamics/dynamicsAppIdRange");
 
 class DynamicsAppIdRanges extends Array {
     constructor() {      
@@ -15,9 +15,10 @@ class DynamicsAppIdRanges extends Array {
 
     log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("ID Ranges:", pIndentation);
+        let indentation = Number.default(pIndentation);
+        logger.writeText("ID Ranges:", indentation);
         for (const dynamicsAppIdRange of this)
-            logger.writeText(dynamicsAppIdRange.toString(), pIndentation + logger.tab);
+            logger.writeText(dynamicsAppIdRange.toString(), indentation + logger.tab);
     }
 
     static default(pValue, pDefault) {
@@ -33,4 +34,4 @@ class DynamicsAppIdRanges extends Array {
     }
 }
 
-module.exports = DynamicsAppIdRange;
+module.exports = DynamicsAppIdRanges;

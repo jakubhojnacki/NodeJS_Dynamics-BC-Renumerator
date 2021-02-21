@@ -4,8 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const WebServiceType = include("/webServices/webServiceType");
-include("/general/javaScript");
+__require("/general/javaScript");
+
+const StringBuilder = __require("/general/stringBuilder");
+const WebServiceType = __require("/webServices/webServiceType");
 
 class WebServiceSettings {
     get url() { return this.mUrl; }
@@ -34,12 +36,13 @@ class WebServiceSettings {
 
     log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("WebService:", pIndentation);
-        const indentation = pIndentation + logger.tab;
-        logger.writeText(`URL = ${this.url}`, indentation);
-        logger.writeText(`User = ${this.user}`, indentation);
-        logger.writeText(`Password = ${this.password ? "*****" : ""}`, indentation);
-        logger.writeText(`Type = ${this.type}`, indentation);
+        let indentation = Number.default(pIndentation);
+        logger.writeText("WebService:", indentation);
+        indentation += logger.tab;
+        logger.writeText(StringBuilder.nameValue("URL", this.url), indentation);
+        logger.writeText(StringBuilder.nameValue("User", this.user), indentation);
+        logger.writeText(StringBuilder.nameValue("Password", this.password ? "*****" : ""), indentation);
+        logger.writeText(StringBuilder.nameValue("Type", this.type), indentation);
     }      
 }
 

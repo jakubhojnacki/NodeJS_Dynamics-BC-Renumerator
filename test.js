@@ -4,15 +4,15 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-global.rootFolderPath = __dirname;
-global.srcFolderPath = `${rootFolderPath}/src`;
-module.exports = (global.include = (lPath) => { return require(`${global.srcFolderPath}/${lPath}`); })
+global.__rootFolderPath = __dirname;
+global.__srcFolderPath = `${__rootFolderPath}/src`;
+module.exports = (global.__require = (lPath) => { return require(`${global.__srcFolderPath}/${lPath}`); })
 
-const Application = include("/application");
+const Application = __require("/application");
 
 (() => {
     const argv = [ 
-        "-f", "/home/Development/Node.js/DynamicsRenumberator/raw/Asset_nHanced-ID-Manager",
+        "-f", "/home/Development/Node.js/Dynamics Renumberator Raw/Asset_nHanced-ID-Manager",
         "-r", "SAAS"
     ];
     global.application = new Application(argv);

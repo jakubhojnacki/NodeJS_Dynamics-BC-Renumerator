@@ -4,18 +4,19 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
-const ApplicationInformation = include("/applicationInformation");
-const ArgName = include("/general/args/argName");
-const Args = include("/general/args/args");
-const ArgTemplate = include("/general/args/argTemplate");
-const ArgTemplates = include("/general/args/argTemplates");
-const DataType = include("/general/dataType");
-const LoggerFactory = include("/general/logging/loggerFactory");
-const LoggerType = include("/general/logging/loggerType");
-const Renumberator = include("/renumbering/renumberator");
-const Settings = include("/settings/settings");
+const ApplicationInformation = __require("/applicationInformation");
+const ArgName = __require("/general/args/argName");
+const Args = __require("/general/args/args");
+const ArgTemplate = __require("/general/args/argTemplate");
+const ArgTemplates = __require("/general/args/argTemplates");
+const DataType = __require("/general/dataType");
+const LoggerFactory = __require("/general/logging/loggerFactory");
+const LoggerType = __require("/general/logging/loggerType");
+const Renumberator = __require("/renumberation/renumberator");
+const Settings = __require("/settings/settings");
+const StringBuilder = __require("/general/stringBuilder");
 
 class Application {
     static get information() { return new ApplicationInformation(
@@ -92,17 +93,28 @@ class Application {
         const __this = this;
         this.logger.writeText("Renumbering:");
         const folderPath = this.args.get(ArgName.folderPath);
-        const renumberator = new Renumberator(folderPath, (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); });
+        const renumberator = new Renumberator(folderPath);
+        renumberator.onDynamicsApp = (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); };
+        renumberator.onFolder = (lFolderName, lIndentation) => { __this.renumber_onFolder(lFolderName, lIndentation); }; 
+        renumberator.onFile = (lFileName, lIndentation) => { __this.renumber_onFile(lFileName, lIndentation); }; 
         renumberator.run();
     }
 
     renumber_onDynamicsApp(pDynamicsApp) {
-        pDynamicsApp.log();
+        pDynamicsApp.log(this.logger.tab);
+    }
+
+    renumber_onFolder(pFolderName, pIndentation) {
+        this.logger.writeText(StringBuilder.nameValue("Folder", pFolderName), (pIndentation + 1) * this.logger.tab);
+    }
+
+    renumber_onFile(pFileName, pIndentation) {
+        this.logger.writeText(StringBuilder.nameValue("File", pFileName), (pIndentation + 1) * this.logger.tab);
     }
 
     finalise() {
         this.logger.writeSeparator();
-        this.logger.writeText("Completed");
+        this.logger.writeText("Completed.");
         this.logger.dispose();
     }
 }

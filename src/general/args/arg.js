@@ -4,7 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
+
+const StringBuilder = __require("/general/stringBuilder");
 
 class Arg {
     get name() { return this.mName; }
@@ -19,7 +21,7 @@ class Arg {
     }
 
     toString() {
-        return `${this.name} = ${this.value}`;
+        return StringBuilder.nameValue(this.name, this.value);
     }
 }
 

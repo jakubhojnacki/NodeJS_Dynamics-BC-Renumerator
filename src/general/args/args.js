@@ -4,10 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-include("/general/javaScript");
+__require("/general/javaScript");
 
-const Arg = include("/general/args/arg");
-const DataType = include("/general/dataType");
+const Arg = __require("/general/args/arg");
+const DataType = __require("/general/dataType");
 
 class Args extends Array {
     constructor() {
@@ -61,11 +61,12 @@ class Args extends Array {
         return value;
     }
 
-    log() {
+    log(pIndentation) {
         const logger = global.application.logger;
-        logger.writeText("Args:");
+        let indentation = Number.default(pIndentation);
+        logger.writeText("Args:", indentation);
         for (const arg of this)
-            logger.writeText(arg.toString(), 2);
+            logger.writeText(arg.toString(), indentation + logger.tab);
     }
 }
 
