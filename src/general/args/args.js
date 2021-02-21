@@ -11,6 +11,7 @@ const DataType = include("/general/dataType");
 
 class Args extends Array {
     constructor() {
+        super();
     }
 
     static parse(pArgV, pArgTemplates, pOnError) {
@@ -24,7 +25,7 @@ class Args extends Array {
                 argTemplate = pArgTemplates.find((lArgTemplate) => { return lArgTemplate.tag === tag; });
             } else if (argTemplate != null) {
                 const value = DataType.parseValue(argV, argTemplate.dataType);
-                this.push(new Arg(argTemplate.name, value));
+                args.push(new Arg(argTemplate.name, value));
                 argTemplate = null; 
             }
         }
@@ -34,28 +35,21 @@ class Args extends Array {
 
     validate(pArgTemplates, pOnError) {
         let result = true;
-        for (const arg of this) {
-            let mandatory = false;
-            switch (typeof(arg.mandatory))
-            {
-                case "boolean":
-                    mandatory = arg.mandatory;
-                    break;
-                case "function":
-                    mandatory = arg.mandatory(this);
-                    break;
+        for (const argTemplate of pArgTemplates)
+            if (argTemplate.isMandatory(this)) {
+                const arg = this.find((lArg) => { return lArg.name === argTemplate.name; });
+                if (arg) {
+                    if (!arg.value)
+                        result = false;
+                } else
+                    result = false;
             }
-            if ((mandatory) && (!arg.value)) {
-                arg.valid = false;
-                result = false;
-            }
-        }
         if (!result)
             pOnError(pArgTemplates, this);
     }
 
     get(pName, pDefaultValue) {
-        const item = this.items.find((lItem) => { return lItem.name === pName; });
+        const item = this.find((lArg) => { return lArg.name === pName; });
         let value = null;
         if (item != null)
             value = item.value;

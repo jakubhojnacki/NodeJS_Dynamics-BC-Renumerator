@@ -39,12 +39,12 @@ class Application {
     parseArgs(pArgV) {
         const __this = this;
         const argTemplates = new ArgTemplates([
-            new ArgTemplate("f", ArgName.folderPath, DataType.string, true),
-            new ArgTemplate("r", ArgName.range, DataType.string, true),
-            new ArgTemplate("sp", ArgName.settingsFilePath, DataType.string, false),
-            new ArgTemplate("b", ArgName.backupMode, DataType.string, false),
-            new ArgTemplate("l", ArgName.logger, DataType.string, false),
-            new ArgTemplate("lp", ArgName.loggerFilePath, DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); })
+            new ArgTemplate("f", ArgName.folderPath, "Path of the folder to process", DataType.string, true),
+            new ArgTemplate("r", ArgName.range, "Range code to use for new objects", DataType.string, true),
+            new ArgTemplate("sp", ArgName.settingsFilePath, "Path of application settings file", DataType.string, false),
+            new ArgTemplate("b", ArgName.backupMode, "Application backup mode (\"none\", \"line\" or \"file\")", DataType.string, false),
+            new ArgTemplate("l", ArgName.logger, "Type of logger used (\"console\" or \"file\")", DataType.string, false),
+            new ArgTemplate("lp", ArgName.loggerFilePath, "File path for logger (if required)", DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); })
         ]);
         return Args.parse(pArgV, argTemplates, (lArgTemplates, lArgs) => { __this.parseArgs_onError(lArgTemplates, lArgs); });
     }
@@ -52,6 +52,7 @@ class Application {
     parseArgs_onError(pArgTemplates, pArgs) {
         const logger = LoggerFactory.create(LoggerType.console);
         pArgTemplates.log(logger, pArgs);
+        throw new Error("Arguments passed to the application are invalid.");
     }
 
     readSettings() {

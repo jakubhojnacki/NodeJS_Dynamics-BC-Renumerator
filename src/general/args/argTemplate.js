@@ -23,9 +23,27 @@ class ArgTemplate {
         this.mMandatory = Boolean.default(pMandatory);
     }
 
-    toString() {
-        return `-${this.tag} [${this.name}] - ${this.description} (Data Type: ${this.dataType}; Mandatory: ${this.mandatory})`;
+    toString(pArgs) {
+        if (pArgs)
+            return `-${this.tag} [${this.name}] - ${this.description} (Data Type: ${this.dataType}; Mandatory: ${this.isMandatory(pArgs)})`;
+        else
+            return `-${this.tag} [${this.name}] - ${this.description} (Data Type: ${this.dataType})`;
     }
+
+
+    isMandatory(pArgs) {
+        let mandatory = false;
+        switch (typeof(this.mandatory))
+        {
+            case "boolean":
+                mandatory = this.mandatory;
+                break;
+            case "function":
+                mandatory = this.mandatory(pArgs);
+                break;
+        }
+        return mandatory;
+    }    
 }
 
 module.exports = ArgTemplate;

@@ -15,7 +15,7 @@ class Arg {
     constructor(pName, pValue) {
         this.mName = String.default(pName);
         this.mValue = pValue;
-        this.mValid = Boolean.default(pValid);
+        this.mValid = true;
     }
 
     toString() {

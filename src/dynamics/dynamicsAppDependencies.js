@@ -10,12 +10,13 @@ const DynamicsAppDependency = include("/dynamics/dynamicsAppDependency");
 
 class DynamicsAppDependencies extends Array {
     constructor() {        
+        super()
     }
 
     log(pIndentation) {
         const logger = global.application.logger;
         logger.writeText("Dependencies:", pIndentation);
-        for (const dynamicsAppDependency in this)
+        for (const dynamicsAppDependency of this)
             logger.writeText(dynamicsAppDependency.toString(), pIndentation + logger.tab);
     }
 

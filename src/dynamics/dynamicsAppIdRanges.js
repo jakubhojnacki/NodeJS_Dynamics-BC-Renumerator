@@ -9,13 +9,14 @@ include("/general/javaScript");
 const DynamicsAppIdRange = include("/dynamics/dynamicsAppIdRange");
 
 class DynamicsAppIdRanges extends Array {
-    constructor() {                
+    constructor() {      
+        super()          
     }
 
     log(pIndentation) {
         const logger = global.application.logger;
         logger.writeText("ID Ranges:", pIndentation);
-        for (const dynamicsAppIdRange in this)
+        for (const dynamicsAppIdRange of this)
             logger.writeText(dynamicsAppIdRange.toString(), pIndentation + logger.tab);
     }
 

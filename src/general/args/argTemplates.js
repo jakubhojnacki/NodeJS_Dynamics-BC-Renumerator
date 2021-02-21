@@ -10,21 +10,22 @@ include("/general/javaScript");
 
 class ArgTemplates extends Array {
     constructor(pArgTemplateArray) {
+        super();
         if (pArgTemplateArray != null)
-            for (const argTemplate in pArgTemplateArray)
+            for (const argTemplate of pArgTemplateArray)
                 this.push(argTemplate);
     }
 
     log(pLogger, pArgs) {
-        logger.writeText("Arguments:");
+        pLogger.writeText("Arguments:");
         const indentation = pLogger.tab;
         for (const argTemplate of this) {
-            logger.writeText(argTemplate.toString(), indentation);
+            pLogger.writeText(argTemplate.toString(pArgs), indentation);
             const arg = pArgs.find((lArg) => { return lArg.name === argTemplate.name; });
             if (arg != null)
-                logger.writeText(`Passed: ${arg.value}; Correct: ${arg.validated}.`, indentation + pLogger.tab);
+                pLogger.writeText(`Passed: ${arg.value}; Correct: ${arg.valid}.`, indentation + pLogger.tab);
             else
-                logger.writeText("Not passed.");
+                pLogger.writeText("Not passed.", indentation + pLogger.tab);
         }
     }
 }
