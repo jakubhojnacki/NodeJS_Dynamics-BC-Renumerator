@@ -58,10 +58,10 @@ class Application {
         return LoggerFactory.create(loggerType, loggerFilePath);
     }
 
-    run() {
+    async run() {
         this.initialise();
         if (this.validate())
-            this.renumber();
+            await this.renumber();
         this.finalise();
     }
 
@@ -88,15 +88,15 @@ class Application {
         throw new Error("Arguments passed to the application are invalid.");
     }
 
-    renumber() {
+    async renumber() {
         const __this = this;
         this.logger.writeText("Renumbering:");
         const folderPath = this.args.get(ArgName.folderPath);
         const renumberationEngine = new RenumberationEngine(folderPath);
         renumberationEngine.onDynamicsApp = (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); };
         renumberationEngine.onFolder = (lFolderName, lIndentation) => { __this.renumber_onFolder(lFolderName, lIndentation); }; 
-        renumberationEngine.onFile = (lFileName, lIndentation) => { __this.renumber_onFile(lFileName, lIndentation); }; 
-        renumberationEngine.run();
+        renumberationEngine.onFile = (lFileName, lRenumbered, lRenumberator,lIndentation) => { __this.renumber_onFile(lFileName, lRenumbered, lRenumberator,lIndentation); }; 
+        await renumberationEngine.run();
     }
 
     renumber_onDynamicsApp(pDynamicsApp) {

@@ -6,9 +6,9 @@
 
 const path = require("path");
 __require("general/javaScript");
-const RenumberationHandler = __require("renumberation/renumberatotionHandler");
+const Renumberator = __require("renumberation/renumberator");
 
-class DynamicsAppManifestRenumberator extends RenumberationHandler {
+class DynamicsAppManifestRenumberator extends Renumberator {
     get name() { return "Dynamics AL App Manifest Renumberator"; }
 
     constructor() {

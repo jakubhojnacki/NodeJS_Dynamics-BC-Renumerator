@@ -30,11 +30,11 @@ class RenumberationEngine {
         this.mRenumberators = [];
     }
 
-    run() {
+    async run() {
         this.validate();
         this.readDynamicsApp();
         this.createRenumberators();
-        this.renumber();
+        await this.renumber();
     }
 
     validate() {
@@ -60,11 +60,11 @@ class RenumberationEngine {
         this.renumberators = RenumberatorFactory.create();
     }
 
-    renumber() {
+    async renumber() {
         this.renumberFolder(this.folderPath, 0);
     }
 
-    renumberFolder(pFolderPath, pIndentation) {
+    async renumberFolder(pFolderPath, pIndentation) {
         const folderName = pIndentation > 0 ? path.basename(pFolderPath) : "/";
         if (this.onFolder)
             this.onFolder(folderName, pIndentation);
@@ -72,18 +72,18 @@ class RenumberationEngine {
         for (const folderEntry of folderEntries) {
             const folderEntryPath = path.join(pFolderPath, folderEntry.name);
             if (folderEntry.isDirectory())
-                this.renumberFolder(folderEntryPath, pIndentation + 1);
+                await this.renumberFolder(folderEntryPath, pIndentation + 1);
             else 
                 if (folderEntry.isFile())
-                    this.renumberFile(folderEntryPath, pIndentation + 1); 
+                    await this.renumberFile(folderEntryPath, pIndentation + 1); 
         };
     }	   
     
-    renumberFile(pFilePath, pIndentation) {
+    async renumberFile(pFilePath, pIndentation) {
         let renumbered = false;
         const renumberator = this.findRenumberator(pFilePath);
         if (renumberator) {
-            renumberator.renumber(pFilePath);
+            await renumberator.renumber(pFilePath);
             renumbered = true;
         }
         const fileName = path.basename(pFilePath);
@@ -92,9 +92,9 @@ class RenumberationEngine {
     }
 
     findRenumberator(pFilePath) {
-        const renumberatorFound = null;
+        let renumberatorFound = null;
         for (const renumberator of this.renumberators)
-            if (handller.canRenumber(pFilePath)) {
+            if (renumberator.canRenumber(pFilePath)) {
                 renumberatorFound = renumberator;
                 break;
             }
