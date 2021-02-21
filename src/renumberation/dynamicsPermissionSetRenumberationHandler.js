@@ -18,7 +18,7 @@ class DynamicsPermissionSetRenumberationHandler extends RenumberationHandler {
     canHandle(pFileName) {
         let result = false;
         if (path.extname(pFileName).trim().toLowerCase() === ".xml") {
-
+            //TODO - Check if it is the right XML
         };
         return result;
     }
