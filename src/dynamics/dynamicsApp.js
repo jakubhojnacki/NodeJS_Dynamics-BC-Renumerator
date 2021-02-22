@@ -31,13 +31,10 @@ class DynamicsApp {
     static deserialise(pData) {
         let dynamicsApp = null;
         if (pData != null) {
-            const id = Guid.default(pData.id);
-            const name = String.default(pData.name);
-            const publisher = String.default(pData.publisher);
             const version = DynamicsAppVersion.parse(pData.version);
             const dependencies = DynamicsAppDependencies.deserialise(pData.dependencies);
             const idRanges = DynamicsAppIdRanges.deserialise(pData.idRanges);
-            dynamicsApp = new DynamicsApp(id, name, publisher, version, dependencies, idRanges);
+            dynamicsApp = new DynamicsApp(pData.id, pData.name, pData.publisher, version, dependencies, idRanges);
         }
         return dynamicsApp;
     }

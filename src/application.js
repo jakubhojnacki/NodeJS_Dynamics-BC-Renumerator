@@ -13,7 +13,7 @@ const ArgTemplates = __require("general/args/argTemplates");
 const DataType = __require("general/dataType");
 const LoggerFactory = __require("general/logging/loggerFactory");
 const LoggerType = __require("general/logging/loggerType");
-const RenumberationEngine = __require("renumberation/renumberationEngine");
+const Renumberation = __require("renumberation/renumberation");
 const Settings = __require("settings/settings");
 const StringBuilder = __require("general/stringBuilder");
 
@@ -92,22 +92,22 @@ class Application {
         const __this = this;
         this.logger.writeText("Renumbering:");
         const folderPath = this.args.get(ArgName.folderPath);
-        const renumberationEngine = new RenumberationEngine(folderPath);
-        renumberationEngine.onDynamicsApp = (lDynamicsApp) => { __this.renumber_onDynamicsApp(lDynamicsApp); };
-        renumberationEngine.onFolder = (lFolderName, lIndentation) => { __this.renumber_onFolder(lFolderName, lIndentation); }; 
-        renumberationEngine.onFile = (lFileName, lRenumbered, lRenumberator,lIndentation) => { __this.renumber_onFile(lFileName, lRenumbered, lRenumberator,lIndentation); }; 
-        await renumberationEngine.run();
+        const renumberation = new Renumberation(folderPath);
+        renumberation.onDynamicsApp = (lDynamicsApp) => { __this.renumberation_onDynamicsApp(lDynamicsApp); };
+        renumberation.onFolder = (lFolderName, lIndentation) => { __this.renumberation_onFolder(lFolderName, lIndentation); }; 
+        renumberation.onFile = (lFileName, lRenumbered, lRenumberator,lIndentation) => { __this.renumberation_onFile(lFileName, lRenumbered, lRenumberator,lIndentation); }; 
+        await renumberation.run();
     }
 
-    renumber_onDynamicsApp(pDynamicsApp) {
+    renumberation_onDynamicsApp(pDynamicsApp) {
         pDynamicsApp.log(this.logger.tab);
     }
 
-    renumber_onFolder(pFolderName, pIndentation) {
+    renumberation_onFolder(pFolderName, pIndentation) {
         this.logger.writeText(StringBuilder.nameValue("Folder", pFolderName), (pIndentation + 1) * this.logger.tab);
     }
 
-    renumber_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
+    renumberation_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
         const stringBuilder = new StringBuilder();
         stringBuilder.addNameValue("File", pFileName);
         if (pRenumbered)

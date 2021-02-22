@@ -18,11 +18,8 @@ class DynamicsAppIdRange {
 
     static deserialise(pData) {
         let dynamicsAppIdRange = null;
-        if (pData != null) {
-            const from = Number.default(pData.from);
-            const to = Number.default(pData.to);
-            dynamicsAppIdRange = new DynamicsAppIdRange(from, to);
-        }
+        if (pData != null)
+            dynamicsAppIdRange = new DynamicsAppIdRange(pData.from, pData.to);
         return dynamicsAppIdRange;
     }
 

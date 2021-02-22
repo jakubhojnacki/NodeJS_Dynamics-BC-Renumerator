@@ -26,10 +26,8 @@ class DynamicsAppDependency {
         let dynamicsAppDependency = null;
         if (pData != null) {
             const id = (pData.id ? pData.id : pData.appId);
-            const name = pData.name;
-            const publisher = pData.publisher;
             const version = DynamicsAppVersion.parse(pData.version);
-            dynamicsAppDependency = new DynamicsAppDependency(id, name, publisher, version);
+            dynamicsAppDependency = new DynamicsAppDependency(id, pData.name, pData.publisher, version);
         }
         return dynamicsAppDependency;
     }

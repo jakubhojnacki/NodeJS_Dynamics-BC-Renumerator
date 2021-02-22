@@ -1,5 +1,5 @@
 /**
- * @module "RenumberationEngine" class
+ * @module "Renumberation" class
  * @description Performs renumberation of Dynamics objects
  * @version 0.0.1 (2021-02-18)
  */
@@ -8,9 +8,10 @@ const fs = require("fs");
 const path = require("path");
 __require("general/javaScript");
 const DynamicsApp = __require("dynamics/dynamicsApp");
+const DynamicsObjects = __require("dynamics/dynamicsObjects");
 const RenumberatorFactory = __require("renumberation/renumberatorFactory");
 
-class RenumberationEngine {
+class Renumberation {
     get folderPath() { return this.mFolderPath; }
     get dynamicsApp() { return this.mDynamicsApp; }
     set dynamicsApp(pValue) { this.mDynamicsApp = pValue; }
@@ -27,12 +28,14 @@ class RenumberationEngine {
     constructor(pFolderPath) {
         this.mFolderPath = String.default(pFolderPath);
         this.mDynamicsApp = null;
+        this.mDynamicsObjects = new DynamicsObjects();
         this.mRenumberators = [];
     }
 
     async run() {
         this.validate();
         this.readDynamicsApp();
+        this.readDynamicsObjects();
         this.createRenumberators();
         await this.renumber();
     }
@@ -54,6 +57,10 @@ class RenumberationEngine {
                 this.onDynamicsApp(this.dynamicsApp);
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
+    }
+
+    readDynamicsObjects() {
+        //TODO - Not implemented
     }
 
     createRenumberators() {
@@ -102,4 +109,4 @@ class RenumberationEngine {
     }
 }
 
-module.exports = RenumberationEngine;
+module.exports = Renumberation;

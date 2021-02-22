@@ -22,9 +22,11 @@ class Settings {
     }
 
     static deserialise(pData) {
-        let settings = new Settings();
-        if (pData != null)
-            settings.mWebService = WebServiceSettings.deserialise(pData.webService);
+        let settings = null;
+        if (pData != null) {
+            const webService = WebServiceSettings.deserialise(pData.webService);
+            settings = new Settings(webService);
+        }
         return settings;
     }
 

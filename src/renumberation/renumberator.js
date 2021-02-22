@@ -8,27 +8,31 @@
 __require("general/javaScript");
 
 /*abstract*/ class Renumberator {
+    get filePath() { return this.mFilePath; }
+    set filePath(pValue) { this.mFilePath = pValue; }
     get newFilePath() { return this.mNewFilePath; }
     set newFilePath(pValue) { this.mNewFilePath = pValue; }
     get newFile() { return this.mNewFile; }
     set newFile(pValue) { this.mNewFile = pValue; }
 
     constructor() {
+        this.mFilePath = "";
         this.mNewFilePath = "";
         this.mNewFile = null;
     }
 
-    createNewFile(pFilePath) {
-        this.newFilePath = pFilePath + '.tmp';
+    createNewFile() {
+        this.newFilePath = this.filePath + '.tmp';
         if (fs.existsSync(newFilePath))
             fs.unlinkSync(newFilePath);
         this.newFile = fs.createWriteStream(this.newFilePath, { flags: "a" });
     }
 
-    overwriteFileWithNewFile(pFilePath) {
+    overwriteFileWithNewFile() {
         this.newFile.close();
-        fs.unlinkSync(pFilePath);
-        fs.renameSync(this.newFilePath, pFilePath);
+        fs.unlinkSync(this.filePath);
+        fs.renameSync(this.newFilePath, this.filePath);
+        this.filePath = this.newFilePath;
         this.newFilePath = "";
         this.newFile = null;
     }

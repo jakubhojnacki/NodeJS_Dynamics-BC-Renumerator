@@ -9,7 +9,7 @@ const DynamicsAppDependency = __require("dynamics/dynamicsAppDependency");
 
 class DynamicsAppDependencies extends Array {
     constructor() {        
-        super()
+        super();
     }
 
     log(pIndentation) {
@@ -19,10 +19,6 @@ class DynamicsAppDependencies extends Array {
         for (const dynamicsAppDependency of this)
             logger.writeText(dynamicsAppDependency.toString(), indentation + logger.tab);
     }
-
-    static default(pValue, pDefault) {
-        return pValue != null ? pValue : (pDefault != null ? pDefault : []);
-    } 
     
     static deserialise(pData) {
         let dynamicsAppDependencies = new DynamicsAppDependencies();

@@ -19,10 +19,6 @@ class DynamicsAppIdRanges extends Array {
         for (const dynamicsAppIdRange of this)
             logger.writeText(dynamicsAppIdRange.toString(), indentation + logger.tab);
     }
-
-    static default(pValue, pDefault) {
-        return pValue != null ? pValue : (pDefault != null ? pDefault : []);
-    } 
     
     static deserialise(pData) {
         let dynamicsAppIdRanges = new DynamicsAppIdRanges();

@@ -23,13 +23,8 @@ class WebServiceSettings {
 
     static deserialise(pData) {
         let webServiceSettings = new WebServiceSettings();
-        if (pData != null) {
-            const url = String.default(pData.url);
-            const user = String.default(pData.user);
-            const password = String.default(pData.password);
-            const type = WebServiceType.parse(pData.type);
-            webServiceSettings = new WebServiceSettings(url, user, password, type);
-        }
+        if (pData != null)
+            webServiceSettings = new WebServiceSettings(pData.url, pData.user, pData.password, pData.type);
         return webServiceSettings;
     }    
 
