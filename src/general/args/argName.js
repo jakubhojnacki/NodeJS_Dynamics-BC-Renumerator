@@ -12,6 +12,7 @@
     static get range() { return "Range"; }
     static get settingsFilePath() { return "SettingsFilePath"; }
     static get endOfLineType() { return "EndOfLineType"; }
+    static get debugMode() { return "DebugMode"; }
 }
 
 module.exports = ArgName;

@@ -36,17 +36,21 @@ class Application {
             new ArgTemplate("l", ArgName.logger, "Type of logger used (\"console\" or \"file\")", DataType.string, false),
             new ArgTemplate("lp", ArgName.loggerFilePath, "File path for logger (if required)", DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); }),
             new ArgTemplate("e", ArgName.endOfLineType, "Type of end-of-line used (\"linux\" or \"windows\")", DataType.string, false),
+            new ArgTemplate("d", ArgName.debugMode, "Defines debug mode (\"true\" or \"false\")", DataType.boolean, false)
         ]);        
     }
 
     get args() { return this.mArgs; }
     get settings() { return this.mSettings; }
     get logger() { return this.mLogger; }
+    get debugMode() { return this.mDebugMode; }
+    set debugMode(pValue) { this.mDebugMode = pValue; }
 
     constructor(pArgV) {
         this.mArgs = Args.parse(pArgV, Application.argTemplates);
         this.mSettings = this.readSettings();
         this.mLogger = this.createLogger();            
+        this.mDebugMode = false;
     }
 
     readSettings() {
@@ -61,13 +65,19 @@ class Application {
     }
 
     async run() {
-        this.initialise();
-        if (this.validate())
-            await this.renumber();
-        this.finalise();
+        try {
+            this.initialise();
+            if (this.validate())
+                await this.renumber();
+        } catch (eError) {
+            this.logger.writeText(this.debugMode ? eError.stack : `Error: ${eError.message}`);
+        } finally {
+            this.finalise();
+        }
     }
 
     initialise() {
+        this.debugMode = this.args ? this.args.get(ArgName.debugMode, false) : false;
         this.logger.writeText(Application.information.toString());
         this.logger.writeSeparator();
         this.args.log();

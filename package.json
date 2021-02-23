@@ -1,5 +1,8 @@
 {
-  "dependencies": {
-    "xmldoc": "^1.1.2"
-  }
+    "dependencies": {
+        "xmldoc": "^1.1.2"
+    },
+    "scripts": {
+        "debug": "node test.js"
+    }
 }

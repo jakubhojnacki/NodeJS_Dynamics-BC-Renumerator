@@ -45,6 +45,13 @@ class DynamicsAlRenumberator extends Renumberator {
                 "(?<prefix>\\s*)(?<type>tableextension|pageextension|enumextension)\\s*(?<id>\\d+)\\s*(?<name>.+)\\s*extends(?<extends>.+)(?<suffix>.*)",
                 RegExpFlag.ignoreCase,
                 "${prefix}${type} ${renumberedId} \"${name}\" extends \"${extends}\"${suffix}"
+            ),
+            new RegExpTemplate(
+                DynamicsAlRegExpTemplateName.tableField,
+                "Table Field",
+                "(?<prefix>\\s*)field\\(\\s*(?<id>\\d+);\\s*(?<name>.+);\\s*(?<dataType>.+)\\)(?<suffix>.*)",
+                RegExpFlag.ignoreCase,
+                "${prefix}field(${renumberedId}; ${name}; ${dataType})${suffix}"
             )
         ]);
         this.mDynamicsObject = null;
@@ -131,7 +138,8 @@ class DynamicsAlRenumberator extends Renumberator {
     parseDynamicsObjectField(pMatch) {
         const id = Number.tryToParseInt(pMatch.namedGroups.id);
         const name = pMatch.namedGroups.name;
-        this.dynamicsObjectField = new DynamicsObjectField(type, id, name);
+        const dataType = pMatch.namedGroups.dataType;
+        this.dynamicsObjectField = new DynamicsObjectField(id, name, dataType);
     }
 
     async renumberDynamicsObjectField() {

@@ -18,7 +18,8 @@ const Application = __require("application");
     const argv = [ 
         "-f", `${__dirname}/../Dynamics Renumberator Raw/Test 1`,
         "-r", "SAAS",
-        "-e", "linux"
+        "-e", "linux",
+        "-d", "true"
     ];
     global.application = new Application(argv);
     global.application.run();

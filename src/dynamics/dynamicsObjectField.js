@@ -8,8 +8,11 @@ __require("general/javaScript");
 const DynamicsEntity = __require("dynamics/dynamicsEntity");
 
 class DynamicsObjectField extends DynamicsEntity {
-    constructor(pId, pName, pRenumberedId) {
+    get dataType() { return this.mDataType; }
+
+    constructor(pId, pName, pDataType, pRenumberedId) {
         super(pId, pName, pRenumberedId);
+        this.mDataType = String.default(pDataType);
     }
 
     static deserialise(pData) {
