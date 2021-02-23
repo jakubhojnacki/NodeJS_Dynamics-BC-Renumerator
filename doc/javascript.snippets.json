@@ -72,7 +72,7 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"__require(\"/general/javaScript\");",
+			"__require(\"general/javaScript\");",
 			"",
 			"class $1 {",
 			"    constructor() {",
@@ -86,7 +86,7 @@
 	"Require": {
 		"prefix": "xreq",
 		"body": [
-			"const ${1/(.)(.*)/${1:/upcase}$2/} = __require(\"/${1/(.)(.*)/${1:/downcase}$2/}\");"
+			"const ${1/(.)(.*)/${1:/upcase}$2/} = __require(\"${1/(.)(.*)/${1:/downcase}$2/}\");"
 		]
 	},
 
@@ -102,7 +102,7 @@
 	"JavaScript": {
 		"prefix": "xjavscr",
 		"body": [
-			"__require(\"/general/javaScript\");"
+			"__require(\"general/javaScript\");"
 		]
 	},
 

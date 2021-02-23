@@ -8,6 +8,7 @@
 __require("general/javaScript");
 
 /*abstract*/ class Renumberator {
+    get renumberation() { return this.mRenumberation; }
     get filePath() { return this.mFilePath; }
     set filePath(pValue) { this.mFilePath = pValue; }
     get newFilePath() { return this.mNewFilePath; }
@@ -15,7 +16,8 @@ __require("general/javaScript");
     get newFile() { return this.mNewFile; }
     set newFile(pValue) { this.mNewFile = pValue; }
 
-    constructor() {
+    constructor(pRenumberation) {
+        this.mRenumberation = pRenumberation;
         this.mFilePath = "";
         this.mNewFilePath = "";
         this.mNewFile = null;
@@ -23,8 +25,8 @@ __require("general/javaScript");
 
     createNewFile() {
         this.newFilePath = this.filePath + '.tmp';
-        if (fs.existsSync(newFilePath))
-            fs.unlinkSync(newFilePath);
+        if (fs.existsSync(this.newFilePath))
+            fs.unlinkSync(this.newFilePath);
         this.newFile = fs.createWriteStream(this.newFilePath, { flags: "a" });
     }
 

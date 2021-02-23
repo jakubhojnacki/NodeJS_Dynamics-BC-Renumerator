@@ -11,8 +11,8 @@ const Renumberator = __require("renumberation/renumberator");
 class DynamicsAppManifestRenumberator extends Renumberator {
     get name() { return "Dynamics AL App Manifest Renumberator"; }
 
-    constructor() {
-        super();
+    constructor(pRenumberation) {
+        super(pRenumberation);
     }
 
     canRenumber(pFilePath) {
@@ -20,7 +20,7 @@ class DynamicsAppManifestRenumberator extends Renumberator {
     }
 
     renumber(pFilePath) {
-        
+        //TODO - Not implemented
     }
 }
 

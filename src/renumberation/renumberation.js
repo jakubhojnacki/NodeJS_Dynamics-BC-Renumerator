@@ -8,13 +8,19 @@ const fs = require("fs");
 const path = require("path");
 __require("general/javaScript");
 const DynamicsApp = __require("dynamics/dynamicsApp");
+const DynamicsManager = __require("dynamics/dynamicsManager");
 const DynamicsObjects = __require("dynamics/dynamicsObjects");
+const EndOfLineType = __require("general/endOfLineType");
 const RenumberatorFactory = __require("renumberation/renumberatorFactory");
 
 class Renumberation {
     get folderPath() { return this.mFolderPath; }
+    get endOfLineType() { return this.mEndOfLineType; }
+    get dynamicsManager() { return this.mDynamicsManager; }
     get dynamicsApp() { return this.mDynamicsApp; }
     set dynamicsApp(pValue) { this.mDynamicsApp = pValue; }
+    get dynamicsObjects() { return this.mDynamicsObjects; }
+    set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
     get renumberators() { return this.mRenumberators; }
     set renumberators(pValue) { this.mRenumberators = pValue; }
 
@@ -25,18 +31,20 @@ class Renumberation {
     get onFile() { return this.mOnFile; }
     set onFile(pValue) { this.mOnFile = pValue; }
 
-    constructor(pFolderPath) {
+    constructor(pFolderPath, pEndOfLineType) {
         this.mFolderPath = String.default(pFolderPath);
+        this.mEndOfLineType = EndOfLineType.parse(String.default(pEndOfLineType));
+        this.mDynamicsManager = new DynamicsManager();
         this.mDynamicsApp = null;
-        this.mDynamicsObjects = new DynamicsObjects();
+        this.mDynamicsObjects = null;
         this.mRenumberators = [];
     }
 
     async run() {
         this.validate();
         this.readDynamicsApp();
-        this.readDynamicsObjects();
-        this.createRenumberators();
+        await this.dynamicsManager.readObjects();
+        this.renumberators = RenumberatorFactory.create(this);
         await this.renumber();
     }
 
@@ -59,16 +67,8 @@ class Renumberation {
             throw new Error("Dynamics application manifest (app.json) is missing.");
     }
 
-    readDynamicsObjects() {
-        //TODO - Not implemented
-    }
-
-    createRenumberators() {
-        this.renumberators = RenumberatorFactory.create();
-    }
-
     async renumber() {
-        this.renumberFolder(this.folderPath, 0);
+        await this.renumberFolder(this.folderPath, 0);
     }
 
     async renumberFolder(pFolderPath, pIndentation) {

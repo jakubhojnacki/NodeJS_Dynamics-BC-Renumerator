@@ -11,6 +11,7 @@ const Args = __require("general/args/args");
 const ArgTemplate = __require("general/args/argTemplate");
 const ArgTemplates = __require("general/args/argTemplates");
 const DataType = __require("general/dataType");
+const EndOfLineType = __require("general/endOfLineType");
 const LoggerFactory = __require("general/logging/loggerFactory");
 const LoggerType = __require("general/logging/loggerType");
 const Renumberation = __require("renumberation/renumberation");
@@ -33,7 +34,8 @@ class Application {
             new ArgTemplate("sp", ArgName.settingsFilePath, "Path of application settings file", DataType.string, false),
             new ArgTemplate("b", ArgName.backupMode, "Application backup mode (\"none\", \"line\" or \"file\")", DataType.string, false),
             new ArgTemplate("l", ArgName.logger, "Type of logger used (\"console\" or \"file\")", DataType.string, false),
-            new ArgTemplate("lp", ArgName.loggerFilePath, "File path for logger (if required)", DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); })
+            new ArgTemplate("lp", ArgName.loggerFilePath, "File path for logger (if required)", DataType.string, (lArgs) => { return lArgs.get(ArgName.logger, false); }),
+            new ArgTemplate("e", ArgName.endOfLineType, "Type of end-of-line used (\"linux\" or \"windows\")", DataType.string, false),
         ]);        
     }
 
@@ -92,7 +94,8 @@ class Application {
         const __this = this;
         this.logger.writeText("Renumbering:");
         const folderPath = this.args.get(ArgName.folderPath);
-        const renumberation = new Renumberation(folderPath);
+        const endOfLineType = this.args.get(ArgName.endOfLineType, EndOfLineType.linux);
+        const renumberation = new Renumberation(folderPath, endOfLineType);
         renumberation.onDynamicsApp = (lDynamicsApp) => { __this.renumberation_onDynamicsApp(lDynamicsApp); };
         renumberation.onFolder = (lFolderName, lIndentation) => { __this.renumberation_onFolder(lFolderName, lIndentation); }; 
         renumberation.onFile = (lFileName, lRenumbered, lRenumberator,lIndentation) => { __this.renumberation_onFile(lFileName, lRenumbered, lRenumberator,lIndentation); }; 

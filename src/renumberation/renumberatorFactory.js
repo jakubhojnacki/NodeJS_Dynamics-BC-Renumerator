@@ -10,11 +10,11 @@ const DynamicsAppManifestRenumberator = __require("renumberation/dynamicsAppMani
 const DynamicsPermissionSetRenumberator = __require("renumberation/dynamicsPermissionSetRenumberator");
 
 /*static*/ class RenumberatorFactory {
-    static create() {
+    static create(pRenumberation) {
         return [
-            new DynamicsAppManifestRenumberator(),
-            new DynamicsAlRenumberator(),
-            new DynamicsPermissionSetRenumberator()
+            new DynamicsAppManifestRenumberator(pRenumberation),
+            new DynamicsAlRenumberator(pRenumberation),
+            new DynamicsPermissionSetRenumberator(pRenumberation)
         ];
     }
 }

@@ -4,9 +4,9 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-const RegExpMatch = require("./regExpMatch");
-
-__require("/general/javaScript");
+__require("general/javaScript");
+const RegExpFlag = __require("regExp/regExpFlag");
+const RegExpMatch = __require("regExp/regExpMatch");
 
 class RegExpSchema {
     get templates() { return this.mTemplates; }
@@ -28,8 +28,19 @@ class RegExpSchema {
         return result;
     }
 
-    replace(pString, pMatch, pReplacements) {
-        //TODO - Not implemented
+    replace(pString, pReplacements) {
+        let newString = pString;
+        let regExp = new RegExp("(?<type>${\w+})", RegExpFlag.ignoreCase);
+        let match = regExp.exec(newString);
+        while(match != null) {
+            const placeholder = match[0].removeIfStartsWith("${").removeIfEndsWith("}");
+            const value = String.deafult(pReplacements[placeholder]);
+            const newStringStart = match.index > 0 ? newString.substr(0, match.index) : "";
+            const newStringEnd = match.index + match[0].length < newString.length ? newString.substr(match.index + match[0].length) : "";
+            newString = newStringStart + value + newStringEnd;
+            match = regExp.exec(newString);
+        }
+        return newString;
     }
 }
 

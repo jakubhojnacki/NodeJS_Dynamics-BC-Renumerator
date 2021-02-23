@@ -4,17 +4,20 @@
  * @version 0.0.1 (2021-02-22)
  */
 
+
 __require("general/javaScript");
+const DynamicsObjects = __require("/dynamics/dynamicsObjects");
 
 class DynamicsManager {
     get objects() { return this.mObjects; }
+    set objects(pValue) { this.mObjects = pValue; }
 
     constructor() {
         this.mObjects = null;
     }
 
-    async readObjects() {
-        //TODO - Not implemented
+    async readObjects() {        
+        this.objects = new DynamicsObjects(); //TODO - Not implemented
     }
 
     getObject(pType, pId) {
@@ -22,11 +25,11 @@ class DynamicsManager {
     }
 
     async reserveObject(pType) {
-        //TODO - Not implemented
+        return 0; //TODO - Not implemented
     }
 
-    async reserveObjectField(pObjectType, pObjectId) {
-        //TODO - Not implemented
+    async reserveObjectField(pObjectType, pObjectId) {        
+        return 0; //TODO - Not implemented
     }
 }
 

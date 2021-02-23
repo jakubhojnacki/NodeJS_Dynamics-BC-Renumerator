@@ -5,6 +5,8 @@
  */
 
 __require("general/javaScript");
+const Enum = __require("general/enum");
+const EnumValue = __require("general/enumValue");
 
 /*static*/ class DynamicsObjectType {
     static get table() { return "table"; }

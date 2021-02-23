@@ -11,6 +11,7 @@
     static get loggerFilePath() { return "LoggerFilePath"; }
     static get range() { return "Range"; }
     static get settingsFilePath() { return "SettingsFilePath"; }
+    static get endOfLineType() { return "EndOfLineType"; }
 }
 
 module.exports = ArgName;

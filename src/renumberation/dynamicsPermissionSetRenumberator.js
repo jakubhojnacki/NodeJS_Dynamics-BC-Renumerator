@@ -13,8 +13,8 @@ const Renumberator = __require("renumberation/renumberator");
 class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Dynamics AL Permission Set Renumberator"; }
 
-    constructor() {
-        super();
+    constructor(pRenumberation) {
+        super(pRenumberation);
     }
     
     canRenumber(pFilePath) {
@@ -28,7 +28,7 @@ class DynamicsPermissionSetRenumberator extends Renumberator {
     }
 
     renumber(pFilePath) {
-        
+        //TODO - Not implemented
     }
 }
 

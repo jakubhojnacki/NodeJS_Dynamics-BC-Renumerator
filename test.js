@@ -11,9 +11,14 @@ module.exports = (global.__require = (lPath) => { return require(`${global.__src
 const Application = __require("application");
 
 (() => {
+    // const argv = [ 
+    //     "-f", "/home/Development/Node.js/Dynamics Renumberator Raw/Asset_nHanced-ID-Manager",
+    //     "-r", "SAAS"
+    // ];
     const argv = [ 
-        "-f", "/home/Development/Node.js/Dynamics Renumberator Raw/Asset_nHanced-ID-Manager",
-        "-r", "SAAS"
+        "-f", `${__dirname}/../Dynamics Renumberator Raw/Test 1`,
+        "-r", "SAAS",
+        "-e", "linux"
     ];
     global.application = new Application(argv);
     global.application.run();
