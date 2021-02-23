@@ -6,14 +6,16 @@
 
 const fs = require("fs");
 const path = require("path");
-__require("general/javaScript");
-const DynamicsApp = __require("dynamics/dynamicsApp");
-const DynamicsManager = __require("dynamics/dynamicsManager");
-const DynamicsObjects = __require("dynamics/dynamicsObjects");
-const EndOfLineType = __require("general/endOfLineType");
-const RenumberatorFactory = __require("renumberation/renumberatorFactory");
+
+require("../general/javaScript");
+
+const DynamicsApp = require("../dynamics/dynamicsApp");
+const DynamicsManager = require("../dynamics/dynamicsManager");
+const EndOfLineType = require("../general/endOfLineType");
+const RenumberatorFactory = require("./renumberatorFactory");
 
 class Renumberation {
+    get tempExtension() { return ".tmp"; }    
     get folderPath() { return this.mFolderPath; }
     get endOfLineType() { return this.mEndOfLineType; }
     get dynamicsManager() { return this.mDynamicsManager; }
@@ -43,6 +45,7 @@ class Renumberation {
     async run() {
         this.validate();
         this.readDynamicsApp();
+        await this.dynamicsManager.readApps();
         await this.dynamicsManager.readObjects();
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumber();
@@ -87,25 +90,17 @@ class Renumberation {
     }	   
     
     async renumberFile(pFilePath, pIndentation) {
-        let renumbered = false;
-        const renumberator = this.findRenumberator(pFilePath);
-        if (renumberator) {
-            await renumberator.renumber(pFilePath);
-            renumbered = true;
-        }
-        const fileName = path.basename(pFilePath);
-        if (this.onFile)
-            this.onFile(fileName, renumbered, renumberator, pIndentation);
-    }
-
-    findRenumberator(pFilePath) {
-        let renumberatorFound = null;
-        for (const renumberator of this.renumberators)
-            if (renumberator.canRenumber(pFilePath)) {
-                renumberatorFound = renumberator;
-                break;
+        if (path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
+            let renumbered = false;
+            const renumberator = this.renumberators.find((lRenumberator) => { return lRenumberator.canRenumber(pFilePath); });
+            if (renumberator) {
+                await renumberator.renumber(pFilePath);
+                renumbered = true;
             }
-        return renumberatorFound;
+            const fileName = path.basename(pFilePath);
+            if (this.onFile)
+                this.onFile(fileName, renumbered, renumberator, pIndentation);
+        }
     }
 }
 

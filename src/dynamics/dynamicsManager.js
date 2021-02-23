@@ -4,16 +4,33 @@
  * @version 0.0.1 (2021-02-22)
  */
 
+require("../general/javaScript");
 
-__require("general/javaScript");
-const DynamicsObjects = __require("/dynamics/dynamicsObjects");
+const DynamicsApps = require("./dynamicsApps");
+const DynamicsObjects = require("./dynamicsObjects");
+const Guid = require("../general/guid");
 
 class DynamicsManager {
+    get apps() { return this.mApps; }
+    set apps(pValue) { this.mApps = pValue; }
     get objects() { return this.mObjects; }
     set objects(pValue) { this.mObjects = pValue; }
 
     constructor() {
+        this.mApps = null;
         this.mObjects = null;
+    }
+
+    async readApps() {
+        this.apps = new DynamicsApps(); //TODO - Not implemented
+    }
+
+    getApp(pId) {
+        return this.apps != null ? this.apps.get(pId) : null;
+    }
+
+    async createNewAppId() {
+        return Guid.new();
     }
 
     async readObjects() {        

@@ -4,10 +4,11 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-__require("general/javaScript");
-const DynamicsEntity = __require("dynamics/dynamicsEntity");
-const DynamicsObjectType = __require("dynamics/dynamicsObjectType");
-const DynamicsObjectFields = __require("dynamics/dynamicsObjectFields");
+require("../general/javaScript");
+
+const DynamicsEntity = require("./dynamicsEntity");
+const DynamicsObjectType = require("./dynamicsObjectType");
+const DynamicsObjectFields = require("./dynamicsObjectFields");
 
 class DynamicsObject extends DynamicsEntity {
     get type() { return this.mType; }

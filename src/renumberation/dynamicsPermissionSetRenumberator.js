@@ -7,8 +7,10 @@
 const fs = require("fs");
 const path = require("path");
 const xmldoc = require("xmldoc");
-__require("general/javaScript");
-const Renumberator = __require("renumberation/renumberator");
+
+require("../general/javaScript");
+
+const Renumberator = require("./renumberator");
 
 class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Dynamics AL Permission Set Renumberator"; }

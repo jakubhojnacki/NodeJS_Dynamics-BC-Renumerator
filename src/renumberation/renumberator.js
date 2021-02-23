@@ -4,8 +4,9 @@
  * @version 0.0.1 (2021-02-21)
  */
 
- const fs = require("fs");
-__require("general/javaScript");
+const fs = require("fs");
+
+require("../general/javaScript");
 
 /*abstract*/ class Renumberator {
     get renumberation() { return this.mRenumberation; }
@@ -24,7 +25,7 @@ __require("general/javaScript");
     }
 
     createNewFile() {
-        this.newFilePath = this.filePath + '.tmp';
+        this.newFilePath = this.filePath + this.renumberation.tempExtension;
         if (fs.existsSync(this.newFilePath))
             fs.unlinkSync(this.newFilePath);
         this.newFile = fs.createWriteStream(this.newFilePath, { flags: "a" });

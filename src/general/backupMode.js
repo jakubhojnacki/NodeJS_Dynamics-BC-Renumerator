@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-__require("general/javaScript");
-const Enum = __require("general/enum");
-const EnumValue = __require("general/enumValue");
+require("./javaScript");
+
+const Enum = require("./enum");
+const EnumValue = require("./enumValue");
 
 /*static*/ class BackupMode {
     static get file() { return "file"; }

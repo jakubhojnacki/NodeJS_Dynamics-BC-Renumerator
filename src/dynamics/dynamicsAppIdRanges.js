@@ -4,8 +4,9 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("general/javaScript");
-const DynamicsAppIdRange = __require("dynamics/dynamicsAppIdRange");
+require("../general/javaScript");
+
+const DynamicsAppIdRange = require("./dynamicsAppIdRange");
 
 class DynamicsAppIdRanges extends Array {
     constructor() {      
@@ -27,6 +28,14 @@ class DynamicsAppIdRanges extends Array {
                 dynamicsAppIdRanges.push(DynamicsAppIdRange.deserialise(data));
         return dynamicsAppIdRanges;
     }
+
+    inject(pData) {
+        for (let data of pData) {
+            const idRange = this.find((lIdRange) => { return ((lIdRange.from === data.from) && (lIdRange.to === data.to)); });
+            if (idRange)
+                idRange.inject(data);
+        }
+    } 
 }
 
 module.exports = DynamicsAppIdRanges;

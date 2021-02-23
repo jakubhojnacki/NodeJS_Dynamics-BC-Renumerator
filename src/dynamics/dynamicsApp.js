@@ -4,12 +4,13 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("general/javaScript");
-const DynamicsAppDependencies = __require("dynamics/dynamicsAppDependencies");
-const DynamicsAppIdRanges = __require("dynamics/dynamicsAppIdRanges");
-const DynamicsAppVersion = __require("dynamics/dynamicsAppVersion");
-const Guid = __require("general/guid");
-const StringBuilder = __require("general/stringBuilder");
+require("../general/javaScript");
+
+const DynamicsAppDependencies = require("./dynamicsAppDependencies");
+const DynamicsAppIdRanges = require("./dynamicsAppIdRanges");
+const DynamicsAppVersion = require("./dynamicsAppVersion");
+const Guid = require("../general/guid");
+const StringBuilder = require("../general/stringBuilder");
 
 class DynamicsApp {
     get id() { return this.mId; }
@@ -18,14 +19,17 @@ class DynamicsApp {
     get version() { return this.mVersion; }
     get dependencies() { return this.mDependencies; }
     get idRanges() { return this.mIdRanges; }
+    get renumberedId() { return this.mRenumberedId; }
+    set renumberedId(pValue) { this.mRenumberedId = pValue; }
 
-    constructor(pId, pName, pPublisher, pVersion, pDependencies, pIdRanges) {
+    constructor(pId, pName, pPublisher, pVersion, pDependencies, pIdRanges, pRenumberedId) {
         this.mId = Guid.default(pId);
         this.mName = String.default(pName);
         this.mPublisher = String.default(pPublisher);
         this.mVersion = DynamicsAppVersion.default(pVersion);
         this.mDependencies = DynamicsAppDependencies.default(pDependencies);
         this.mIdRanges = DynamicsAppIdRanges.default(pIdRanges);
+        this.mRenumberedId = Guid.default(pRenumberedId);
     }
 
     static deserialise(pData) {
@@ -37,6 +41,12 @@ class DynamicsApp {
             dynamicsApp = new DynamicsApp(pData.id, pData.name, pData.publisher, version, dependencies, idRanges);
         }
         return dynamicsApp;
+    }
+
+    inject(pData) {
+        pData.id = this.renumberedId;
+        this.dependencies.inject(pData.dependencies);
+        this.idRanges.inject(pData.idRanges);
     }
 
     log(pIndentation) {

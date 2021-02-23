@@ -4,19 +4,20 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("general/javaScript");
-const ApplicationInformation = __require("applicationInformation");
-const ArgName = __require("general/args/argName");
-const Args = __require("general/args/args");
-const ArgTemplate = __require("general/args/argTemplate");
-const ArgTemplates = __require("general/args/argTemplates");
-const DataType = __require("general/dataType");
-const EndOfLineType = __require("general/endOfLineType");
-const LoggerFactory = __require("general/logging/loggerFactory");
-const LoggerType = __require("general/logging/loggerType");
-const Renumberation = __require("renumberation/renumberation");
-const Settings = __require("settings/settings");
-const StringBuilder = __require("general/stringBuilder");
+require("../general/javaScript");
+
+const ApplicationInformation = require("./applicationInformation");
+const ArgName = require("../args/argName");
+const Args = require("../args/args");
+const ArgTemplate = require("../args/argTemplate");
+const ArgTemplates = require("../args/argTemplates");
+const DataType = require("../general/dataType");
+const EndOfLineType = require("../general/endOfLineType");
+const LoggerFactory = require("../logging/loggerFactory");
+const LoggerType = require("../logging/loggerType");
+const Renumberation = require("../renumberation/renumberation");
+const Settings = require("../settings/settings");
+const StringBuilder = require("../general/stringBuilder");
 
 class Application {
     static get information() { return new ApplicationInformation(
@@ -54,7 +55,7 @@ class Application {
     }
 
     readSettings() {
-        const settingsFilePath = this.args.get(ArgName.settingsFilePath, `${__dirname}/../settings.json`);
+        const settingsFilePath = this.args.get(ArgName.settingsFilePath, `${__dirname}/../../settings.json`);
         return Settings.read(settingsFilePath);
     }
 

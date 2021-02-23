@@ -4,8 +4,10 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-__require("general/javaScript");
-const DynamicsAppDependency = __require("dynamics/dynamicsAppDependency");
+require("../general/javaScript");
+
+const DynamicsAppDependency = require("./dynamicsAppDependency");
+const Guid = require("../general/guid");
 
 class DynamicsAppDependencies extends Array {
     constructor() {        
@@ -27,6 +29,15 @@ class DynamicsAppDependencies extends Array {
                 dynamicsAppDependencies.push(DynamicsAppDependency.deserialise(data));
         return dynamicsAppDependencies;
     }    
+
+    inject(pData) {
+        for (let data of pData) {
+            const dataId = Guid.default(data.id, data.appId);
+            const dependency = this.find((lDependency) => { return lDependency.id === dataId; });
+            if (dependency)
+                dependency.inject(data);
+        }
+    }
 }
 
 module.exports = DynamicsAppDependencies;

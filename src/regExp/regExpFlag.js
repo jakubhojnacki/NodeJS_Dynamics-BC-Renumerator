@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-__require("general/javaScript");
+require("../general/javaScript");
 
 /*static*/ class RegExpFlag {
     static get globalMatch() { return "g"; }

@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("general/javaScript");
+require("../general/javaScript");
 
 class ApplicationInformation {
     get name() { return this.mName; }

@@ -4,10 +4,11 @@
  * @version 0.0.1 (2021-02-21)
  */
 
-__require("general/javaScript");
-const DynamicsAlRenumberator = __require("renumberation/dynamicsAlRenumberator");
-const DynamicsAppManifestRenumberator = __require("renumberation/dynamicsAppManifestRenumberator");
-const DynamicsPermissionSetRenumberator = __require("renumberation/dynamicsPermissionSetRenumberator");
+require("../general/javaScript");
+
+const DynamicsAlRenumberator = require("./dynamicsAlRenumberator");
+const DynamicsAppManifestRenumberator = require("./dynamicsAppManifestRenumberator");
+const DynamicsPermissionSetRenumberator = require("./dynamicsPermissionSetRenumberator");
 
 /*static*/ class RenumberatorFactory {
     static create(pRenumberation) {

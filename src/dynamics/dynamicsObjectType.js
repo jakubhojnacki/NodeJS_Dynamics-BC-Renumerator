@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-__require("general/javaScript");
-const Enum = __require("general/enum");
-const EnumValue = __require("general/enumValue");
+require("../general/javaScript");
+
+const Enum = require("../general/enum");
+const EnumValue = require("../general/enumValue");
 
 /*static*/ class DynamicsObjectType {
     static get table() { return "table"; }

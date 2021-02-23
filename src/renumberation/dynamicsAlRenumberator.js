@@ -7,21 +7,23 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require('readline');
-__require("general/javaScript");
-const DynamicsAlRegExpTemplateName = __require("renumberation/dynamicsAlRegExpTemplateName");
-const DynamicsObject = __require("dynamics/dynamicsObject");
-const DynamicsObjectField = __require("dynamics/dynamicsObjectField");
-const DynamicsObjectType = __require("dynamics/dynamicsObjectType");
-const EndOfLineType = __require("general/endOfLineType");
-const RegExpFlag = __require("regExp/regExpFlag");
-const RegExpSchema = __require("regExp/regExpSchema");
-const RegExpTemplate = __require("regExp/regExpTemplate");
-const Renumberator = __require("renumberation/renumberator");
+
+require("../general/javaScript");
+
+const DynamicsAlRegExpTemplateName = require("./dynamicsAlRegExpTemplateName");
+const DynamicsObject = require("../dynamics/dynamicsObject");
+const DynamicsObjectField = require("../dynamics/dynamicsObjectField");
+const DynamicsObjectType = require("../dynamics/dynamicsObjectType");
+const EndOfLineType = require("../general/endOfLineType");
+const RegExpFlag = require("../regExp/regExpFlag");
+const RegExpSchema = require("../regExp/regExpSchema");
+const RegExpTemplate = require("../regExp/regExpTemplate");
+const Renumberator = require("./renumberator");
 
 class DynamicsAlRenumberator extends Renumberator {
     get name() { return "Dynamics AL Renumberator"; }
-    get regExpSchema() { return this.mRegExpSchema; }
     get dynamicsManager() { return this.renumberation.dynamicsManager; }
+    get regExpSchema() { return this.mRegExpSchema; }
     get dynamicsObject() { return this.mDynamicsObject; }
     set dynamicsObject(pValue) { this.mDynamicsObject = pValue; }
     get dynamicsObjectField() { return this.mDynamicsObjectField; }
@@ -64,14 +66,14 @@ class DynamicsAlRenumberator extends Renumberator {
     }
 
     async renumber(pFilePath) {
-        await this.initialise(pFilePath);
+        this.initialise(pFilePath);
         this.createNewFile();
         await this.renumberFile();
         //^^^
         // this.overwriteFileWithNewFile();
     }
 
-    async initialise(pFilePath) {
+    initialise(pFilePath) {
         this.filePath = pFilePath;
         this.dynamicsObject = null;
         this.dynamicsObjectField = null;
@@ -126,7 +128,8 @@ class DynamicsAlRenumberator extends Renumberator {
     }
 
     createDynamicsObjectNewLine(pMatch) {
-        return this.regExpSchema.replace(pMatch.template.replaceWith, this.dynamicsObject);
+        let replacements = this.dynamicsObject.merge(pMatch.namedGroups);
+        return this.regExpSchema.replace(pMatch.template.replaceWith, replacements);
     }
 
     async processDynamicsObjectField(pMatch) {
@@ -155,7 +158,8 @@ class DynamicsAlRenumberator extends Renumberator {
     }
 
     createDynamicsObjectFieldNewLine(pMatch) {
-        return this.regExpSchema.replace(pMatch.template.replaceWith, this.dynamicsObjectField);
+        let replacements = this.dynamicsObjectField.merge(pMatch.namedGroups);
+        return this.regExpSchema.replace(pMatch.template.replaceWith, replacements);
     }
 }
 

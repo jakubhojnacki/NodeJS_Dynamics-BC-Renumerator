@@ -4,8 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-const Enum = __require("general/enum");
-const EnumValue = __require("general/enumValue");
+require("../general/javaScript");
+
+const Enum = require("../general/enum");
+const EnumValue = require("../general/enumValue");
 
 /*static*/ class WebServiceType {
     static get rest() { return "rest"; }

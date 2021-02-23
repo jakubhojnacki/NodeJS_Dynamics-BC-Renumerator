@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("general/javaScript");
-const StringBuilder = __require("general/stringBuilder");
-const WebServiceType = __require("webServices/webServiceType");
+require("../general/javaScript");
+
+const StringBuilder = require("../general/stringBuilder");
+const WebServiceType = require("../webServices/webServiceType");
 
 class WebServiceSettings {
     get url() { return this.mUrl; }

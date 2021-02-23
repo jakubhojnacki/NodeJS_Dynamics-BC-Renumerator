@@ -4,9 +4,10 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-__require("general/javaScript");
-const RegExpFlag = __require("regExp/regExpFlag");
-const RegExpMatch = __require("regExp/regExpMatch");
+require("../general/javaScript");
+
+const RegExpFlag = require("./regExpFlag");
+const RegExpMatch = require("./regExpMatch");
 
 class RegExpSchema {
     get templates() { return this.mTemplates; }

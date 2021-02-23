@@ -5,8 +5,10 @@
  */
 
 const fs = require("fs");
-__require("general/javaScript");
-const WebServiceSettings = __require("settings/webServiceSettings");
+
+require("../general/javaScript");
+
+const WebServiceSettings = require("./webServiceSettings");
 
 class Settings {
     get webService() { return this.mWebService; }

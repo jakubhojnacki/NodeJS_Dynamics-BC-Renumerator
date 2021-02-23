@@ -4,8 +4,9 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-__require("general/javaScript");
-const StringBuilder = __require("general/stringBuilder");
+require("../general/javaScript");
+
+const StringBuilder = require("../general/stringBuilder");
 
 class Arg {
     get name() { return this.mName; }

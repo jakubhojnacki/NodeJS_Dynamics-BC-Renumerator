@@ -4,8 +4,9 @@
  * @version 0.0.1 (2021-02-22)
  */
 
-__require("general/javaScript");
-const DynamicsObject = __require("dynamics/dynamicsObject");
+require("../general/javaScript");
+
+const DynamicsObject = require("./dynamicsObject");
 
 class DynamicsObjects extends Array {
     constructor() {        

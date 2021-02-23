@@ -117,10 +117,13 @@ Object.prototype.clone = function() {
 	return cloned;
 }
 
-Object.prototype.merge = function(pObject) {
+Object.prototype.merge = function(pObject, pOverwrite) {
 	if (pObject != null)
-		for (const property in pObject)
-			this[property] = pObject[property];
+		for (const property in pObject) {
+			const set = pOverwrite ? true : (!(property in this));
+			if (set) 
+				this[property] = pObject[property];
+		}
 	return this;
 }
 
