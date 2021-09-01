@@ -4,16 +4,18 @@
  * @version 0.0.1 (2021-02-23)
  */
 
-import "./javaScript.js";
-import Enum from "./enum.js";
+require("./javaScript");
 
-export default class EndOfLineType {
+const Enum = require("./enum");
+const EnumValue = require("./enumValue");
+
+/*static*/ class EndOfLineType {
     static get linux() { return "linux"; }
     static get windows() { return "windows"; }
 
     static get values() { return [
-        EndOfLineType.linux,
-        EndOfLineType.windows
+        new EnumValue(EndOfLineType.linux, true),
+        new EnumValue(EndOfLineType.windows)
     ]; }
 
     static parse(pString) {

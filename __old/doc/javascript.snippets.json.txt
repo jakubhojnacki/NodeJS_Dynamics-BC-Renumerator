@@ -72,31 +72,33 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"import \"../general/javaScript\";",
+			"require(\"../general/javaScript\");",
 			"",
-			"export default class $1 {",
+			"class $1 {",
 			"    constructor() {",
 			"    }",
-			"}"
+			"}",
+			"",
+			"module.exports = $1;"
 		]
 	},
 
 	"Require": {
-		"prefix": "ximp",
+		"prefix": "xreq",
 		"body": [
-			"import ${1/(.)(.*)/${1:/upcase}$2/} from \"../$2/${1/(.)(.*)/${1:/downcase}$2/}\";"
+			"const ${1/(.)(.*)/${1:/upcase}$2/} = require(\"../$2/${1/(.)(.*)/${1:/downcase}$2/}\");"
 		]
 	},
 
 	"JavaScript": {
 		"prefix": "xjavscr",
 		"body": [
-			"import \"../general/javaScript\";"
+			"require(\"../general/javaScript\");"
 		]
 	},
 
 	"Module": {
-		"prefix": "xclahdr",
+		"prefix": "xmod",
 		"body": [
 			"/**",
 			" * @module \"$1\" class",
@@ -115,24 +117,27 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"import \"../general/javaScript\";",
-			"import Enum from \"../general/enum\";",
+			"require(\"../general/javaScript\");",
+			"const Enum = require(\"../general/enum\");",
+			"const EnumValue = require(\"../general/enumValue\");",
 			"",
-			"export default class $1 {",
+			"/*static*/ class $1 {",
 			"    static get one() { return \"one\"; }",
 			"    static get two() { return \"two\"; }",
 			"    static get three() { return \"three\"; }",
 			"",
 			"    static get values() { return [",
-			"        $1.one,",
-			"        $1.two,",
-			"        $1.three",
+			"        new EnumValue($1.one),",
+			"        new EnumValue($1.two),",
+			"        new EnumValue($1.three)",
 			"    ]; }",
 			"",
-			"    static parse(pText) {",
-			"        return Enum.parse(pText, $1.values, $1.name);",
+			"    static parse(pString) {",
+			"        return Enum.parse(pString, $1.values, $1.name);",
 			"    }",
-			"}"
+			"}",
+			"",
+			"module.exports = $1;"			
 		]
 	}
 }

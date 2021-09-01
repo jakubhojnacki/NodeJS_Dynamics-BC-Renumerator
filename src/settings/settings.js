@@ -1,44 +1,50 @@
 /**
  * @module "Settings" class
- * @description Represents application settings
- * @version 0.0.1 (2021-02-17)
+ * @description Class representing settings
+ * @version 0.0.1 (2021-07-27)
  */
 
-const fs = require("fs");
+import "../general/javaScript.js";
+import FileSystem from "fs";
+import GeneralSettings from "./generalSettings.js";
+import Path from "path";
+import WebServiceSettings from "./webServiceSettings.js";
 
-require("../general/javaScript");
-
-const WebServiceSettings = require("./webServiceSettings");
-
-class Settings {
+export default class Settings {
+    get general() { return this.mGeneral; }
     get webService() { return this.mWebService; }
 
-    constructor(pWebService) {
-        this.mWebService = Object.default(pWebService, new WebServiceSettings());
+    constructor(pGeneral, pWebService) {
+        this.mGeneral = Object.validate(pGeneral, new GeneralSettings());
+        this.mWebService = Object.validate(pWebService, new WebServiceSettings());
+    }
+
+    serialise() {
+        let data = {
+            "general": this.general.serialise(),
+            "webService": this.webService.serialise()
+        };
+        return data;
     }
 
     static read(pFilePath) {
-        const rawData = fs.readFileSync(pFilePath);
-        const data = JSON.parse(rawData);
-        return Settings.deserialise(data);
-    }
-
-    static deserialise(pData) {
-        let settings = null;
-        if (pData != null) {
-            const webService = WebServiceSettings.deserialise(pData.webService);
-            settings = new Settings(webService);
+        let settings = new Settings();
+        const settingsFilePath = pFilePath ? pFilePath : Path.join(global.theRoot, "settings.json");        
+        if (FileSystem.existsSync(settingsFilePath)) {
+            const rawData = FileSystem.readFileSync(settingsFilePath);
+            const data = JSON.parse(rawData);
+            settings = Settings.deserialise(data);
         }
         return settings;
     }
 
-    log(pIndentation) {
-        const logger = global.application.logger;
-        let indentation = Number.default(pIndentation);
-        logger.writeText("Settings:", indentation);
-        indentation += logger.tab;
-        this.webService.log(indentation);
-    }    
+    static deserialise(pData) {
+        let object = new Settings();
+        if (pData != null) {
+            const general = GeneralSettings.deserialise(pData.general);
+            const webService = WebServiceSettings.deserialise(pData.webService);
+            object = new Settings(general, webService);
+        }
+        return object;
+    }
 }
-
-module.exports = Settings;

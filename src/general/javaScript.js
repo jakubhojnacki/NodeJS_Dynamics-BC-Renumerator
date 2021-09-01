@@ -1,50 +1,105 @@
 /**
  * @module JavaScript extensions
  * @description A series of useful language extensions
- * @version 0.0.2 (2021-02-19)
+ * @version 0.0.7 (2021-05-25)
  */
-
-Array.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : []);
-}
 
 Array.isNonEmpty = function(pArray) {
 	return ((pArray != null) && (Array.isArray(pArray)) && (pArray.length > 0));
+}
+
+Array.nonEmpty = function(pValue, pDefault) {
+	return Array.isNonEmpty(pValue) ? pValue : pDefault;
+}
+
+Array.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		if (Array.isArray(pInput))
+			value = pInput;
+		if (value == null)
+			Object.raiseTypeError(pInput, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : [];
+	return value;
 }
 
 Array.prototype.clone = function() {
 	return this.slice(0);
 };
 
-Boolean.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : false);
+Array.prototype.contains = function(pItem){
+    return (this.indexOf(pItem) >= 0);
+};
+
+Boolean.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		switch (typeof(pInput)) {
+			case "boolean":
+				value = pInput;
+				break;
+			case "number":
+				if (pInput === 1)
+					value = true;
+				else if (pInput === 0)
+					value = false;
+				break;
+			case "string": {
+					const string = pInput.trim().toLowerCase();
+					switch (string) {
+						case "true": 
+							value = true;
+							break;
+						case "false": 
+							value = false;
+							break;
+					}
+				} break;
+		}
+		if (value == null)
+			Object.raiseTypeError(pInput, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : false;
+	return value;
 }
 
-Boolean.tryToParse = function(pString) {
-	let boolean = false;
-	if (typeof(pString) === "boolean")
-		boolean = pString;
-	else {
-		const string = pString ? pString.trim().toLowerCase() : "";
-		boolean = (string === "true");
-	}
-	return boolean;
+Date.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		const typeOf = typeof(pInput);
+		switch (typeOf) {
+			case "object":
+				if (pInput instanceof Date)
+					value = pInput;
+				break;
+			case "number": {
+					value = new Date();
+					value.setTime(pInput);
+				} break;
+			case "string": {
+					value = new Date();
+					value.setTime(Date.parse(pInput));
+				}
+				break;
+		}
+		if (value == null)
+			Object.raiseTypeError(pInput, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : new Date();
+	return value;
 }
 
-Date.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : new Date());
+Date.createTimeStamp = function() {
+	return (new Date()).toTimeStamp();
 }
 
-Date.tryToParse = function(pString) {
-	let time = Date.parse(pString);
-	if (isNaN(time))
-		time = null;
-	let date = null;
-	if (time != null) {
-		date = new Date();
-		date.setTime(time);
-	}
-	return date;
+Date.createFileTimeStamp = function() {
+	return (new Date()).toFileTimeStamp();
+}
+
+Date.isDate = function(pValue) {
+	return pValue instanceof Date;
 }
 
 Date.prototype.format = function(pPattern) {
@@ -72,6 +127,10 @@ Date.prototype.toTimeStamp = function() {
 	return this.format("yyyyMMddhhmmsszzz");
 }
 
+Date.prototype.toFileTimeStamp = function() {
+	return this.format("yyyyMMdd.hhmmsszzz");
+}
+
 Number.compare = function(pNumber) {
 	let result = 0;
 	const thisValue = this.valueof();
@@ -82,8 +141,8 @@ Number.compare = function(pNumber) {
 	return result;
 }
 
-Number.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : 0);
+Number.nonEmpty = function(pValue, pDefault) {
+	return pValue !== 0 ? pValue : pDefault;
 }
 
 Number.prototype.pad = function(pLength) 
@@ -92,22 +151,96 @@ Number.prototype.pad = function(pLength)
 	return string.substr(string.length - pLength);
 }
 
-Number.tryToParseInt = function(pString) {
-	let number =  parseInt(pString, 10);
-	if (isNaN(number))
-		number = 0;
-	return number;
-}   
+Number.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		switch (typeof(pInput)) {
+			case "number":
+				value = pInput;
+				break;
+			case "string":
+				value = Number.parseFloat(pInput);
+				break;
+		}
+		if (value == null)
+			Object.raiseTypeError(pValue, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : 0;
+	return value;
+}
 
-Number.tryToParseFloat = function(pString) {
-	let number =  parseFloat(pString);
-	if (isNaN(number))
-		number = 0;
-	return number;
-}   
+Number.validateAsInteger = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		switch (typeof(pInput)) {
+			case "number":
+				if (Number.isInteger(pInput))
+					value = pInput;
+				break;
+			case "string":
+				value = Number.parseInt(pInput);
+				break;
+		}
+		if (value == null)
+			Object.raiseTypeError(pValue, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : 0;
+	return value;
+}
 
-Object.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : {});
+Object.raiseTypeError = function(pValue, pTypeName) {
+	throw new Error(`${Object.toString(pValue)} is not ${pTypeName.toLowerCase()}.`);
+}
+
+Object.raiseNullError = function(pTypeName) {
+	throw new Error(`${pTypeName} cannot be null.`);
+}
+
+Object.isFunction = function(pValue) {
+	return (typeof(pValue) === "function");
+}
+
+Object.isValueType = function(pValue) {
+	return ((typeof(pValue) !== "object") || (pValue instanceof String) || (pValue instanceof Number) || (pValue instanceof Boolean) ||
+		(pValue instanceof Date));
+}
+
+Object.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		if (typeof(pInput) === "object")
+			value = pInput;
+		if (value == null)
+			Object.raiseTypeError(pInput, this.name);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : {};
+	return value;
+}
+
+Object.toString = function(pValue) {
+	const type = typeof(pValue);
+	let string = "";
+	if (pValue != null)
+		switch (type) {
+			case "undefined":
+			case "null":
+			case "boolean":
+			case "number":
+			case "bigint":
+			case "string":
+				string = new String(pValue).valueOf();
+				break;
+			case "object":
+				if (pValue instanceof Date)
+					string = pValue.toISOString();
+				else
+					if ("toString" in pValue)
+						string = pValue.toString();
+					else
+						string = new String(pValue).valueOf();
+				break;
+		}
+	return string;
 }
 
 Object.prototype.clone = function() {
@@ -127,8 +260,20 @@ Object.prototype.merge = function(pObject, pOverwrite) {
 	return this;
 }
 
-String.default = function(pValue, pDefault) {
-	return pValue != null ? pValue : (pDefault != null ? pDefault : "");
+String.nonEmpty = function(pValue, pDefault) {
+	return pValue ? pValue : pDefault;
+}
+
+String.validate = function(pInput, pDefaultValue, pAllowNull) {
+	let value = null;
+	if (pInput != null) {
+		if (typeof(pInput) === "string")
+			value = pInput;
+		else
+			value = Object.toString(pInput);
+	} else if (!pAllowNull)
+		value = pDefaultValue != null ? pDefaultValue : "";
+	return value;
 }
 
 String.prototype.append = function(pPart, pPrefix, pSuffix) {
@@ -155,4 +300,19 @@ String.prototype.removeIfEndsWith = function(pPart) {
 		if (this.substr(this.length - pPart.length) === pPart)
 			newString = this.substr(0, this.length - pPart.length);
 	return newString;
+}
+
+String.prototype.replaceAll = function(pFind, pReplace) {
+	return this.replace(new RegExp(pFind, 'g'), pReplace);
+}
+
+String.prototype.replaceEndsOfLine = function(pReplace) {
+    return this.replace(new RegExp("\n", 'g'), pReplace).replace(new RegExp("\n\r", 'g'), pReplace);
+}
+
+String.prototype.format = function(pReplacements) {
+    let newString = this.valueOf();
+    for (let index = 0; index < pReplacements.length; index++)
+        newString = newString.replace(`{${index}}`, pReplacements[index]);
+    return newString;
 }

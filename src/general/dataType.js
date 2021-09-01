@@ -1,57 +1,64 @@
 /**
  * @module "DataType" class (static)
  * @description Enumeratos and manages data types
- * @version 0.0.2 (2021-02-19)
+ * @version 0.0.3 (2021-05-25)
  */
 
-require("./javaScript");
+import "./javaScript.js";
+import Enum from "./enum.js";
 
-const Enum = require("./enum");
-const EnumValue = require("./enumValue");
-
-/*static*/ class DataType {
-    static get boolean() { return "boolean"; }
-    static get integer() { return "integer"; }
-    static get float() { return "float"; }
-    static get string() { return "string"; }
-    static get date() { return "date"; }
+export default class DataType {
+    static get boolean() { return "Boolean"; }
+    static get integer() { return "Integer"; }
+    static get float() { return "Float"; }
+    static get string() { return "String"; }
+    static get date() { return "Date"; }
+    static get array() { return "Array"; }
+    static get object() { return "Object"; }
 
     static get values() { return [
-        new EnumValue(DataType.boolean),
-        new EnumValue(DataType.integer),
-        new EnumValue(DataType.float),
-        new EnumValue(DataType.string, true),
-        new EnumValue(DataType.date)
+        DataType.string,
+        DataType.boolean,
+        DataType.integer,
+        DataType.float,
+        DataType.date,
+        DataType.array,
+        DataType.object
     ]; }
 
-    static parse(pString) {
-        return Enum.parse(pString, DataType.values, DataType.name);
+    static parse(pText) {
+        return Enum.parse(pText, DataType.values, DataType.name);
     }
 
-    static parseValue(pString, pDataType) {
+    static validateValue(pValue, pDataType) {
+        const type = String.nonEmpty(typeof(pValue), "string");
         let value = null;
-        switch (pDataType) {
-            case DataType.boolean:
-                value = Boolean.tryToParse(pString);
-                break;
-            case DataType.integer:
-                value = Number.tryToParseInt(pString);
-                break;
-            case DataType.float:
-                value = Number.tryToParseFloat(pString);
-                break;
-            case DataType.date:
-                value = Date.tryToParse(pString);
-                break;
-            case "":
-            case DataType.string:
-                value = pString;
-                break;
-            default:
-                throw new Error(`Unhandled data type: ${pDataType}.`);
-        }
+        if (pValue != null)
+            switch (pDataType) {
+                case DataType.boolean:
+                    value = Boolean.validate(pValue);
+                    break;
+                case DataType.integer:
+                    value = Number.validate(pValue, false, true);
+                    break;
+                case DataType.float:
+                    value = Number.validate(pValue);
+                    break;
+                case DataType.date:
+                    value = Date.validate(pValue);
+                    break;
+                case DataType.string:
+                    value = String.validate(pValue);
+                    break;
+                case DataType.array:
+                    value = Array.validate(pValue);
+                    break;
+                case DataType.object:
+                    value = Object.validate(pValue);
+                    break;
+                default:
+                    throw new Error(`Unhandled data type: ${pDataType}.`);
+            }
         return value;
     }
 }
-
-module.exports = DataType;

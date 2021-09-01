@@ -1,18 +1,21 @@
 /**
- * @module "ArgName" class (static)
+ * @module "ArgName" class
  * @description Class representing argument names
- * @version 0.0.1 (2021-02-17)
+ * @version 0.0.3 (2021-08-10)
  */
 
-/*static*/ class ArgName {
-    static get folderPath() { return "FolderPath"; }
-    static get backupMode() { return "BackupMode"; }
-    static get logger() { return "Logger"; }
-    static get loggerFilePath() { return "LoggerFilePath"; }
-    static get range() { return "Range"; }
-    static get settingsFilePath() { return "SettingsFilePath"; }
-    static get endOfLineType() { return "EndOfLineType"; }
+export default class ArgName {
+    static get folder() { return "Folder"; }
+    static get settings() { return "Settings"; }
     static get debugMode() { return "DebugMode"; }
-}
 
-module.exports = ArgName;
+    static get values() { return [
+        ArgName.folder,
+        ArgName.settings,
+        ArgName.debugMode
+    ]; }
+
+    static parse(pText) {
+        return Enum.parse(pText, ArgName.values, ArgName.name);
+    }
+}

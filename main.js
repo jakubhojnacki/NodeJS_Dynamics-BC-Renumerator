@@ -1,12 +1,8 @@
-/**
- * @module Main file
- * @description File application execution starts from
- * @version 0.0.1 (2021-02-17)
- */
-
-const Application = require("./src/application/application");
+import Application from "./src/application.js";
+import Node from "./src/general/node.js";
 
 (() => {
-    global.application = new Application(process.argv);
-    global.application.run();
+    global.theRoot = Node.getRoot(import.meta);
+    global.theApplication = new Application(process.argv);
+    global.theApplication.run();
 })();

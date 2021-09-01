@@ -1,36 +1,21 @@
 /**
  * @module "Enum" class
  * @description Enum helper class (static)
- * @version 0.0.1 (2021-02-21)
+ * @version 0.0.2 (2021-05-25)
  */
 
-require("./javaScript");
+import "./javaScript.js";
 
-/*static*/ class Enum {
-    static parse(pString, pEnumValues, pEnumName, pDefaultValue) {
-        const string = pString ? pString.trim().toLowerCase() : "";
-        let result = false;
-        let value = "";
-        if (string) {
-            const enumValue = pEnumValues.find((lValue) => { return lValue.name === string; });
-            if (enumValue) {
-                value = enumValue.name;
-                result = true;
-            }
-        } else {
-            const enumValue = pEnumValues.find((lValue) => { return lValue.default; });
-            if (enumValue) {
-                value = "";
-                result = true;
-            }
-        }
-        if (!result)
-            if (pDefaultValue)
-                value = pDefaultValue;
-            else
-                throw new Error(`Value ${pString} cannot be parsed into ${pEnumName}.`);
+export default class Enum {
+    static parse(pText, pValues, pEnumName) {
+        const text = String.validate(pText).trim().toLowerCase();
+        let value = null;
+        if (text)
+            value = pValues.find((lValue) => { return lValue.toLowerCase() === text; });
+        else
+            value = pValues[0];
+        if (!value)
+            throw new Error(`Value ${pText} cannot be parsed into ${pEnumName}.`);
         return value;
     }
 }
-
-module.exports = Enum;

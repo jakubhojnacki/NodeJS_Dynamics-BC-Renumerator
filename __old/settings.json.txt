@@ -1,9 +1,4 @@
 {
-    "general" : {
-        "range": "SAAS",
-        "backupMode": "none",
-        "endOfLineType": "windows"
-    },
     "webService": {
         "url": "http://localhost/dynamicsrenumberator",
         "user": "dynamics.renumberator.user",

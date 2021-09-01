@@ -4,10 +4,12 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-import "../general/javaScript.js";
-import WebServiceType from "../webServices/webServiceType.js";
+require("../general/javaScript");
 
-export default class WebServiceSettings {
+const StringBuilder = require("../general/stringBuilder");
+const WebServiceType = require("../webServices/webServiceType");
+
+class WebServiceSettings {
     get url() { return this.mUrl; }
     get user() { return this.mUser; }
     get password() { return this.mPassword; }
@@ -20,20 +22,23 @@ export default class WebServiceSettings {
         this.mType = WebServiceType.parse(pType);
     }
 
-    serialise() {
-        let data = { 
-            "url": this.url, 
-            "user": this.user, 
-            "password": this.password,
-            "type": this.type
-        };
-        return data;
-    }
-
     static deserialise(pData) {
         let webServiceSettings = new WebServiceSettings();
         if (pData != null)
             webServiceSettings = new WebServiceSettings(pData.url, pData.user, pData.password, pData.type);
         return webServiceSettings;
     }    
+
+    log(pIndentation) {
+        const logger = global.application.logger;
+        let indentation = Number.default(pIndentation);
+        logger.writeText("WebService:", indentation);
+        indentation += logger.tab;
+        logger.writeText(StringBuilder.nameValue("URL", this.url), indentation);
+        logger.writeText(StringBuilder.nameValue("User", this.user), indentation);
+        logger.writeText(StringBuilder.nameValue("Password", this.password ? "*****" : ""), indentation);
+        logger.writeText(StringBuilder.nameValue("Type", this.type), indentation);
+    }      
 }
+
+module.exports = WebServiceSettings;

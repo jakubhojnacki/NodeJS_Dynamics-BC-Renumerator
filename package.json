@@ -1,9 +1,18 @@
 {
-    "dependencies": {
-        "uuid": "^8.3.2",
-        "xmldoc": "^1.1.2"
-    },
+    "name": "dynamics-renumberator",
+    "version": "2.0.0",
+    "displayName": "Dynamics Renumberator",
+    "description": "Renumbers Dynamics application into another ID range",
+    "date": "September 2021",
+    "main": "main.js",
     "scripts": {
-        "debug": "node test.js"
-    }
+        "test": "node test.js"
+    },
+    "keywords": [
+        "dynamics",
+        "business central",
+        "renumber"
+    ],
+    "author": "Jakub Hojnacki <jakubhojnacki@gmail.com>",
+    "license": "ISC"
 }

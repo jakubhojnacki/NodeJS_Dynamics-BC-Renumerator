@@ -4,19 +4,23 @@
  * @version 0.0.1 (2021-02-17)
  */
 
-import "../general/javaScript.js";
-import Enum from "../general/enum.js";
+require("../general/javaScript");
 
-export default class WebServiceType {
+const Enum = require("../general/enum");
+const EnumValue = require("../general/enumValue");
+
+/*static*/ class WebServiceType {
     static get rest() { return "rest"; }
     static get soap() { return "soap"; }
 
     static get values() { return [
-        WebServiceType.rest,
-        WebServiceType.soap
+        new EnumValue(WebServiceType.rest, true),
+        new EnumValue(WebServiceType.soap)
     ]; }
 
     static parse(pString) {
         return Enum.parse(pString, WebServiceType.values, WebServiceType.name);
     }
 }
+
+module.exports = WebServiceType;
