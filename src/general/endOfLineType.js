@@ -34,5 +34,3 @@ export default class EndOfLineType {
         return result;
     }    
 }
-
-module.exports = EndOfLineType;

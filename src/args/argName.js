@@ -5,12 +5,12 @@
  */
 
 export default class ArgName {
-    static get folder() { return "Folder"; }
+    static get folderPath() { return "FolderPath"; }
     static get settings() { return "Settings"; }
     static get debugMode() { return "DebugMode"; }
 
     static get values() { return [
-        ArgName.folder,
+        ArgName.folderPath,
         ArgName.settings,
         ArgName.debugMode
     ]; }

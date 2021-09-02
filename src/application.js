@@ -11,6 +11,7 @@ import ArgTemplateFactory from "./args/argTemplateFactory.js";
 import Engine from "./engine/engine.js";
 import Logger from "./general/logger.js";
 import Manifest from "./general/manifest.js";
+import StringBuilder from "./general/stringBuilder.js";
 
 export default class Application {
     static get manifest() { return new Manifest(); }
@@ -40,10 +41,29 @@ export default class Application {
     }
 
     async runEngine() {
-        const folder = this.args.get(ArgName.folder);
-        const engine = new Engine(folder, this.settings);
-        /*TODO - hook into events*/
-        await engine.run();
+        const __this = this;
+        const folderPath = this.args.get(ArgName.folderPath);
+        const engine = new Engine(folderPath, this.settings);
+        engine.onDynamicsApp = (lDynamicsApp) => { __this.engine_onDynamicsApp(lDynamicsApp); };
+        engine.onFolder = (lFolderName, lIndentation) => { __this.engine_onFolder(lFolderName, lIndentation); };
+        engine.onFile = (lFileName, lRenumbered, lRenumberator, lIndentation) => { __this.engine_onFile(lFileName, lRenumbered, lRenumberator, lIndentation); };
+        await engine.run(folderPath, this.setings);
+    }
+
+    engine_onDynamicsApp(pDynamicsApp) {
+        pDynamicsApp.log(this.logger.tab);
+    }
+
+    engine_onFolder(pFolderName, pIndentation) {
+        this.logger.writeLine(`[${pFolderName}]`, pIndentation); 
+    }
+
+    engine_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
+        const stringBuilder = new StringBuilder();
+        stringBuilder.addNameValue("File", pFileName);
+        if (pRenumbered)
+            stringBuilder.addNameValue("Renumbered By", pRenumberator.name);
+        this.logger.writeLine(stringBuilder.toString(), (pIndentation + 1) * this.logger.tab);
     }
 
     initialise() {
