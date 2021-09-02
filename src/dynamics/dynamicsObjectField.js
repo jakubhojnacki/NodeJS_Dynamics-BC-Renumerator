@@ -5,7 +5,7 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsEntity = require("./dynamicsEntity");
+import DynamicsEntity from "./dynamicsEntity.js";
 
 export default class DynamicsObjectField extends DynamicsEntity {
     get dataType() { return this.mDataType; }

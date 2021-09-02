@@ -5,8 +5,8 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsAppDependency = require("./dynamicsAppDependency");
-const Guid = require("../general/guid");
+import DynamicsAppDependency from "./dynamicsAppDependency.js";
+import Guid from "../general/guid.js";
 
 export default class DynamicsAppDependencies extends Array {
     constructor() {        
@@ -31,7 +31,7 @@ export default class DynamicsAppDependencies extends Array {
 
     inject(pData) {
         for (let data of pData) {
-            const dataId = Guid.default(data.id, data.appId);
+            const dataId = Guid.validate(data.id, data.appId);
             const dependency = this.find((lDependency) => { return lDependency.id === dataId; });
             if (dependency)
                 dependency.inject(data);

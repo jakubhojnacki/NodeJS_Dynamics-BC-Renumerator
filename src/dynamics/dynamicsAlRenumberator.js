@@ -5,18 +5,18 @@
  */
 
 import "../general/javaScript.js";
+import DynamicsAlRegExpTemplateName from "./dynamicsAlRegExpTemplateName.js";
+import DynamicsObject from "../dynamics/dynamicsObject.js";
+import DynamicsObjectField from "../dynamics/dynamicsObjectField.js";
+import DynamicsObjectType from "../dynamics/dynamicsObjectType.js";
 import FileSystem from "fs";
+import EndOfLineType from "../general/endOfLineType.js";
 import Path from "path";
 import ReadLine from "readline";
-const DynamicsAlRegExpTemplateName = require("./dynamicsAlRegExpTemplateName");
-const DynamicsObject = require("../dynamics/dynamicsObject");
-const DynamicsObjectField = require("../dynamics/dynamicsObjectField");
-const DynamicsObjectType = require("../dynamics/dynamicsObjectType");
-const EndOfLineType = require("../general/endOfLineType");
-const RegExpFlag = require("../regExp/regExpFlag");
-const RegExpSchema = require("../regExp/regExpSchema");
-const RegExpTemplate = require("../regExp/regExpTemplate");
-const Renumberator = require("./renumberator");
+import RegExpFlag from "../regExp/regExpFlag.js";
+import RegExpSchema from "../regExp/regExpSchema.js";
+import RegExpTemplate from "../regExp/regExpTemplate.js";
+import Renumberator from "./renumberator.js";
 
 export default class DynamicsAlRenumberator extends Renumberator {
     get name() { return "Dynamics AL Renumberator"; }
@@ -67,7 +67,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
         this.initialise(pFilePath);
         this.createNewFile();
         await this.renumberFile();
-        //^^^
+        //TODO - Why is this commented out?
         // this.overwriteFileWithNewFile();
     }
 

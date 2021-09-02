@@ -5,9 +5,9 @@
  */
 
 import "../general/javaScript.js";
-const fs = require("fs");
-const path = require("path");
-const Renumberator = require("./renumberator");
+import FileSystem from "fs.js";
+import Path from "path.js";
+import Renumberator from "./renumberator.js";
 
 export default class DynamicsAppManifestRenumberator extends Renumberator {
     get name() { return "Dynamics AL App Manifest Renumberator"; }
@@ -19,7 +19,7 @@ export default class DynamicsAppManifestRenumberator extends Renumberator {
     }
 
     canRenumber(pFilePath) {
-        return path.basename(pFilePath).trim().toLowerCase() === "app.json";
+        return Path.basename(pFilePath).trim().toLowerCase() === "app.json";
     }
 
     async renumber(pFilePath) {
@@ -44,7 +44,7 @@ export default class DynamicsAppManifestRenumberator extends Renumberator {
     }
 
     async renumberFile() {
-        let rawData = fs.readFileSync(this.filePath);
+        let rawData = FileSystem.readFileSync(this.filePath);
         let data = JSON.parse(rawData);
         this.dynamicsApp.inject(data);
         rawData = JSON.stringify(data, null, 4);

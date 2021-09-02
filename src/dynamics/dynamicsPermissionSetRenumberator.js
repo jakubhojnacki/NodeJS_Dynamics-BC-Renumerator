@@ -5,10 +5,10 @@
  */
 
 import "../general/javaScript.js";
-const fs = require("fs");
-const path = require("path");
-const xmldoc = require("xmldoc");
-const Renumberator = require("./renumberator");
+import fs from "fs.js";
+import path from "path.js";
+import xmldoc from "xmldoc.js";
+import Renumberator from "./renumberator.js";
 
 export default class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Dynamics AL Permission Set Renumberator"; }

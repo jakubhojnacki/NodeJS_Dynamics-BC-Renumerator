@@ -5,7 +5,7 @@
  */
 
 import "../general/javaScript.js";
-const StringBuilder = require("../general/stringBuilder");
+import StringBuilder from "../general/stringBuilder.js";
 
 export default class DynamicsAppIdRange {
     get from() { return this.mFrom; }

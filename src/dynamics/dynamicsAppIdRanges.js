@@ -5,7 +5,7 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsAppIdRange = require("./dynamicsAppIdRange");
+import DynamicsAppIdRange from "./dynamicsAppIdRange.js";
 
 export default class DynamicsAppIdRanges extends Array {
     constructor() {      

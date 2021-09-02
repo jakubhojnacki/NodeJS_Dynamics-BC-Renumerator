@@ -5,11 +5,11 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsAppDependencies = require("./dynamicsAppDependencies");
-const DynamicsAppIdRanges = require("./dynamicsAppIdRanges");
-const DynamicsAppVersion = require("./dynamicsAppVersion");
-const Guid = require("../general/guid");
-const StringBuilder = require("../general/stringBuilder");
+import DynamicsAppDependencies from "./dynamicsAppDependencies.js";
+import DynamicsAppIdRanges from "./dynamicsAppIdRanges.js";
+import DynamicsAppVersion from "./dynamicsAppVersion.js";
+import Guid from "../general/guid.js";
+import StringBuilder from "../general/stringBuilder.js";
 
 export default class DynamicsApp {
     get id() { return this.mId; }

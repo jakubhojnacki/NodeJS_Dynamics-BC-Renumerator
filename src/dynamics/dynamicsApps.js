@@ -5,8 +5,7 @@
  */
 
 import "../general/javaScript.js";
-
-const DynamicsApp = require("./dynamicsApp");
+import DynamicsApp from "./dynamicsApp.js";
 
 export default class DynamicsApps extends Array {
     constructor() {        

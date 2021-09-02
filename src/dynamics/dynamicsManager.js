@@ -5,9 +5,9 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsApps = require("./dynamicsApps");
-const DynamicsObjects = require("./dynamicsObjects");
-const Guid = require("../general/guid");
+import DynamicsApps from "./dynamicsApps.js";
+import DynamicsObjects from "./dynamicsObjects.js";
+import Guid from "../general/guid.js";
 
 export default class DynamicsManager {
     get apps() { return this.mApps; }

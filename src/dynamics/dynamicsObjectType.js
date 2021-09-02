@@ -5,8 +5,7 @@
  */
 
 import "../general/javaScript.js";
-const Enum = require("../general/enum");
-const EnumValue = require("../general/enumValue");
+import Enum from "../general/enum.js";
 
 export default class DynamicsObjectType {
     static get table() { return "table"; }
@@ -21,16 +20,16 @@ export default class DynamicsObjectType {
     static get enumExtension() { return "enumExtension"; }
 
     static get values() { return [
-        new EnumValue(DynamicsObjectType.table),
-        new EnumValue(DynamicsObjectType.tableExtension),
-        new EnumValue(DynamicsObjectType.page),
-        new EnumValue(DynamicsObjectType.pageExtension),
-        new EnumValue(DynamicsObjectType.codeunit),
-        new EnumValue(DynamicsObjectType.report),
-        new EnumValue(DynamicsObjectType.xmlPort),
-        new EnumValue(DynamicsObjectType.query),
-        new EnumValue(DynamicsObjectType.enum),
-        new EnumValue(DynamicsObjectType.enumExtension)
+        DynamicsObjectType.table,
+        DynamicsObjectType.tableExtension,
+        DynamicsObjectType.page,
+        DynamicsObjectType.pageExtension,
+        DynamicsObjectType.codeunit,
+        DynamicsObjectType.report,
+        DynamicsObjectType.xmlPort,
+        DynamicsObjectType.query,
+        DynamicsObjectType.enum,
+        DynamicsObjectType.enumExtension
     ]; }
 
     static parse(pString) {

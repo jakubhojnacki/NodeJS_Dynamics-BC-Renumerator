@@ -5,7 +5,7 @@
  */
 
 import "../general/javaScript.js";
-const DynamicsObject = require("./dynamicsObject");
+import DynamicsObject from "./dynamicsObject.js";
 
 export default class DynamicsObjects extends Array {
     constructor() {        
