@@ -5,10 +5,10 @@
  */
 
 import "../general/javaScript.js";
-import fs from "fs.js";
-import path from "path.js";
-import xmldoc from "xmldoc.js";
-import Renumberator from "./renumberator.js";
+import FileSystem from "fs";
+import Path from "path";
+import XmlDoc from "xmldoc";
+import Renumberator from "../engine/renumberator.js";
 
 export default class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Dynamics AL Permission Set Renumberator"; }
@@ -19,9 +19,9 @@ export default class DynamicsPermissionSetRenumberator extends Renumberator {
     
     canRenumber(pFilePath) {
         let result = false;
-        if (path.extname(pFilePath).trim().toLowerCase() === ".xml") {
-            const xmlFile = fs.readFileSync(pFilePath);
-            const xmlDoc = new xmldoc.XmlDocument(xmlFile);
+        if (Path.extname(pFilePath).trim().toLowerCase() === ".xml") {
+            const xmlFile = FileSystem.readFileSync(pFilePath);
+            const xmlDoc = new XmlDoc.XmlDocument(xmlFile);
             result = (xmlDoc.name === "PermissionSets");
         };
         return result;

@@ -16,7 +16,7 @@ export default class DynamicsObject extends DynamicsEntity {
     constructor(pType, pId, pName, pRenumberedId, pFields) {
         super(pId, pName, pRenumberedId);
         this.mType = DynamicsObjectType.parse(pType);
-        this.mFields = DynamicsObjectFields.default(pFields);
+        this.mFields = DynamicsObjectFields.validate(pFields);
     }
 
     static deserialise(pData) {

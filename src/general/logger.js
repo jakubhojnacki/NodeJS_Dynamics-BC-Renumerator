@@ -18,7 +18,7 @@ export default class Logger {
 
     indentText(pText, pIndentation) {
         const indentation = Number.validate(pIndentation);
-        const indentationText = indentation > 0 ? " ".repeat(indentation) : "";
+        const indentationText = indentation > 0 ? " ".repeat(indentation * this.tab) : "";
         return indentationText + String.validate(pText);
     }
 
@@ -50,14 +50,14 @@ export default class Logger {
             for (const property in pObject)
                 switch (typeof(pObject[property])) {
                     case "object":
-                        this.writeObject(pObject[property], pIndentation + this.tab);
+                        this.writeObject(pObject[property], pIndentation + 1);
                         break;
                     case "function":
                         if (writeFunctions)
-                            this.writeLine(StringBuilder.nameValue(property, "function()"), pIndentation + this.tab);
+                            this.writeLine(StringBuilder.nameValue(property, "function()"), pIndentation + 1);
                         break;
                     default:
-                        this.writeLine(StringBuilder.nameValue(property, pObject[property]), pIndentation + this.tab);
+                        this.writeLine(StringBuilder.nameValue(property, pObject[property]), pIndentation + 1);
                         break;
                 }
         } else

@@ -4,23 +4,24 @@
  * @version 0.0.1 (2021-09-01)
  */
 
-import "../general/javaScript";
-import EndOfLineType from "../general/endOfLineType";
+import "../general/javaScript.js";
+import BackupMode from "../engine/backupMode.js";
+import EndOfLineType from "../general/endOfLineType.js";
 
 export default class GeneralSettings {
-    get range() { return this.mRange; }
+    get rangeCode() { return this.mRangeCode; }
     get backupMode() { return this.mBackupMode; }
     get endOfLineType() { return this.mEndOfLineType; }
 
-    constructor(pRange, pBackupMode, pEndOfLineType) {
-        this.mRange = String.default(pRange);
-        this.mBackupMode = Boolean.default(pBackupMode);
+    constructor(pRangeCode, pBackupMode, pEndOfLineType) {
+        this.mRangeCode = String.validate(pRangeCode);
+        this.mBackupMode = BackupMode.parse(pBackupMode);
         this.mEndOfLineType = EndOfLineType.parse(pEndOfLineType);
     }
 
     serialise() {
         let data = { 
-            "range": this.range, 
+            "rangeCode": this.rangeCode, 
             "backupMode": this.backupMode, 
             "endOfLineType": this.endOfLineType 
         };
@@ -30,7 +31,7 @@ export default class GeneralSettings {
     static deserialise(pData) {
         let object = new GeneralSettings();
         if (pData != null)
-            object = new GeneralSettings(pData.range, pData.backupMode, pData.endOfLineType);
+            object = new GeneralSettings(pData.rangeCode, pData.backupMode, pData.endOfLineType);
         return object;
     }    
 }

@@ -1,9 +1,7 @@
 @echo off
 
-set FirstArgument=One
-set SecondArgument=Two
-set ThirdArgument=Three
+set FolderPath=c:\Temp\Renumberation Test
 
-node "./main.js" "%FirstArgument%" "%SecondArgument%" "%ThirdArgument%"
+node "./main.js" "%FolderPath%" -d
 
 pause

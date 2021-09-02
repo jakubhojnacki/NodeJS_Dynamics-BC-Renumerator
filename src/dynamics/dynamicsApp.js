@@ -22,13 +22,13 @@ export default class DynamicsApp {
     set renumberedId(pValue) { this.mRenumberedId = pValue; }
 
     constructor(pId, pName, pPublisher, pVersion, pDependencies, pIdRanges, pRenumberedId) {
-        this.mId = Guid.default(pId);
-        this.mName = String.default(pName);
-        this.mPublisher = String.default(pPublisher);
-        this.mVersion = DynamicsAppVersion.default(pVersion);
-        this.mDependencies = DynamicsAppDependencies.default(pDependencies);
-        this.mIdRanges = DynamicsAppIdRanges.default(pIdRanges);
-        this.mRenumberedId = Guid.default(pRenumberedId);
+        this.mId = Guid.validate(pId);
+        this.mName = String.validate(pName);
+        this.mPublisher = String.validate(pPublisher);
+        this.mVersion = pVersion;
+        this.mDependencies = pDependencies;
+        this.mIdRanges = pIdRanges;
+        this.mRenumberedId = Guid.validate(pRenumberedId);
     }
 
     static deserialise(pData) {
@@ -48,16 +48,15 @@ export default class DynamicsApp {
         this.idRanges.inject(pData.idRanges);
     }
 
-    log(pIndentation) {
-        const logger = global.application.logger;
-        let indentation = Number.default(pIndentation);
-        logger.writeText("Dynamics App:", pIndentation);
-        indentation += logger.tab;
-        logger.writeText(StringBuilder.nameValue("ID", this.id), indentation);
-        logger.writeText(StringBuilder.nameValue("Name", this.name), indentation);
-        logger.writeText(StringBuilder.nameValue("Publisher", this.publisher), indentation);
-        logger.writeText(StringBuilder.nameValue("Version", this.version.toString()), indentation);
-        this.dependencies.log(indentation);
-        this.idRanges.log(indentation);
+    log(pLogger, pIndentation) {
+        let indentation = Number.validate(pIndentation);
+        pLogger.writeLine("Dynamics App:", pIndentation);
+        indentation += 1;
+        pLogger.writeLine(StringBuilder.nameValue("ID", this.id), indentation);
+        pLogger.writeLine(StringBuilder.nameValue("Name", this.name), indentation);
+        pLogger.writeLine(StringBuilder.nameValue("Publisher", this.publisher), indentation);
+        pLogger.writeLine(StringBuilder.nameValue("Version", this.version.toString()), indentation);
+        this.dependencies.log(pLogger, indentation);
+        this.idRanges.log(pLogger, indentation);
     }        
 }

@@ -4,11 +4,11 @@
  * @version 0.0.1 (2021-02-21)
  */
 
- import "../general/javaScript.js";
- import FileSystem from "fs";
+import "../general/javaScript.js";
+import FileSystem from "fs";
 
 export default class Renumberator {
-    get renumberation() { return this.mRenumberation; }
+    get engine() { return this.mEngine; }
     get filePath() { return this.mFilePath; }
     set filePath(pValue) { this.mFilePath = pValue; }
     get newFilePath() { return this.mNewFilePath; }
@@ -16,15 +16,15 @@ export default class Renumberator {
     get newFile() { return this.mNewFile; }
     set newFile(pValue) { this.mNewFile = pValue; }
 
-    constructor(pRenumberation) {
-        this.mRenumberation = pRenumberation;
+    constructor(pEngine) {
+        this.mEngine = pEngine;
         this.mFilePath = "";
         this.mNewFilePath = "";
         this.mNewFile = null;
     }
 
     createNewFile() {
-        this.newFilePath = this.filePath + this.renumberation.tempExtension;
+        this.newFilePath = `${this.filePath}.tmp`;
         if (FileSystem.existsSync(this.newFilePath))
             FileSystem.unlinkSync(this.newFilePath);
         this.newFile = FileSystem.createWriteStream(this.newFilePath, { flags: "a" });

@@ -12,12 +12,11 @@ export default class DynamicsAppIdRanges extends Array {
         super()          
     }
 
-    log(pIndentation) {
-        const logger = global.application.logger;
-        let indentation = Number.default(pIndentation);
-        logger.writeText("ID Ranges:", indentation);
+    log(pLogger, pIndentation) {
+        let indentation = Number.validate(pIndentation);
+        pLogger.writeLine("ID Ranges:", indentation);
         for (const dynamicsAppIdRange of this)
-            logger.writeText(dynamicsAppIdRange.toString(), indentation + logger.tab);
+            pLogger.writeLine(dynamicsAppIdRange.toString(), indentation + 1);
     }
     
     static deserialise(pData) {

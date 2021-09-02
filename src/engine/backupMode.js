@@ -4,7 +4,7 @@
  * @version 0.0.1 (2021-02-20)
  */
 
-import "./general/javaScript.js";
+import "../general/javaScript.js";
 import Enum from "../general/enum.js";
 
 export default class BackupMode {

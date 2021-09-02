@@ -11,6 +11,7 @@ import ArgTemplateFactory from "./args/argTemplateFactory.js";
 import Engine from "./engine/engine.js";
 import Logger from "./general/logger.js";
 import Manifest from "./general/manifest.js";
+import Settings from "./settings/settings.js";
 import StringBuilder from "./general/stringBuilder.js";
 
 export default class Application {
@@ -51,7 +52,7 @@ export default class Application {
     }
 
     engine_onDynamicsApp(pDynamicsApp) {
-        pDynamicsApp.log(this.logger.tab);
+        pDynamicsApp.log(this.logger, 0);
     }
 
     engine_onFolder(pFolderName, pIndentation) {
@@ -59,11 +60,8 @@ export default class Application {
     }
 
     engine_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
-        const stringBuilder = new StringBuilder();
-        stringBuilder.addNameValue("File", pFileName);
-        if (pRenumbered)
-            stringBuilder.addNameValue("Renumbered By", pRenumberator.name);
-        this.logger.writeLine(stringBuilder.toString(), (pIndentation + 1) * this.logger.tab);
+        const renumberedText = pRenumbered ? `renumbered by "${pRenumberator.name}"` : "not renumbered";
+        this.logger.writeLine(`${pFileName} => ${renumberedText}`, pIndentation + 1);
     }
 
     initialise() {

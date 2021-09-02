@@ -18,11 +18,11 @@ export default class DynamicsAppDependency {
     set renumberedId(pValue) { this.mRenumberedId = pValue; }
 
     constructor(pId, pName, pPublisher, pVersion, pRenumberedId) {
-        this.mId = Guid.default(pId);
-        this.mName = String.default(pName);
-        this.mPublisher = String.default(pPublisher);
-        this.mVersion = DynamicsAppVersion.default(pVersion);
-        this.mRenumberedId = Guid.default(pRenumberedId);
+        this.mId = Guid.validate(pId);
+        this.mName = String.validate(pName);
+        this.mPublisher = String.validate(pPublisher);
+        this.mVersion = pVersion;
+        this.mRenumberedId = Guid.validate(pRenumberedId);
     }
 
     static deserialise(pData) {

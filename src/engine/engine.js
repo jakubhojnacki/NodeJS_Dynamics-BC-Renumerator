@@ -5,10 +5,11 @@
  */
 
 import "../general/javaScript.js";
+import DynamicsApp from "../dynamics/dynamicsApp.js";
+import DynamicsManager from "../dynamics/dynamicsManager.js";
 import FileSystem from "fs";
 import Path from "path";
 import RenumberatorFactory from "./renumberatorFactory.js";
-import Settings from "../settings/settings.js";
 
 export default class Engine {
     get folderPath() { return this.mFolderPath; }
@@ -30,8 +31,8 @@ export default class Engine {
     set onFile(pValue) { this.mOnFile = pValue; }
 
     constructor(pFolderPath, pSettings) {
-        this.mFolderPath = String.default(pFolderPath);
-        this.mSettings = Object.default(pSettings, new Settings());
+        this.mFolderPath = String.validate(pFolderPath);
+        this.mSettings = pSettings;
         this.mDynamicsManager = new DynamicsManager();
         this.mDynamicsApp = null;
         this.mDynamicsObjects = null;

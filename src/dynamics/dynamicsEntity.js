@@ -13,8 +13,8 @@ export default class DynamicsEntity {
     set renumberedId(pValue) { this.mRenumberedId = pValue; }
 
     constructor(pId, pName, pRenumberedId) {
-        this.mId = Number.default(pId);
-        this.mName = String.default(pName);
-        this.mRenumberedId = Number.default(pRenumberedId);
+        this.mId = Number.validate(pId);
+        this.mName = String.validate(pName).removeIfStartsWith("\"").removeIfEndsWith("\"");
+        this.mRenumberedId = Number.validate(pRenumberedId);
     }
 }

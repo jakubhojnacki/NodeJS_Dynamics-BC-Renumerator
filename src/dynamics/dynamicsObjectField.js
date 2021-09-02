@@ -12,7 +12,7 @@ export default class DynamicsObjectField extends DynamicsEntity {
 
     constructor(pId, pName, pDataType, pRenumberedId) {
         super(pId, pName, pRenumberedId);
-        this.mDataType = String.default(pDataType);
+        this.mDataType = String.validate(pDataType);
     }
 
     static deserialise(pData) {

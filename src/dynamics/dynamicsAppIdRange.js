@@ -16,10 +16,10 @@ export default class DynamicsAppIdRange {
     set renumberedTo(pValue) { this.mRenumberedTo = pValue; }
 
     constructor(pFrom, pTo, pRenumberedFrom, pRenumberedTo) {
-        this.mFrom = Number.default(pFrom);
-        this.mTo = Number.default(pTo);
-        this.mRenumberedFrom = Number.default(pRenumberedFrom);
-        this.mRenumberedTo = Number.default(pRenumberedTo);
+        this.mFrom = Number.validate(pFrom);
+        this.mTo = Number.validate(pTo);
+        this.mRenumberedFrom = Number.validate(pRenumberedFrom);
+        this.mRenumberedTo = Number.validate(pRenumberedTo);
     }
 
     static deserialise(pData) {

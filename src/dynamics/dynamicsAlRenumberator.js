@@ -16,11 +16,11 @@ import ReadLine from "readline";
 import RegExpFlag from "../regExp/regExpFlag.js";
 import RegExpSchema from "../regExp/regExpSchema.js";
 import RegExpTemplate from "../regExp/regExpTemplate.js";
-import Renumberator from "./renumberator.js";
+import Renumberator from "../engine/renumberator.js";
 
 export default class DynamicsAlRenumberator extends Renumberator {
     get name() { return "Dynamics AL Renumberator"; }
-    get dynamicsManager() { return this.renumberation.dynamicsManager; }
+    get dynamicsManager() { return this.engine.dynamicsManager; }
     get regExpSchema() { return this.mRegExpSchema; }
     get dynamicsObject() { return this.mDynamicsObject; }
     set dynamicsObject(pValue) { this.mDynamicsObject = pValue; }
@@ -83,7 +83,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
         const readLineInterface = ReadLine.createInterface({ input: fileStream, crlfDelay: Infinity });
         for await (const line of readLineInterface) {
             const newLine = await this.renumberLine(line);
-            this.newFile.write(newLine + EndOfLineType.get(this.renumberation.endOfLineType));
+            this.newFile.write(newLine + EndOfLineType.get(this.engine.settings.general.endOfLineType));
         }
         fileStream.close();
     }
@@ -112,7 +112,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
 
     parseDynamicsObject(pMatch) {
         const type = DynamicsObjectType.parse(pMatch.namedGroups.type);
-        const id = Number.tryToParseInt(pMatch.namedGroups.id);
+        const id = Number.validateAsInteger(pMatch.namedGroups.id);
         const name = pMatch.namedGroups.name;
         this.dynamicsObject = new DynamicsObject(type, id, name);
     }
@@ -137,7 +137,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
     }
 
     parseDynamicsObjectField(pMatch) {
-        const id = Number.tryToParseInt(pMatch.namedGroups.id);
+        const id = Number.validateAsInteger(pMatch.namedGroups.id);
         const name = pMatch.namedGroups.name;
         const dataType = pMatch.namedGroups.dataType;
         this.dynamicsObjectField = new DynamicsObjectField(id, name, dataType);

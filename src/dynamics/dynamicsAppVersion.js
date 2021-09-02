@@ -13,23 +13,19 @@ export default class DynamicsAppVersion {
     get revision() { return this.mRevision; }
 
     constructor(pMajor, pMinor, pBuild, pRevision) {
-        this.mMajor = Number.default(pMajor);
-        this.mMinor = Number.default(pMinor);
-        this.mBuild = Number.default(pBuild);
-        this.mRevision = Number.default(pRevision);
+        this.mMajor = Number.validate(pMajor);
+        this.mMinor = Number.validate(pMinor);
+        this.mBuild = Number.validate(pBuild);
+        this.mRevision = Number.validate(pRevision);
     }
 
     static parse(pString) {
         const stringParts = pString.split(".");
-        const major = (stringParts.length >= 1 ? Number.tryToParseInt(stringParts[0]) : 0);
-        const minor = (stringParts.length >= 2 ? Number.tryToParseInt(stringParts[1]) : 0);
-        const build = (stringParts.length >= 3 ? Number.tryToParseInt(stringParts[2]) : 0);
-        const revision = (stringParts.length >= 4 ? Number.tryToParseInt(stringParts[3]) : 0);
+        const major = (stringParts.length >= 1 ? Number.validateAsInteger(stringParts[0]) : 0);
+        const minor = (stringParts.length >= 2 ? Number.validateAsInteger(stringParts[1]) : 0);
+        const build = (stringParts.length >= 3 ? Number.validateAsInteger(stringParts[2]) : 0);
+        const revision = (stringParts.length >= 4 ? Number.validateAsInteger(stringParts[3]) : 0);
         return new DynamicsAppVersion(major, minor, build, revision);
-    }
-
-    static default(pValue, pDefault) {
-        return pValue != null ? pValue : (pDefault != null ? pDefault : new DynamicsAppVersion());
     }
 
     toString() {

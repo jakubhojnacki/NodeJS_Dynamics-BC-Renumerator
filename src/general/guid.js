@@ -4,20 +4,20 @@
  * @version 0.0.1 (2021-02-19)
  */
 
-const uuid = require("uuid");
+import { v4 as UUID } from "uuid";
 
 export default class Guid {
-    static get empty() { return uuid.NIL; }
+    static get empty() { return UUID.NIL; }
 
-    static default(pValue, pDefault) {
+    static validate(pValue, pDefault) {
         return pValue != null ? pValue : (pDefault != null ? pDefault : Guid.empty);
     }
 
     static create() {
-        return uuid.v4();
+        return UUID();
     }
 
     static parse(pString) {
-        return uuid.parse(pString);
+        return UUID.parse(pString);
     }
 }

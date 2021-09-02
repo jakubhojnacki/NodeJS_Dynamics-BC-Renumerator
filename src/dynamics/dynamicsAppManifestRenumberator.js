@@ -5,14 +5,14 @@
  */
 
 import "../general/javaScript.js";
-import FileSystem from "fs.js";
-import Path from "path.js";
-import Renumberator from "./renumberator.js";
+import FileSystem from "fs";
+import Path from "path";
+import Renumberator from "../engine/renumberator.js";
 
 export default class DynamicsAppManifestRenumberator extends Renumberator {
     get name() { return "Dynamics AL App Manifest Renumberator"; }
-    get dynamicsManager() { return this.renumberation.dynamicsManager; }
-    get dynamicsApp() { return this.renumberation.dynamicsApp; }
+    get dynamicsManager() { return this.engine.dynamicsManager; }
+    get dynamicsApp() { return this.engine.dynamicsApp; }
 
     constructor(pRenumberation) {
         super(pRenumberation);

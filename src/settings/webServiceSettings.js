@@ -14,9 +14,9 @@ export default class WebServiceSettings {
     get type() { return this.mType; }
 
     constructor(pUrl, pUser, pPassword, pType) {
-        this.mUrl = String.default(pUrl);
-        this.mUser = String.default(pUser);
-        this.mPassword = String.default(pPassword);
+        this.mUrl = String.validate(pUrl);
+        this.mUser = String.validate(pUser);
+        this.mPassword = String.validate(pPassword);
         this.mType = WebServiceType.parse(pType);
     }
 

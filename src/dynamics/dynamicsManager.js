@@ -29,7 +29,7 @@ export default class DynamicsManager {
     }
 
     async createNewAppId() {
-        return Guid.new();
+        return Guid.create();
     }
 
     async readObjects() {        

@@ -67,18 +67,17 @@ export default class Args extends Array {
         return result;
     }
 
-    reportInvalid(pIndentation) {
-        const logger = global.theApplication.logger;
+    reportInvalid(pLogger, pIndentation) {
         let indentation = Number.validate(pIndentation);
-        logger.writeLine("Application args:", indentation);
-        indentation += logger.tab;
+        pLogger.writeLine("Application args:", indentation);
+        indentation += 1;
         for (const argTemplate of this.argTemplates) {
-            logger.writeLine(argTemplate.toString(this), indentation);
+            pLogger.writeLine(argTemplate.toString(this), indentation);
             const arg = this.find((lArg) => { return lArg.name === argTemplate.name; });
             if (arg != null)
-                logger.writeLine(`Passed: ${arg.value}; Valid: ${arg.valid}.`, indentation + logger.tab);
+                pLogger.writeLine(`Passed: ${arg.value}; Valid: ${arg.valid}.`, indentation + 1);
             else
-                logger.writeLine("Not passed.", indentation + logger.tab);
+                pLogger.writeLine("Not passed.", indentation + 1);
         }
     }
 
@@ -95,11 +94,10 @@ export default class Args extends Array {
         return value;
     }
 
-    log(pIndentation) {
+    log(pLogger, pIndentation) {
         let indentation = Number.validate(pIndentation);
-        const logger = global.application.logger;
-        logger.writeLine("Args:", indentation);
+        pLogger.writeLine("Args:", indentation);
         for (const arg of this)
-            logger.writeLine(arg.toString(), indentation + logger.tab);
+            pLogger.writeLine(arg.toString(), indentation + 1);
     }
 }

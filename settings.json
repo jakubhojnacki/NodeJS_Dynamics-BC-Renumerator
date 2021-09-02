@@ -1,7 +1,7 @@
 {
     "general" : {
-        "range": "SAAS",
-        "backupMode": "none",
+        "rangeCode": "SAAS",
+        "backupMode": "line",
         "endOfLineType": "windows"
     },
     "webService": {

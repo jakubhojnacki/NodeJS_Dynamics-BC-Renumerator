@@ -4,6 +4,7 @@
     "displayName": "Dynamics Renumberator",
     "description": "Renumbers Dynamics application into another ID range",
     "date": "September 2021",
+    "type": "module",
     "main": "main.js",
     "scripts": {
         "test": "node test.js"
@@ -14,5 +15,9 @@
         "renumber"
     ],
     "author": "Jakub Hojnacki <jakubhojnacki@gmail.com>",
-    "license": "ISC"
+    "license": "ISC",
+    "dependencies": {
+        "uuid": "^8.3.2",
+        "xmldoc": "^1.1.2"
+    }
 }

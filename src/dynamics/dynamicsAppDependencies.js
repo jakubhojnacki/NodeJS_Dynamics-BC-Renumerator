@@ -13,12 +13,11 @@ export default class DynamicsAppDependencies extends Array {
         super();
     }
 
-    log(pIndentation) {
-        const logger = global.application.logger;
-        let indentation = Number.default(pIndentation);
-        logger.writeText("Dependencies:", indentation);
+    log(pLogger, pIndentation) {
+        let indentation = Number.validate(pIndentation);
+        pLogger.writeLine("Dependencies:", indentation);
         for (const dynamicsAppDependency of this)
-            logger.writeText(dynamicsAppDependency.toString(), indentation + logger.tab);
+            pLogger.writeLine(dynamicsAppDependency.toString(), indentation + 1);
     }
     
     static deserialise(pData) {
