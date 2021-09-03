@@ -5,9 +5,9 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsEntity from "./dynamicsEntity.js";
+import DynamicsObjectBase from "./dynamicsObjectBase.js";
 
-export default class DynamicsObjectField extends DynamicsEntity {
+export default class DynamicsObjectField extends DynamicsObjectBase {
     get dataType() { return this.mDataType; }
 
     constructor(pId, pName, pDataType, pRenumberedId) {
@@ -18,7 +18,7 @@ export default class DynamicsObjectField extends DynamicsEntity {
     static deserialise(pData) {
         let dynamicsObjectField = null;
         if (pData != null)
-            dynamicsObjectField = new DynamicsObjectField(pData.id, pData.name, pData.renumberedId);
+            dynamicsObjectField = new DynamicsObjectField(pData.extensionId, pData.name, pData.renumberedId);
         return dynamicsObjectField;
     }
 }

@@ -5,13 +5,14 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsEntity from "./dynamicsEntity.js";
+import DynamicsObjectBase from "./dynamicsObjectBase.js";
 import DynamicsObjectType from "./dynamicsObjectType.js";
 import DynamicsObjectFields from "./dynamicsObjectFields.js";
 
-export default class DynamicsObject extends DynamicsEntity {
+export default class DynamicsObject extends DynamicsObjectBase {
     get type() { return this.mType; }
     get fields() { return this.mFields; }
+    set fields(pValue) { this.mFields = pValue; }
 
     constructor(pType, pId, pName, pRenumberedId, pFields) {
         super(pId, pName, pRenumberedId);

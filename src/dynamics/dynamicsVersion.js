@@ -1,12 +1,12 @@
 /**
- * @module "DynamicsAppVersion" class
- * @description Represents Dynamics application version
+ * @module "DynamicsVersion" class
+ * @description Represents Dynamics (application) version
  * @version 0.0.1 (2021-02-20)
  */
 
 import "../general/javaScript.js";
 
-export default class DynamicsAppVersion {
+export default class DynamicsVersion {
     get major() { return this.mMajor; }
     get minor() { return this.mMinor; }
     get build() { return this.mBuild; }
@@ -25,33 +25,33 @@ export default class DynamicsAppVersion {
         const minor = (stringParts.length >= 2 ? Number.validateAsInteger(stringParts[1]) : 0);
         const build = (stringParts.length >= 3 ? Number.validateAsInteger(stringParts[2]) : 0);
         const revision = (stringParts.length >= 4 ? Number.validateAsInteger(stringParts[3]) : 0);
-        return new DynamicsAppVersion(major, minor, build, revision);
+        return new DynamicsVersion(major, minor, build, revision);
     }
 
     toString() {
         return `${this.major}.${this.minor}.${this.build}.${this.revision}`;
     }
 
-    compare(pDynamicsAppVersion) {
-        let result = this.major.compare(pDynamicsAppVersion.major);
+    compare(pDynamicsVersion) {
+        let result = this.major.compare(pDynamicsVersion.major);
         if (result === 0)
-            result = this.minor.compare(pDynamicsAppVersion.minor);
+            result = this.minor.compare(pDynamicsVersion.minor);
         if (result === 0) 
-            result = this.build.compare(pDynamicsAppVersion.build);
+            result = this.build.compare(pDynamicsVersion.build);
         if (result === 0) 
-            result = this.revision.compare(pDynamicsAppVersion.revision);
+            result = this.revision.compare(pDynamicsVersion.revision);
         return result;
     }
 
-    isEqual(pDynamicsAppVersion) {
-        return (this.compare(pDynamicsAppVersion) === 0);
+    isEqual(pDynamicsVersion) {
+        return (this.compare(pDynamicsVersion) === 0);
     }
 
-    isGreater(pDynamicsAppVersion) {
-        return (this.compare(pDynamicsAppVersion) === 1);
+    isGreater(pDynamicsVersion) {
+        return (this.compare(pDynamicsVersion) === 1);
     }
 
-    isLower(pDynamicsAppVersion) {
-        return (this.compare(pDynamicsAppVersion) === -1);
+    isLower(pDynamicsVersion) {
+        return (this.compare(pDynamicsVersion) === -1);
     }
 }

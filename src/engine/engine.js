@@ -5,8 +5,8 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsApp from "../dynamics/dynamicsApp.js";
-import DynamicsManager from "../dynamics/dynamicsManager.js";
+import DynamicsApplication from "../dynamics/dynamicsApplication.js";
+import DynamicsWebServiceAdapter from "../dynamics/dynamicsWebServiceAdapter.js";
 import FileSystem from "fs";
 import Path from "path";
 import RenumberatorFactory from "./renumberatorFactory.js";
@@ -15,11 +15,9 @@ export default class Engine {
     get folderPath() { return this.mFolderPath; }
     get settings() { return this.mSettings; }
 
-    get dynamicsManager() { return this.mDynamicsManager; }
+    get dynamicsAdapter() { return this.mDynamicsAdapter; }
     get dynamicsApp() { return this.mDynamicsApp; }
     set dynamicsApp(pValue) { this.mDynamicsApp = pValue; }
-    get dynamicsObjects() { return this.mDynamicsObjects; }
-    set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
     get renumberators() { return this.mRenumberators; }
     set renumberators(pValue) { this.mRenumberators = pValue; }
 
@@ -33,9 +31,8 @@ export default class Engine {
     constructor(pFolderPath, pSettings) {
         this.mFolderPath = String.validate(pFolderPath);
         this.mSettings = pSettings;
-        this.mDynamicsManager = new DynamicsManager();
+        this.mDynamicsAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
         this.mDynamicsApp = null;
-        this.mDynamicsObjects = null;
         this.mRenumberators = [];
     }
 
@@ -54,8 +51,7 @@ export default class Engine {
 
     async process() {
         this.readDynamicsApp();
-        await this.dynamicsManager.readApps();
-        await this.dynamicsManager.readObjects();
+        await this.dynamicsAdapter.renumber();
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumber();
     }
@@ -65,7 +61,7 @@ export default class Engine {
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApp = DynamicsApp.deserialise(data);
+            this.dynamicsApp = DynamicsApplication.deserialise(data);
             if (this.onDynamicsApp)
                 this.onDynamicsApp(this.dynamicsApp);
         } else

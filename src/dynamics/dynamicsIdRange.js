@@ -1,13 +1,13 @@
 /**
- * @module "DynamicsAppIdRange" class
- * @description Represents one Dynamics application range
+ * @module "DynamicsIdRange" class
+ * @description Represents one Dynamics ID range
  * @version 0.0.1 (2021-02-19)
  */
 
 import "../general/javaScript.js";
 import StringBuilder from "../general/stringBuilder.js";
 
-export default class DynamicsAppIdRange {
+export default class DynamicsIdRange {
     get from() { return this.mFrom; }
     get to() { return this.mTo; }
     get renumberedFrom() { return this.mRenumberedFrom; }
@@ -20,13 +20,6 @@ export default class DynamicsAppIdRange {
         this.mTo = Number.validate(pTo);
         this.mRenumberedFrom = Number.validate(pRenumberedFrom);
         this.mRenumberedTo = Number.validate(pRenumberedTo);
-    }
-
-    static deserialise(pData) {
-        let dynamicsAppIdRange = null;
-        if (pData != null)
-            dynamicsAppIdRange = new DynamicsAppIdRange(pData.from, pData.to);
-        return dynamicsAppIdRange;
     }
 
     inject(pData) {

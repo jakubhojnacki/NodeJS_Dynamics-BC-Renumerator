@@ -1,5 +1,5 @@
 /**
- * @module "DynamicsAppManifestRenumberator" class
+ * @module "DynamicsManifestRenumberator" class
  * @description Handles Dynamics app manifest renumberation
  * @version 0.0.1 (2021-02-21)
  */
@@ -9,8 +9,8 @@ import FileSystem from "fs";
 import Path from "path";
 import Renumberator from "../engine/renumberator.js";
 
-export default class DynamicsAppManifestRenumberator extends Renumberator {
-    get name() { return "Dynamics AL App Manifest Renumberator"; }
+export default class DynamicsManifestRenumberator extends Renumberator {
+    get name() { return "Dynamics AL Manifest Renumberator"; }
     get dynamicsManager() { return this.engine.dynamicsManager; }
     get dynamicsApp() { return this.engine.dynamicsApp; }
 

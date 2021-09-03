@@ -5,24 +5,24 @@
  */
 
 import "../general/javaScript.js";
+import DynamicsWebServiceSettings from "./dynamicsWebServiceSettings.js";
 import FileSystem from "fs";
 import GeneralSettings from "./generalSettings.js";
 import Path from "path";
-import WebServiceSettings from "./webServiceSettings.js";
 
 export default class Settings {
     get general() { return this.mGeneral; }
-    get webService() { return this.mWebService; }
+    get dynamicsWebService() { return this.mDynamicsWebService; }
 
-    constructor(pGeneral, pWebService) {
+    constructor(pGeneral, pDynamicsWebService) {
         this.mGeneral = Object.validate(pGeneral, new GeneralSettings());
-        this.mWebService = Object.validate(pWebService, new WebServiceSettings());
+        this.mDynamicsWebService = Object.validate(pDynamicsWebService, new DynamicsWebServiceSettings());
     }
 
     serialise() {
         let data = {
             "general": this.general.serialise(),
-            "webService": this.webService.serialise()
+            "dynamicsWebService": this.dynamicsWebService.serialise()
         };
         return data;
     }
@@ -42,8 +42,8 @@ export default class Settings {
         let object = new Settings();
         if (pData != null) {
             const general = GeneralSettings.deserialise(pData.general);
-            const webService = WebServiceSettings.deserialise(pData.webService);
-            object = new Settings(general, webService);
+            const dynamicsWebService = DynamicsWebServiceSettings.deserialise(pData.dynamicsWebService);
+            object = new Settings(general, dynamicsWebService);
         }
         return object;
     }
