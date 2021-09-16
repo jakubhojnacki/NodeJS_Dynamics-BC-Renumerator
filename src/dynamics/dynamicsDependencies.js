@@ -5,19 +5,20 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsDependency from "./dynamicsDependency.js";
 import Guid from "../general/guid.js";
 
 export default class DynamicsDependencies extends Array {
+    get logger() { return global.theApplication.logger; }
+
     constructor() {        
         super();
     }
 
-    log(pLogger, pIndentation) {
-        let indentation = Number.validate(pIndentation);
-        pLogger.writeLine("Dependencies:", indentation);
+    log(pIndentation) {
+        const indentation = Number.validate(pIndentation);
+        this.logger.writeLine("Dependencies:", indentation);
         for (const dynamicsDependency of this)
-            pLogger.writeLine(dynamicsDependency.toString(), indentation + 1);
+            this.logger.writeLine(dynamicsDependency.toString(), indentation + 1);
     }
 
     inject(pData) {

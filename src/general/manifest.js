@@ -26,6 +26,6 @@ export default class Manifest {
     }
 
     toString() {
-        return `${this.name} version ${this.version}, ${this.author}, ${this.date}`; 
+        return `${this.name} ${this.version}, ${this.author}, ${this.date}`; 
     }
 }

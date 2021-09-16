@@ -4,8 +4,8 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
-import ODataOperator from "./oDataOperator";
+import "../general/javaScript.js";
+import ODataOperator from "./oDataOperator.js";
 
 export default class ODataFilterPart {
     get name() { return this.mName; }
@@ -13,7 +13,7 @@ export default class ODataFilterPart {
     get value() { return this.mValue; }
 
     constructor(pName, pOperator, pValue) {
-        this.mName = String.default(pName);
+        this.mName = String.validate(pName);
         this.mOperator = ODataOperator.parse(pOperator);
         this.mValue = pValue;
     }

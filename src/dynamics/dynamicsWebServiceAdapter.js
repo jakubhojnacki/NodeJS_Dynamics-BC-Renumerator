@@ -5,6 +5,7 @@
  */
 
 import "../general/javaScript.js";
+import BasicAuthentication from "../webServices/basicAuthentication.js";
 import Charset from "../network/charset.js";
 import ContentType from "../network/contentType.js";
 import DynamicsApplication from "./dynamicsApplication.js";
@@ -12,6 +13,7 @@ import DynamicsDependencies from "./dynamicsDependencies.js";
 import DynamicsDependency from "./dynamicsDependency.js";
 import DynamicsObjects from "./dynamicsObjects.js";
 import DynamicsObject from "./dynamicsObject.js";
+import DynamicsWebServiceSerialiser from "./dynamicsWebServiceSerialiser.js";
 import MediaType from "../network/mediaType.js";
 import Method from "../network/method.js";
 import ODataFilter from "../oData/oDataFilter.js";
@@ -38,7 +40,7 @@ export default class DynamicsWebServiceAdapter {
 
     async renumber(pApp, pRenumberationCode) {
         this.initialise(pApp, pRenumberationCode);
-        this.runWebService();
+        await this.runWebService();
         this.finalise();
     }
 
@@ -52,19 +54,24 @@ export default class DynamicsWebServiceAdapter {
         //TODO - Not implemented
     }
 
-    runWebService() {
+    async runWebService() {
         const webService = this.createWebService();
-        const response = webService.execute();
+        const response = await webService.execute();
         this.processResponse(response);
     }
 
     createWebService() {
         const url = this.createUrl();
-        const headers = this.createHeaders();
         const authentication = this.createAuthentication();
         const contentType = new ContentType(MediaType.json, Charset.utf8);
         const accept = new ContentType(MediaType.json, Charset.utf8);
-        return new RestWebService(url, Method.get, headers, "", authentication, contentType, accept);
+        return new RestWebService(url, Method.get, null, "", authentication, contentType, accept);
+    }
+
+    createAuthentication() {
+        const user = this.settings.user;
+        const password = this.settings.password;
+        return new BasicAuthentication(user, password);
     }
 
     createUrl() {
@@ -94,7 +101,7 @@ export default class DynamicsWebServiceAdapter {
 
     processApplication(pData) {
         if ((pData) && (Array.isArray(pData)) && (pData.length > 0))
-            this.application = DynamicsApplication.deserialise(pData[0]);
+            this.application = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
         else
             this.cannotProcessResponse();
     }
@@ -149,5 +156,8 @@ export default class DynamicsWebServiceAdapter {
 
     cannotProcessResponse() {
         throw new Error("Cannot process renumberation web service response");
+    }
+
+    finalise() {        
     }
 }

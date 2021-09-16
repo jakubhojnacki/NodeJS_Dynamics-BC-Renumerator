@@ -4,14 +4,14 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
-import DynamicsApplication from "./dynamicsApplication";
-import DynamicsApplications from "./dynamicsApplications";
-import DynamicsDependency from "./dynamicsDependency";
-import DynamicsDependencies from "./dynamicsDependencies";
-import DynamicsIdRange from "./dynamicsIdRange";
-import DynamicsIdRanges from "./dynamicsIdRanges";
-import DynamicsVersion from "./dynamicsVersion";
+import "../general/javaScript.js";
+import DynamicsApplication from "./dynamicsApplication.js";
+import DynamicsApplications from "./dynamicsApplications.js";
+import DynamicsDependency from "./dynamicsDependency.js";
+import DynamicsDependencies from "./dynamicsDependencies.js";
+import DynamicsIdRange from "./dynamicsIdRange.js";
+import DynamicsIdRanges from "./dynamicsIdRanges.js";
+import DynamicsVersion from "./dynamicsVersion.js";
 
 export default class DynamicsManifestSerialiser {
     static deserialiseDynamicsApplications(pData) {

@@ -8,6 +8,8 @@ import "../general/javaScript.js";
 import Arg from "./arg.js";
 
 export default class Args extends Array {
+    get logger() { return global.theApplication.logger; }
+
     get argTemplates() { return this.mArgTemplates; }
 
     constructor(pArgTemplates) {
@@ -94,10 +96,10 @@ export default class Args extends Array {
         return value;
     }
 
-    log(pLogger, pIndentation) {
-        let indentation = Number.validate(pIndentation);
-        pLogger.writeLine("Args:", indentation);
+    log(pIndentation) {
+        const indentation = Number.validate(pIndentation);
+        this.logger.writeLine("Args:", indentation);
         for (const arg of this)
-            pLogger.writeLine(arg.toString(), indentation + 1);
+            this.logger.writeLine(arg.toString(), indentation + 1);
     }
 }

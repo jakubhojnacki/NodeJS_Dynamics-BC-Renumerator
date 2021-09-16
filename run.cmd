@@ -1,6 +1,6 @@
 @echo off
 
-set FolderPath=c:\Temp\Renumberation Test
+set FolderPath=c:\Temp\Product_nHanced-Search
 
 node "./main.js" "%FolderPath%" -d
 

@@ -4,7 +4,9 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
+import "../general/javaScript.js";
+import Guid from "../general/guid.js";
+import StringBuilder from "../general/stringBuilder.js";
 
 export default class DynamicsApplicationBase {
     get id() { return this.mId; }

@@ -25,14 +25,14 @@ export default class DynamicsWebServiceSettings {
         this.mProtocol = Protocol.parse(pProtocol);
         this.mServer = String.validate(pServer);
         this.mPort = Number.validateAsInteger(pPort);
-        this.mInstance = String.default(pInstance);
+        this.mInstance = String.validate(pInstance);
         this.mUser = String.validate(pUser);
         this.mPassword = String.validate(pPassword);
-        this.mApiPublisher = String.default(pApiPublisher);
-        this.mApiGroup = String.default(pApiGroup);
-        this.mApiVersion = String.default(pApiVersion);
-        this.mCompanyName = String.default(pCompanyName);
-        this.mCompanyId = String.default(pCompanyId);
+        this.mApiPublisher = String.validate(pApiPublisher);
+        this.mApiGroup = String.validate(pApiGroup);
+        this.mApiVersion = String.validate(pApiVersion);
+        this.mCompanyName = String.validate(pCompanyName);
+        this.mCompanyId = String.validate(pCompanyId);
     }
 
     serialise() {
@@ -56,7 +56,7 @@ export default class DynamicsWebServiceSettings {
         let webServiceSettings = new DynamicsWebServiceSettings();
         if (pData != null)
             webServiceSettings = new DynamicsWebServiceSettings(pData.protocol, pData.server, pData.port, pData.instance, pData.user, pData.password,
-                pData.apiPublisher, pData.apiGroup, pdata.apiVersion, pData.companyName, pData.companyId);
+                pData.apiPublisher, pData.apiGroup, pData.apiVersion, pData.companyName, pData.companyId);
         return webServiceSettings;
     }    
 

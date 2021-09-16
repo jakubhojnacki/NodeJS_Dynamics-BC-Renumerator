@@ -13,7 +13,7 @@ import DataType from "../general/dataType.js";
 export default class ArgTemplateFactory {
     static get argTemplates() { 
         return new ArgTemplates([
-            new ArgTemplate(0, ArgName.folderPath, "Path to a folder with Dynamics solution", DataType.string, true),
+            new ArgTemplate(0, ArgName.directoryPath, "Path to a directory with Dynamics solution", DataType.string, true),
             new ArgTemplate([ "s", "settings" ], ArgName.settings, "Path to settings file", DataType.string),
             new ArgTemplate([ "d", "debugMode" ], ArgName.debugMode, "Defines debug mode (\"true\" or \"false\")", DataType.boolean)
         ]);        

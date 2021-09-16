@@ -4,8 +4,8 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
-import Enum from "../general/enum";
+import "../general/javaScript.js";
+import Enum from "../general/enum.js";
 
 export default class ODataOperator {
     static get equals() { return "equals"; }
@@ -36,7 +36,7 @@ export default class ODataOperator {
         return Enum.parse(pText, ODataOperator.values, ODataOperator.name);
     }
 
-    static get toString(pValue) {
+    static toString(pValue) {
         let string = "";
         switch (pValue) {
             case ODataOperator.equals:

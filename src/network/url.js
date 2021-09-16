@@ -31,6 +31,9 @@ export default class Url {
 	get password() { return this.mPassword; }
 	set password(pValue) { this.mPassword = pValue; }
 
+    get hostPortString() { return this.createHostPortString(); }
+    get pathString() { return this.createPathString(); }
+
     constructor(pProtocol, pHost, pPort, pPath, pParameters, pUser, pPassword) {
         this.mProtocol = Protocol.parse(pProtocol);
         this.mHost = String.validate(pHost);
@@ -67,7 +70,7 @@ export default class Url {
         let string = "";
         if (this.path != null) {
             let first = true;
-            for (const pathPart of this.path) {
+            for (let pathPart of this.path) {
                 pathPart = pathPart.removeIfStartsWith(Url.pathSeparator);
                 pathPart = pathPart.removeIfEndsWith(Url.pathSeparator);
                 if (pathPart.length > 0) {

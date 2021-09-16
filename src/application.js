@@ -43,20 +43,20 @@ export default class Application {
 
     async runEngine() {
         const __this = this;
-        const folderPath = this.args.get(ArgName.folderPath);
-        const engine = new Engine(folderPath, this.settings);
+        const directoryPath = this.args.get(ArgName.directoryPath);
+        const engine = new Engine(directoryPath, this.settings);
         engine.onDynamicsApp = (lDynamicsApp) => { __this.engine_onDynamicsApp(lDynamicsApp); };
-        engine.onFolder = (lFolderName, lIndentation) => { __this.engine_onFolder(lFolderName, lIndentation); };
+        engine.onDirectory = (lDirectoryName, lIndentation) => { __this.engine_onDirectory(lDirectoryName, lIndentation); };
         engine.onFile = (lFileName, lRenumbered, lRenumberator, lIndentation) => { __this.engine_onFile(lFileName, lRenumbered, lRenumberator, lIndentation); };
-        await engine.run(folderPath, this.setings);
+        await engine.run(directoryPath, this.setings);
     }
 
     engine_onDynamicsApp(pDynamicsApp) {
-        pDynamicsApp.log(this.logger, 0);
+        pDynamicsApp.log(0);
     }
 
-    engine_onFolder(pFolderName, pIndentation) {
-        this.logger.writeLine(`[${pFolderName}]`, pIndentation); 
+    engine_onDirectory(pDirectoryName, pIndentation) {
+        this.logger.writeLine(`[${pDirectoryName}]`, pIndentation); 
     }
 
     engine_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
@@ -66,13 +66,13 @@ export default class Application {
 
     initialise() {
         this.logger.writeLine(Application.manifest.toString());
-        this.logger.newLine();
+        this.logger.writeSeparator();
         const result = this.args.validate();
         return result;
     }
 
     finalise() {
-        this.logger.newLine();
+        this.logger.writeSeparator();
         this.logger.writeLine("Completed.");
     }
 }

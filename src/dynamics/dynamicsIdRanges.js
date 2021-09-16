@@ -5,18 +5,19 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsIdRange from "./dynamicsIdRange.js";
 
 export default class DynamicsIdRanges extends Array {
+    get logger() { return global.theApplication.logger; }
+
     constructor() {      
         super()          
     }
 
-    log(pLogger, pIndentation) {
-        let indentation = Number.validate(pIndentation);
-        pLogger.writeLine("ID Ranges:", indentation);
+    log(pIndentation) {
+        const indentation = Number.validate(pIndentation);
+        this.logger.writeLine("ID Ranges:", indentation);
         for (const dynamicsIdRange of this)
-            pLogger.writeLine(dynamicsIdRange.toString(), indentation + 1);
+            this.logger.writeLine(dynamicsIdRange.toString(), indentation + 1);
     }
 
     inject(pData) {

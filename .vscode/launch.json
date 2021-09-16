@@ -5,13 +5,14 @@
             "type": "node",
             "request": "launch",
             "name": "Test node.js Application",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
             "program": "${workspaceFolder}/main.js",
             "args": [
-                "C:\\Temp\\Renumberation Test",
+                "C:\\Temp\\Product_nHanced-Search",
                 "-d"
+            ],
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
             ]
         }
     ]

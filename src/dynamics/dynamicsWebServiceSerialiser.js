@@ -4,16 +4,15 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
-import DynamicsApplication from "./dynamicsApplication";
-import DynamicsDependency from "./dynamicsDependency";
-import DynamicsDependencies from "./dynamicsDependencies";
-import DynamicsObject from "./dynamicsObject";
-import DynamicsObjects from "./dynamicsObjects";
-import DynamicsObjectField from "./dynamicsObjectField";
-import DynamicsObjectFields from "./dynamicsObjectFields";
-import DynamicsObjectType from "./dynamicsObjectType";
-import DynamicsVersion from "./dynamicsVersion";
+import "../general/javaScript.js";
+import DynamicsApplication from "./dynamicsApplication.js";
+import DynamicsDependency from "./dynamicsDependency.js";
+import DynamicsDependencies from "./dynamicsDependencies.js";
+import DynamicsObject from "./dynamicsObject.js";
+import DynamicsObjects from "./dynamicsObjects.js";
+import DynamicsObjectField from "./dynamicsObjectField.js";
+import DynamicsObjectType from "./dynamicsObjectType.js";
+import DynamicsVersion from "./dynamicsVersion.js";
 
 export default class DynamicsWebServiceSerialiser {
     static deserialiseDynamicsApplication(pData) {

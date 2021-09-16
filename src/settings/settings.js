@@ -7,21 +7,25 @@
 import "../general/javaScript.js";
 import DynamicsWebServiceSettings from "./dynamicsWebServiceSettings.js";
 import FileSystem from "fs";
+import IgnoreSettings from "./ignoreSettings.js";
 import GeneralSettings from "./generalSettings.js";
 import Path from "path";
 
 export default class Settings {
     get general() { return this.mGeneral; }
+    get ignore() { return this.mIgnore; }
     get dynamicsWebService() { return this.mDynamicsWebService; }
 
-    constructor(pGeneral, pDynamicsWebService) {
+    constructor(pGeneral, pIgnore, pDynamicsWebService) {
         this.mGeneral = Object.validate(pGeneral, new GeneralSettings());
+        this.mIgnore = Object.validate(pIgnore, new IgnoreSettings());
         this.mDynamicsWebService = Object.validate(pDynamicsWebService, new DynamicsWebServiceSettings());
     }
 
     serialise() {
         let data = {
             "general": this.general.serialise(),
+            "ignore": this.ignore.serialise(),
             "dynamicsWebService": this.dynamicsWebService.serialise()
         };
         return data;
@@ -42,8 +46,9 @@ export default class Settings {
         let object = new Settings();
         if (pData != null) {
             const general = GeneralSettings.deserialise(pData.general);
+            const ignore = IgnoreSettings.deserialise(pData.ignore);
             const dynamicsWebService = DynamicsWebServiceSettings.deserialise(pData.dynamicsWebService);
-            object = new Settings(general, dynamicsWebService);
+            object = new Settings(general, ignore, dynamicsWebService);
         }
         return object;
     }

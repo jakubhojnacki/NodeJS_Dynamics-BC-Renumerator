@@ -4,8 +4,8 @@
  * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript";
-import ODataOperator from "./oDataOperator";
+import "../general/javaScript.js";
+import ODataOperator from "./oDataOperator.js";
 
 export default class ODataFilter {
     get parts() { return this.mParts; }

@@ -9,8 +9,8 @@ import DynamicsAlRegExpTemplateName from "./dynamicsAlRegExpTemplateName.js";
 import DynamicsObject from "../dynamics/dynamicsObject.js";
 import DynamicsObjectField from "../dynamics/dynamicsObjectField.js";
 import DynamicsObjectType from "../dynamics/dynamicsObjectType.js";
-import FileSystem from "fs";
 import EndOfLineType from "../general/endOfLineType.js";
+import FileSystem from "fs";
 import Path from "path";
 import ReadLine from "readline";
 import RegExpFlag from "../regExp/regExpFlag.js";
@@ -83,7 +83,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
         const readLineInterface = ReadLine.createInterface({ input: fileStream, crlfDelay: Infinity });
         for await (const line of readLineInterface) {
             const newLine = await this.renumberLine(line);
-            this.newFile.write(newLine + EndOfLineType.getOutput(this.engine.settings.general.endOfLineType));
+            this.newFile.write(newLine + EndOfLineType.toString(this.engine.settings.general.endOfLineType));
         }
         fileStream.close();
     }

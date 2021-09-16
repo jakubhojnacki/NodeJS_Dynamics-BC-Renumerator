@@ -4,6 +4,14 @@
         "backupMode": "line",
         "endOfLineType": "windows"
     },
+    "ignore": {
+        "directories": [
+            ".*"
+        ],
+        "files": [
+            ".*"
+        ]
+    },
     "dynamicsWebService": {
         "protocol": "http",
         "server": "localhost",

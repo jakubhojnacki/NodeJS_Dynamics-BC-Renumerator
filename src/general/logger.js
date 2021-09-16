@@ -12,7 +12,7 @@ export default class Logger {
     get tab() { return this.mTab; }
     
     constructor(pWidth, pTab) {
-        this.mWidth = Number.validateAsInteger(pWidth, 80);
+        this.mWidth = Number.validateAsInteger(pWidth, 120);
         this.mTab = Number.validateAsInteger(pTab, 2);
     }
 
@@ -40,7 +40,7 @@ export default class Logger {
     }
 
     writeError(pText, pIndentation) {
-        const text = pText.trim().toLowerCase().startsWith("error") ? pText : `Error: ${pText}`;
+        const text = pText.trim().toLowerCase().startsWith("error") ? pText : `ERROR: ${pText}`;
         this.writeLine(text, pIndentation);
     }
 

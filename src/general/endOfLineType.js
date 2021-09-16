@@ -20,7 +20,7 @@ export default class EndOfLineType {
         return Enum.parse(pString, EndOfLineType.values, EndOfLineType.name);
     }    
 
-    static getOutput(pEndOfLineType) {
+    static toString(pEndOfLineType) {
         let result = "";
         switch (pEndOfLineType) {
             case "":

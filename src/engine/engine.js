@@ -5,17 +5,17 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsApplication from "../dynamics/dynamicsApplication.js";
+import DynamicsManifestSerialiser from "../dynamics/dynamicsManifestSerialiser.js";
 import DynamicsWebServiceAdapter from "../dynamics/dynamicsWebServiceAdapter.js";
 import FileSystem from "fs";
 import Path from "path";
 import RenumberatorFactory from "./renumberatorFactory.js";
 
 export default class Engine {
-    get folderPath() { return this.mFolderPath; }
+    get directoryPath() { return this.mDirectoryPath; }
     get settings() { return this.mSettings; }
 
-    get dynamicsAdapter() { return this.mDynamicsAdapter; }
+    get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
     get dynamicsApp() { return this.mDynamicsApp; }
     set dynamicsApp(pValue) { this.mDynamicsApp = pValue; }
     get renumberators() { return this.mRenumberators; }
@@ -23,17 +23,20 @@ export default class Engine {
 
     get onDynamicsApp() { return this.mOnDynamicsApp; }
     set onDynamicsApp(pValue) { this.mOnDynamicsApp = pValue; }
-    get onFolder() { return this.mOnFolder; }
-    set onFolder(pValue) { this.mOnFolder = pValue; }
+    get onDirectory() { return this.mOnDirectory; }
+    set onDirectory(pValue) { this.mOnDirectory = pValue; }
     get onFile() { return this.mOnFile; }
     set onFile(pValue) { this.mOnFile = pValue; }
 
-    constructor(pFolderPath, pSettings) {
-        this.mFolderPath = String.validate(pFolderPath);
+    constructor(pDirectoryPath, pSettings) {
+        this.mDirectoryPath = String.validate(pDirectoryPath);
         this.mSettings = pSettings;
-        this.mDynamicsAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
+        this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
         this.mDynamicsApp = null;
         this.mRenumberators = [];
+        this.mOnDynamicsApp = null;
+        this.mOnDirectory = null;
+        this.mOnFile = null;
     }
 
     async run() {      
@@ -43,25 +46,25 @@ export default class Engine {
     }
 
     initialise() {
-        if (!this.folderPath)
-            throw new Error("Folder can't be empty.");
-        if (!FileSystem.existsSync(this.folderPath))
-            throw new Error(`Folder ${this.folderPath} doesn't exist.`);
+        if (!this.directoryPath)
+            throw new Error("Directory can't be empty.");
+        if (!FileSystem.existsSync(this.directoryPath))
+            throw new Error(`Directory ${this.directoryPath} doesn't exist.`);
     }
 
     async process() {
         this.readDynamicsApp();
-        await this.dynamicsAdapter.renumber();
+        await this.dynamicsWebServiceAdapter.renumber();
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumber();
     }
 
     readDynamicsApp() {
-        const filePath = Path.join(this.folderPath, "app.json");
+        const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApp = DynamicsApplication.deserialise(data);
+            this.dynamicsApp = DynamicsManifestSerialiser.deserialiseDynamicsApplication(data);
             if (this.onDynamicsApp)
                 this.onDynamicsApp(this.dynamicsApp);
         } else
@@ -69,36 +72,50 @@ export default class Engine {
     }
 
     async renumber() {
-        await this.renumberFolder(this.folderPath, 0);
+        await this.renumberDirectory(this.directoryPath, 0);
     }
 
-    async renumberFolder(pFolderPath, pIndentation) {
-        const folderName = pIndentation > 0 ? Path.basename(pFolderPath) : "/";
-        if (this.onFolder)
-            this.onFolder(folderName, pIndentation);
-        const folderEntries = FileSystem.readdirSync(pFolderPath, { withFileTypes: true });
-        for (const folderEntry of folderEntries) {
-            const folderEntryPath = Path.join(pFolderPath, folderEntry.name);
-            if (folderEntry.isDirectory())
-                await this.renumberFolder(folderEntryPath, pIndentation + 1);
-            else 
-                if (folderEntry.isFile())
-                    await this.renumberFile(folderEntryPath, pIndentation + 1); 
-        };
+    async renumberDirectory(pDirectoryPath, pIndentation) {
+        const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
+        if (this.shouldDirectoryBeRenumbered(directoryName)) {
+            if (this.onDirectory)
+                this.onDirectory(directoryName, pIndentation);
+            const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
+            for (const directoryEntry of directoryEntries) {
+                const directoryEntryPath = Path.join(pDirectoryPath, directoryEntry.name);
+                if (directoryEntry.isDirectory())
+                    await this.renumberDirectory(directoryEntryPath, pIndentation + 1);
+                else 
+                    if (directoryEntry.isFile())
+                        await this.renumberFile(directoryEntryPath, pIndentation + 1); 
+            };
+        }
     }	   
-    
+
+    shouldDirectoryBeRenumbered(pDirectoryName) {
+        let result = false;
+        return result;
+    }
+
     async renumberFile(pFilePath, pIndentation) {
         if (Path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
-            let renumbered = false;
-            const renumberator = this.renumberators.find((lRenumberator) => { return lRenumberator.canRenumber(pFilePath); });
-            if (renumberator) {
-                await renumberator.renumber(pFilePath);
-                renumbered = true;
-            }
             const fileName = Path.basename(pFilePath);
-            if (this.onFile)
-                this.onFile(fileName, renumbered, renumberator, pIndentation);
+            if (this.shouldFileBeRenumbered(fileName)) {
+                let renumbered = false;
+                const renumberator = this.renumberators.find((lRenumberator) => { return lRenumberator.canRenumber(pFilePath); });
+                if (renumberator) {
+                    await renumberator.renumber(pFilePath);
+                    renumbered = true;
+                }
+                if (this.onFile)
+                    this.onFile(fileName, renumbered, renumberator, pIndentation);
+            }
         }
+    }
+
+    shouldFileBeRenumbered(pFileName) {
+        let result = false;
+        return result;
     }
 
     finalise() {        

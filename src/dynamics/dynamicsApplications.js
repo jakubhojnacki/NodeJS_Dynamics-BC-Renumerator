@@ -5,7 +5,6 @@
  */
 
 import "../general/javaScript.js";
-import DynamicsApplication from "./dynamicsApplication.js";
 
 export default class DynamicsApplications extends Array {
     constructor() {        

@@ -6,8 +6,6 @@
 
 import "../general/javaScript.js";
 import DynamicsApplicationBase from "./dynamicsApplicationBase.js";
-import Guid from "../general/guid.js";
-import StringBuilder from "../general/stringBuilder.js";
 
 export default class DynamicsDependency extends DynamicsApplicationBase {
     constructor(pId, pName, pPublisher, pVersion, pRenumberedId) {

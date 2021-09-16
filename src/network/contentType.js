@@ -27,7 +27,7 @@ export default class ContentType {
     toString() {
         let string = MediaType.toString(this.mediaType);
         if (this.charset)
-            string = `${string}; charset=${Charset.getOutput(this.charset)}`;
+            string = `${string}; charset=${Charset.toString(this.charset)}`;
         return string;
     }
 
