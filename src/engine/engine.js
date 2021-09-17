@@ -10,19 +10,20 @@ import DynamicsWebServiceAdapter from "../dynamics/dynamicsWebServiceAdapter.js"
 import FileSystem from "fs";
 import Path from "path";
 import RenumberatorFactory from "./renumberatorFactory.js";
+import Validator from "../general/validator.js";
 
 export default class Engine {
     get directoryPath() { return this.mDirectoryPath; }
     get settings() { return this.mSettings; }
 
     get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
-    get dynamicsApp() { return this.mDynamicsApp; }
-    set dynamicsApp(pValue) { this.mDynamicsApp = pValue; }
+    get dynamicsApplication() { return this.mDynamicsApplication; }
+    set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get renumberators() { return this.mRenumberators; }
     set renumberators(pValue) { this.mRenumberators = pValue; }
 
-    get onDynamicsApp() { return this.mOnDynamicsApp; }
-    set onDynamicsApp(pValue) { this.mOnDynamicsApp = pValue; }
+    get onDynamicsApplication() { return this.mOnDynamicsApplication; }
+    set onDynamicsApplication(pValue) { this.mOnDynamicsApplication = pValue; }
     get onDirectory() { return this.mOnDirectory; }
     set onDirectory(pValue) { this.mOnDirectory = pValue; }
     get onFile() { return this.mOnFile; }
@@ -32,9 +33,9 @@ export default class Engine {
         this.mDirectoryPath = String.validate(pDirectoryPath);
         this.mSettings = pSettings;
         this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
-        this.mDynamicsApp = null;
+        this.mDynamicsApplication = null;
         this.mRenumberators = [];
-        this.mOnDynamicsApp = null;
+        this.mOnDynamicsApplication = null;
         this.mOnDirectory = null;
         this.mOnFile = null;
     }
@@ -53,30 +54,41 @@ export default class Engine {
     }
 
     async process() {
-        this.readDynamicsApp();
-        this.validateDynamicsApp();
-        await this.dynamicsWebServiceAdapter.renumber();
-        this.renumberators = RenumberatorFactory.create(this);
+        this.readDynamicsApplication();
+        await this.callWebService();
         await this.renumber();
     }
 
-    readDynamicsApp() {
+    readDynamicsApplication() {
         const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApp = DynamicsManifestSerialiser.deserialiseDynamicsApplication(data);
-            if (this.onDynamicsApp)
-                this.onDynamicsApp(this.dynamicsApp);
+            this.dynamicsApplication = DynamicsManifestSerialiser.deserialiseDynamicsApplication(data);
+            if (this.onDynamicsApplication)
+                this.onDynamicsApplication(this.dynamicsApplication);
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
+        this.validateDynamicsApplication();
     }
 
-    validateDynamicsApp() {
-        //TODO - Not implemented
+    validateDynamicsApplication() {
+        const validator = new Validator();
+        validator.testNotEmpty(Engine.name, "Dynamics Application", this.dynamicsApplication);
+        if (this.dynamicsApplication)
+            this.dynamicsApplication.validate(validator, true);
+    }
+
+    async callWebService() {
+        const renumberationCode = this.settings.general.renumberationCode;
+        this.dynamicsWebServiceAdapter.initialise(this.dynamicsApplication, renumberationCode);
+        this.dynamicsWebServiceAdapter.validate(null, true);
+        await this.dynamicsWebServiceAdapter.renumber();
+        this.dynamicsWebServiceAdapter.finalise();
     }
 
     async renumber() {
+        this.renumberators = RenumberatorFactory.create(this);
         await this.renumberDirectory(this.directoryPath, 0);
     }
 

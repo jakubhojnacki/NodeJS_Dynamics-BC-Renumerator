@@ -31,9 +31,6 @@ export default class Url {
 	get password() { return this.mPassword; }
 	set password(pValue) { this.mPassword = pValue; }
 
-    get protocolCredentialsHostPortString() { return this.toProtocolCredentialsHostPortString(); }
-    get pathParametersString() { return this.toPathParametersString(); }
-
     constructor(pProtocol, pHost, pPort, pPath, pParameters, pUser, pPassword) {
         this.mProtocol = Protocol.parse(pProtocol);
         this.mHost = String.validate(pHost);
@@ -45,16 +42,12 @@ export default class Url {
     }
 
     toString() {
-        const protocolCredentialsHostPortString = this.toProtocolCredentialsHostPortString();
-        const pathParametersString = this.toPathParametersString();
-        return `${protocolCredentialsHostPortString}${pathParametersString}`;
-    }
-
-    toProtocolCredentialsHostPortString() {
         const protocolString = this.toProtocolString();
         const credentialsString = this.toCredentialsString();
         const hostPortString = this.toHostPortString();
-        return `${protocolString}${credentialsString}${hostPortString}`;
+        const pathString = this.toPathString();
+        const parametersString = this.toParametersString();
+        return `${protocolString}${credentialsString}${hostPortString}${pathString}${parametersString}`;
     }
 
     toProtocolString() {
@@ -80,12 +73,14 @@ export default class Url {
         if (this.path != null) {
             let first = true;
             for (let pathPart of this.path) {
-                pathPart = pathPart.removeIfStartsWith(Url.pathSeparator);
-                pathPart = pathPart.removeIfEndsWith(Url.pathSeparator);
-                if (pathPart.length > 0) {
-                    string += first ? "" : Url.pathSeparator;
-                    string += pathPart;
-                    first = false;
+                if (pathPart) {
+                    pathPart = pathPart.removeIfStartsWith(Url.pathSeparator);
+                    pathPart = pathPart.removeIfEndsWith(Url.pathSeparator);
+                    if (pathPart.length > 0) {
+                        string += first ? "" : Url.pathSeparator;
+                        string += pathPart;
+                        first = false;
+                    }
                 }
             }
         }

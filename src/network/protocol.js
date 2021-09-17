@@ -6,16 +6,15 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class Protocol {
     static get http() { return "http"; }
     static get https() { return "https"; }
-    static get ftp() { return "ftp"; }
 
     static get items() { return [
-        Protocol.http,
-        Protocol.https,
-        Protocol.ftp
+        new EnumItem(Protocol.http),
+        new EnumItem(Protocol.https)
     ]; }
 
     static parse(pString) {
@@ -23,18 +22,6 @@ export default class Protocol {
     }
 
     static toString(pValue) {
-        let string = "";
-        switch (pValue) {
-            case Protocol.http:
-                string = "http";
-                break;
-            case Protocol.https:
-                string = "https";
-                break;
-            case Protocol.ftp:
-                string = "ftp";
-                break;
-        }
-        return string;
+        return Enum.toString(pValue, Protocol.items, Protocol.name);
     }
 }

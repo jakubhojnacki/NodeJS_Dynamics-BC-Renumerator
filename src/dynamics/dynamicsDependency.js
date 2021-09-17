@@ -22,4 +22,13 @@ export default class DynamicsDependency extends DynamicsApplicationBase {
     toString() {
         return super.toStringBuilder().toString();
     }
+
+    validate(pValidator, pRaiseError, pWithRenumbered) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        super.validate(DynamicsDependency.name, validator, pWithRenumbered);
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }   
 }

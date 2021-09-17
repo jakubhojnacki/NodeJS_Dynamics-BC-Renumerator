@@ -6,6 +6,7 @@
 
 import "./javaScript.js";
 import Enum from "./enum.js";
+import EnumItem from "./enumItem.js";
 
 export default class DataType {
     static get boolean() { return "Boolean"; }
@@ -16,18 +17,22 @@ export default class DataType {
     static get array() { return "Array"; }
     static get object() { return "Object"; }
 
-    static get values() { return [
-        DataType.string,
-        DataType.boolean,
-        DataType.integer,
-        DataType.float,
-        DataType.date,
-        DataType.array,
-        DataType.object
+    static get items() { return [
+        new EnumItem(DataType.string),
+        new EnumItem(DataType.boolean),
+        new EnumItem(DataType.integer),
+        new EnumItem(DataType.float),
+        new EnumItem(DataType.date),
+        new EnumItem(DataType.array),
+        new EnumItem(DataType.object)
     ]; }
 
     static parse(pText) {
-        return Enum.parse(pText, DataType.values, DataType.name);
+        return Enum.parse(pText, DataType.items, DataType.name);
+    }
+
+    static toString(pValue) {
+        return Enum.toString(pValue, DataType.items, DataType.name);
     }
 
     static validateValue(pValue, pDataType) {

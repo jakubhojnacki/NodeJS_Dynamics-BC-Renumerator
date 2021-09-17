@@ -7,15 +7,35 @@
 import "./javaScript.js";
 
 export default class Enum {
-    static parse(pText, pValues, pEnumName) {
-        const text = String.validate(pText).trim().toLowerCase();
-        let value = null;
-        if (text)
-            value = pValues.find((lValue) => { return lValue.toLowerCase() === text; });
-        else
-            value = pValues[0];
-        if (!value)
-            throw new Error(`Value ${pText} cannot be parsed into ${pEnumName}.`);
-        return value;
+    static parse(pString, pItems, pEnumName) {
+        Enum.validateItems(pItems, pEnumName);
+        const string = String.validate(pString).trim().toLowerCase();
+        let item = null;
+        if (item == null)
+            item = pItems.find((lItem) => { return lItem.string ? lItem.string.trim().toLowerCase() === string : false; });
+        if (item == null)          
+            item = pItems.find((lItem) => { return lItem.value ? lItem.value.trim().toLowerCase() === string : false; });
+        if (item == null) {
+            const firstItem = pItems[0];
+            item = firstItem.string ? firstItem.string : firstItem.value;
+        }
+        if (item == null)
+            throw new Error(`Value ${pString} cannot be parsed into ${pEnumName}.`);
+        return item.value;
+    }
+
+    static toString(pValue, pItems, pEnumName) {
+        Enum.validateItems(pItems, pEnumName);
+        const value = pValue.trim().toLowerCase();
+        let string = "";
+        const item = pItems.find((lItem) => { return lItem.value.trim().toLowerCase() == value; });
+        if (item)
+            string = item.string ? item.string : item.value;
+        return string;
+    }
+
+    static validateItems(pItems, pEnumName) {
+        if ((pItems == null) || (!Array.isArray(pItems)) || (pItems.length == 0)) 
+            throw new Error(`${pEnumName} has incorrect list of items.`);
     }
 }

@@ -29,4 +29,14 @@ export default class DynamicsDependencies extends Array {
                 dependency.inject(data);
         }
     }
+
+    validate(pValidator, pRaiseError, pWithRenumbered) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        for (const dependency of this)
+            dependency.validate(pValidator, false, pWithRenumbered);
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }   
 }

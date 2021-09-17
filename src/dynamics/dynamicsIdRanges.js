@@ -5,6 +5,7 @@
  */
 
 import "../general/javaScript.js";
+import Validator from "../general/validator.js";
 
 export default class DynamicsIdRanges extends Array {
     get logger() { return global.theApplication.logger; }
@@ -27,4 +28,14 @@ export default class DynamicsIdRanges extends Array {
                 idRange.inject(data);
         }
     } 
+
+    validate(pValidator, pRaiseError, pWithRenumbered) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        for (const range of this)
+            range.validate(pValidator, false, pWithRenumbered);
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }        
 }

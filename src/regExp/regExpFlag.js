@@ -4,7 +4,9 @@
  * @version 0.0.1 (2021-02-22)
  */
 
- import "../general/javaScript.js";
+import "../general/javaScript.js";
+import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class RegExpFlag {
     static get globalMatch() { return "g"; }
@@ -14,20 +16,20 @@ export default class RegExpFlag {
     static get unicode() { return "u"; }
     static get sticky() { return "y"; }
 
-    static get values() { return [
-        new EnumValue(RegExpFlag.globalMatch),
-        new EnumValue(RegExpFlag.ignoreCase),
-        new EnumValue(RegExpFlag.multiline),
-        new EnumValue(RegExpFlag.dotAll),
-        new EnumValue(RegExpFlag.unicode),
-        new EnumValue(RegExpFlag.sticky)
+    static get items() { return [
+        new EnumItem(RegExpFlag.globalMatch, "g"),
+        new EnumItem(RegExpFlag.ignoreCase, "i"),
+        new EnumItem(RegExpFlag.multiline, "m"),
+        new EnumItem(RegExpFlag.dotAll, "s"),
+        new EnumItem(RegExpFlag.unicode, "u"),
+        new EnumItem(RegExpFlag.sticky, "y")
     ]; }
 
     static parse(pString) {
-        return Enum.parse(pString, RegExpFlag.values, RegExpFlag.name);
+        return Enum.parse(pString, RegExpFlag.items, RegExpFlag.name);
     }    
 
-    static combine(pRegexFlags) {
-        return pRegexFlags.join("");
-    }
+    static toString(pValue) {
+        return Enum.toString(pValue, RegExpFlag.items, RegExpFlag.name);
+    }    
 }

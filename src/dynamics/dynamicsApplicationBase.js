@@ -32,4 +32,14 @@ export default class DynamicsApplicationBase {
         stringBuilder.addNameValue("Version", this.version.toString());
         return stringBuilder;
     }
+
+    validate(pClass, pValidator, pWithRenumbered) {
+        const withRenumbered = Boolean.validate(pWithRenumbered);
+        pValidator.testNotEmpty(pClass, "ID", this.id);
+        pValidator.testNotEmpty(pClass, "Name", this.name);
+        pValidator.testNotEmpty(pClass, "Publisher", this.publisher);
+        pValidator.testNotEmpty(pClass, "Version", this.version);
+        if (withRenumbered)
+            pValidator.testNotEmpty(pClass, "Renumbered ID", this.renumberedId);
+    }        
 }

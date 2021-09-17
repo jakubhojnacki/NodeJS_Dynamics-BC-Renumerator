@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class MediaType {
     static get any() { return "any"; }
@@ -16,12 +17,12 @@ export default class MediaType {
     static get xml() { return "xml"; }
 
     static get items() { return [
-        MediaType.any,
-        MediaType.html,
-        MediaType.json,
-        MediaType.text,
-        MediaType.urlEncoded,
-        MediaType.xml
+        new EnumItem(MediaType.any, "*/*"),
+        new EnumItem(MediaType.html, "text/html"),
+        new EnumItem(MediaType.json, "application/json"),
+        new EnumItem(MediaType.text, "text/plain"),
+        new EnumItem(MediaType.urlEncoded, "application/x-www-form-urlencoded"),
+        new EnumItem(MediaType.xml,"application/xml")
     ]; }
 
     static parse(pString) {
@@ -29,27 +30,6 @@ export default class MediaType {
     }
 
     static toString(pValue) {
-        let string = "";
-        switch (pValue) {
-            case MediaType.any:
-                string = "*/*";
-                break;
-            case MediaType.html:
-                string = "text/html";
-                break;
-            case MediaType.json:
-                string = "application/json";
-                break;
-            case MediaType.text:
-                string = "text/plain";
-                break;
-            case MediaType.urlEncoded:
-                string = "application/x-www-form-urlencoded";
-                break;
-            case MediaType.xml:
-                string = "application/xml";
-                break;
-        }
-        return string;
+        return Enum.toString(pValue, MediaType.items, MediaType.name);
     }
 }

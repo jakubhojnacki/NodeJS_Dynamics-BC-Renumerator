@@ -18,7 +18,7 @@ export default class RegExpSchema {
     tryToMatch(pString) {
         let result = new RegExpMatch();
         for (const template of this.templates) {
-            const regExp = new RegExp(template.pattern, template.flags);
+            const regExp = new RegExp(template.pattern, template.flags.toString());
             const match = new RegExpMatch(template, regExp.exec(pString));
             if (match.success) {
                 result = match;

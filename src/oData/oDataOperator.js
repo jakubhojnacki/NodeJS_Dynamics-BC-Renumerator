@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class ODataOperator {
     static get equals() { return "equals"; }
@@ -19,57 +20,24 @@ export default class ODataOperator {
     static get has() { return "has"; }
     static get in() { return "in"; }
 
-    static get values() { return [
-        ODataOperator.equals,
-        ODataOperator.notEquals,
-        ODataOperator.greater,
-        ODataOperator.greaterOrEqual,
-        ODataOperator.less,
-        ODataOperator.lessOrEqual,
-        ODataOperator.and,
-        ODataOperator.or,
-        ODataOperator.has,
-        ODataOperator.in
+    static get items() { return [
+        new EnumItem(ODataOperator.equals, "eq"),
+        new EnumItem(ODataOperator.notEquals, "ne"),
+        new EnumItem(ODataOperator.greater, "gt"),
+        new EnumItem(ODataOperator.greaterOrEqual, "ge"),
+        new EnumItem(ODataOperator.less, "lt"),
+        new EnumItem(ODataOperator.lessOrEqual, "le"),
+        new EnumItem(ODataOperator.and, "and"),
+        new EnumItem(ODataOperator.or, "or"),
+        new EnumItem(ODataOperator.has, "has"),
+        new EnumItem(ODataOperator.in, "in")
     ]; }
 
     static parse(pText) {
-        return Enum.parse(pText, ODataOperator.values, ODataOperator.name);
+        return Enum.parse(pText, ODataOperator.items, ODataOperator.name);
     }
 
     static toString(pValue) {
-        let string = "";
-        switch (pValue) {
-            case ODataOperator.equals:
-                string = "eq";
-                break;
-            case ODataOperator.notEquals:
-                string = "ne";
-                break;
-            case ODataOperator.greater:
-                string = "gt";
-                break;
-            case ODataOperator.greaterOrEqual:
-                string = "ge";
-                break;
-            case ODataOperator.less:
-                string = "lt";
-                break;
-            case ODataOperator.lessOrEqual:
-                string = "le";
-                break;
-            case ODataOperator.and:
-                string = "and";
-                break;
-            case ODataOperator.or:
-                string = "or";
-                break;
-            case ODataOperator.has:
-                string = "has";
-                break;
-            case ODataOperator.in:
-                string = "in";
-                break;
-        }
-        return string;
+        return Enum.toString(pValue, ODataOperator.items, ODataOperator.name);
     }
 }

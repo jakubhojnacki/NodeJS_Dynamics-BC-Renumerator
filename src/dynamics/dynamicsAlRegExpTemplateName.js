@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class DynamicsAlRegExpTemplateName {
     static get object() { return "object"; }
@@ -13,14 +14,18 @@ export default class DynamicsAlRegExpTemplateName {
     static get tableField() { return "tableField"; }
     static get enumValue() { return "enumValue"; }
 
-    static get values() { return [
-        DynamicsAlRegExpTemplateName.object,
-        DynamicsAlRegExpTemplateName.objectExtension,
-        DynamicsAlRegExpTemplateName.tableField,
-        DynamicsAlRegExpTemplateName.enumValue
+    static get items() { return [
+        new EnumItem(DynamicsAlRegExpTemplateName.object),
+        new EnumItem(DynamicsAlRegExpTemplateName.objectExtension),
+        new EnumItem(DynamicsAlRegExpTemplateName.tableField),
+        new EnumItem(DynamicsAlRegExpTemplateName.enumValue)
     ]; }
 
     static parse(pString) {
-        return Enum.parse(pString, DynamicsAlRegExpTemplateName.values, DynamicsAlRegExpTemplateName.name);
+        return Enum.parse(pString, DynamicsAlRegExpTemplateName.items, DynamicsAlRegExpTemplateName.name);
     }    
+
+    static toString(pValue) {
+        return Enum.toString(pValue, DynamicsAlRegExpTemplateName.items, DynamicsAlRegExpTemplateName.name);
+    }  
 }

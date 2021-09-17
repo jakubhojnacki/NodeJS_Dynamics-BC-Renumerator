@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class DynamicsObjectType {
     static get table() { return "table"; }
@@ -19,20 +20,24 @@ export default class DynamicsObjectType {
     static get enum() { return "enum"; }
     static get enumExtension() { return "enumExtension"; }
 
-    static get values() { return [
-        DynamicsObjectType.table,
-        DynamicsObjectType.tableExtension,
-        DynamicsObjectType.page,
-        DynamicsObjectType.pageExtension,
-        DynamicsObjectType.codeunit,
-        DynamicsObjectType.report,
-        DynamicsObjectType.xmlPort,
-        DynamicsObjectType.query,
-        DynamicsObjectType.enum,
-        DynamicsObjectType.enumExtension
+    static get items() { return [
+        new EnumItem(DynamicsObjectType.table),
+        new EnumItem(DynamicsObjectType.tableExtension),
+        new EnumItem(DynamicsObjectType.page),
+        new EnumItem(DynamicsObjectType.pageExtension),
+        new EnumItem(DynamicsObjectType.codeunit),
+        new EnumItem(DynamicsObjectType.report),
+        new EnumItem(DynamicsObjectType.xmlPort),
+        new EnumItem(DynamicsObjectType.query),
+        new EnumItem(DynamicsObjectType.enum),
+        new EnumItem(DynamicsObjectType.enumExtension)
     ]; }
 
     static parse(pString) {
-        return Enum.parse(pString, DynamicsObjectType.values, DynamicsObjectType.name);
+        return Enum.parse(pString, DynamicsObjectType.items, DynamicsObjectType.name);
+    }
+
+    static toString(pValue) {
+        return Enum.toString(pValue, DynamicsObjectType.items, DynamicsObjectType.name);
     }
 }

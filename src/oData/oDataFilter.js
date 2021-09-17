@@ -25,6 +25,7 @@ export default class ODataFilter {
         for (const part of this.parts) {
             string += first ? "" : ` ${ODataOperator.toString(this.operator)} `;
             string += `${prefix}${part.toString()}${suffix}`;
+            first = false;
         }
         return string;
     }

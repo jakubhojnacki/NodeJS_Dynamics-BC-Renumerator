@@ -22,6 +22,6 @@ export default class BasicAuthentication extends Authentication {
 	async getHeaderValue() {
 		let userPassword = `${this.user}:${this.password}`;
 		userPassword = Buffer.from(userPassword, "ascii").toString("base64");
-		return `basic ${userPassword}`;
+		return `Basic ${userPassword}`;
 	}
 }

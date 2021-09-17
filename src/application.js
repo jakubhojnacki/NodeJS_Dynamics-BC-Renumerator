@@ -45,14 +45,14 @@ export default class Application {
         const __this = this;
         const directoryPath = this.args.get(ArgName.directoryPath);
         const engine = new Engine(directoryPath, this.settings);
-        engine.onDynamicsApp = (lDynamicsApp) => { __this.engine_onDynamicsApp(lDynamicsApp); };
+        engine.onDynamicsApplication = (lDynamicsApplication) => { __this.engine_onDynamicsApplication(lDynamicsApplication); };
         engine.onDirectory = (lDirectoryName, lIndentation) => { __this.engine_onDirectory(lDirectoryName, lIndentation); };
         engine.onFile = (lFileName, lRenumbered, lRenumberator, lIndentation) => { __this.engine_onFile(lFileName, lRenumbered, lRenumberator, lIndentation); };
         await engine.run(directoryPath, this.setings);
     }
 
-    engine_onDynamicsApp(pDynamicsApp) {
-        pDynamicsApp.log(0);
+    engine_onDynamicsApplication(pDynamicsApplication) {
+        pDynamicsApplication.log(0);
     }
 
     engine_onDirectory(pDirectoryName, pIndentation) {

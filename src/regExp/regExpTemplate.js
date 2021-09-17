@@ -5,6 +5,7 @@
  */
 
 import "../general/javaScript.js";
+import RegExpFlags from "./regExpFlags.js";
 
 export default class RegExpTemplate {
     get name() { return this.mName; }
@@ -17,7 +18,7 @@ export default class RegExpTemplate {
         this.mName = String.validate(pName);
         this.mDescription = String.validate(pDescription);
         this.mPattern = String.validate(pPattern);
-        this.mFlags = String.validate(pFlags);
+        this.mFlags = Object.validate(pFlags, new RegExpFlags());
         this.mReplaceWith = String.validate(pReplaceWith);
     }
 }

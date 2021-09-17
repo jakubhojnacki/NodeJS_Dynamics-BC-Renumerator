@@ -21,11 +21,12 @@ import ODataOperator from "../oData/oDataOperator.js";
 import ODataFilterPart from "../oData/oDataFilterPart.js";
 import RestWebService from "../webServices/restWebService.js";
 import UrlParameter from "../network/urlParameter.js";
+import Validator from "../general/validator.js";
 
 export default class DynamicsWebServiceAdapter {
     get settings() { return this.mSettings; }
-    get application() { return this.mApplication; }
-    set application(pValue) { this.mApplication = pValue; }
+    get dynamicsApplication() { return this.mDynamicsApplication; }
+    set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get renumberationCode() { return this.mRenumberationCode; }
     set renumberationCode(pValue) { this.mRenumberationCode = pValue; }
     get objects() { return this.mObjects; }
@@ -33,35 +34,51 @@ export default class DynamicsWebServiceAdapter {
 
     constructor(pSettings) {
         this.mSettings = pSettings;
-        this.mApplication = null;
+        this.mDynamicsApplication = null;
         this.mRenumberationCode = "";
         this.mObjects = null;
     }
 
     async renumber(pApp, pRenumberationCode) {
         this.initialise(pApp, pRenumberationCode);
-        await this.runWebService();
+        await this.runWebService("renumber");
         this.finalise();
     }
 
-    initialise(pApplication, pRenumberationCode) {
-        this.application = pApplication;
+    initialise(pDynamicsApplication, pRenumberationCode) {
+        this.dynamicsApplication = pDynamicsApplication;
         this.renumberationCode = pRenumberationCode;
         this.validate();
     }
 
-    validate() {
-        //TODO - Not implemented
+    getValidator() {
+        const validator = new Validator();
+        this.settings.validate(validator);
     }
 
-    async runWebService() {
-        const webService = this.createWebService();
+    validate(pValidator, pRaiseError) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Settings", this.settings);
+        if (this.settings)
+            this.settings.validate(validator);
+        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Application", this.dynamicsApplication);
+        if (this.dynamicsApplication)
+            this.dynamicsApplication.validate(validator);
+        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Renumberation Code", this.renumberationCode);
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }
+
+    async runWebService(pWebService) {
+        const webService = this.createWebService(pWebService);
         const response = await webService.execute();
         this.processResponse(response);
     }
 
-    createWebService() {
-        const url = this.createUrl();
+    createWebService(pWebService) {
+        const url = this.createUrl(pWebService);
         const authentication = this.createAuthentication();
         const contentType = new ContentType(MediaType.json, Charset.utf8);
         const accept = new ContentType(MediaType.json, Charset.utf8);
@@ -74,8 +91,8 @@ export default class DynamicsWebServiceAdapter {
         return new BasicAuthentication(user, password);
     }
 
-    createUrl() {
-        const url = this.settings.createUrl();
+    createUrl(pWebService) {
+        const url = this.settings.createUrl(pWebService);
         const oDataFilter = new ODataFilter([ 
             new ODataFilterPart("extensionId", ODataOperator.equals, "d4688c1b-70bd-47f3-8087-f462a8a88f0b"),
             new ODataFilterPart("renumberationCode", ODataOperator.equals, "'SAAS'")
@@ -88,20 +105,26 @@ export default class DynamicsWebServiceAdapter {
     }
 
     processResponse(pResponse) {
-        const rawData = pResponse.body;
-        const data = JSON.parse(rawData);
-        if (data.value) {
-            this.processApplication(pData.value.applications);
-            this.processWebServiceResponseDependencies(pData.value.applicationDependencies);
-            this.processWebServiceResponseObjects(pData.value.objects);
-            this.processWebServiceResponseObjectFields(pData.value.objectFields);
-        } else
-            this.cannotProcessResponse();
+        const data = this.extractResponseData(pResponse);
+        this.processApplication(data.applications);
+        this.processWebServiceResponseDependencies(data.applicationDependencies);
+        this.processWebServiceResponseObjects(data.objects);
+        this.processWebServiceResponseObjectFields(data.objectFields);
+    }
+
+    extractResponseData(pResponse) {
+        if (!pResponse.body)
+            throw new Error("Web service response doesn't have any data.");
+        if ((!pResponse.body.value) || (!Array.isArray(pResponse.body.value)))
+            throw new Error("Web service response data is not of expected format.");
+        if (pResponse.body.value.length == 0)
+            throw new Error("Web service response data is empty.");
+        return pResponse.body.value[0];
     }
 
     processApplication(pData) {
         if ((pData) && (Array.isArray(pData)) && (pData.length > 0))
-            this.application = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
+            this.dynamicsApplication = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
         else
             this.cannotProcessResponse();
     }
@@ -118,11 +141,11 @@ export default class DynamicsWebServiceAdapter {
     }
 
     processWebServiceResponseDependencies(pData) {
-        if ((this.application) && (pData) && (Array.isArray(pData))) {
-            this.application.dependencies = new DynamicsDependencies();  
+        if ((this.dynamicsApplication) && (pData) && (Array.isArray(pData))) {
+            this.dynamicsApplication.dependencies = new DynamicsDependencies();  
             for (const dataItem of pData) {
                 const dependency = DynamicsDependency.deserialise(dataItem);
-                this.application.dependencies.push(dependency);
+                this.dynamicsApplication.dependencies.push(dependency);
             }
         } else
             this.cannotProcessResponse();
@@ -152,10 +175,6 @@ export default class DynamicsWebServiceAdapter {
             }
         } else
             this.cannotProcessResponse();
-    }
-
-    cannotProcessResponse() {
-        throw new Error("Cannot process renumberation web service response");
     }
 
     finalise() {        

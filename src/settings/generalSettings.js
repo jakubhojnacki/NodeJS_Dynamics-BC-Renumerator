@@ -9,19 +9,19 @@ import BackupMode from "../engine/backupMode.js";
 import EndOfLineType from "../general/endOfLineType.js";
 
 export default class GeneralSettings {
-    get rangeCode() { return this.mRangeCode; }
+    get renumberationCode() { return this.mRenumberationCode; }
     get backupMode() { return this.mBackupMode; }
     get endOfLineType() { return this.mEndOfLineType; }
 
     constructor(pRangeCode, pBackupMode, pEndOfLineType) {
-        this.mRangeCode = String.validate(pRangeCode);
+        this.mRenumberationCode = String.validate(pRangeCode);
         this.mBackupMode = BackupMode.parse(pBackupMode);
         this.mEndOfLineType = EndOfLineType.parse(pEndOfLineType);
     }
 
     serialise() {
         let data = { 
-            "rangeCode": this.rangeCode, 
+            "renumberationCode": this.renumberationCode, 
             "backupMode": this.backupMode, 
             "endOfLineType": this.endOfLineType 
         };
@@ -31,7 +31,7 @@ export default class GeneralSettings {
     static deserialise(pData) {
         let object = new GeneralSettings();
         if (pData != null)
-            object = new GeneralSettings(pData.rangeCode, pData.backupMode, pData.endOfLineType);
+            object = new GeneralSettings(pData.renumberationCode, pData.backupMode, pData.endOfLineType);
         return object;
     }    
 }

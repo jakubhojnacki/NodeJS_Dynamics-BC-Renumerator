@@ -6,31 +6,22 @@
 
 import "./javaScript.js";
 import Enum from "./enum.js";
+import EnumItem from "./enumItem.js";
 
 export default class EndOfLineType {
     static get linux() { return "linux"; }
     static get windows() { return "windows"; }
 
-    static get values() { return [
-        EndOfLineType.linux,
-        EndOfLineType.windows
+    static get items() { return [
+        new EnumItem(EndOfLineType.linux, "\n"),
+        new EnumItem(EndOfLineType.windows, "\n\r")
     ]; }
 
     static parse(pString) {
-        return Enum.parse(pString, EndOfLineType.values, EndOfLineType.name);
+        return Enum.parse(pString, EndOfLineType.items, EndOfLineType.name);
     }    
 
-    static toString(pEndOfLineType) {
-        let result = "";
-        switch (pEndOfLineType) {
-            case "":
-            case EndOfLineType.linux:
-                result = "\n";
-                break;
-            case EndOfLineType.windows:
-                result = "\r\n";
-                break;
-        }
-        return result;
+    static toString(pValue) {
+        return Enum.toString(pValue, EndOfLineType.items, EndOfLineType.name);
     }    
 }

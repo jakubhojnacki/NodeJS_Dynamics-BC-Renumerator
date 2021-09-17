@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class Method {
     static get connect() { return "Connect"; }
@@ -19,15 +20,15 @@ export default class Method {
     static get trace() { return "Trace"; }
 
     static get items() { return [
-        Method.get,
-        Method.post,
-        Method.put,
-        Method.patch,
-        Method.delete,
-        Method.connect,
-        Method.head,
-        Method.options,
-        Method.trace
+        new EnumItem(Method.get, "GET"),
+        new EnumItem(Method.post, "POST"),
+        new EnumItem(Method.put, "PUT"),
+        new EnumItem(Method.patch, "PATCH"),
+        new EnumItem(Method.delete, "DELETE"),
+        new EnumItem(Method.connect, "CONNECT"),
+        new EnumItem(Method.head, "HEAD"),
+        new EnumItem(Method.options, "OPTIONS"),
+        new EnumItem(Method.trace, "TRACE")
     ]; }
 
     static parse(pString) {
@@ -35,36 +36,6 @@ export default class Method {
     }
 
     static toString(pValue) {
-        let string = "";
-        switch (pValue) {
-            case Method.get:
-                string = "GET";
-                break;
-            case Method.post:
-                string = "POST";
-                break;
-            case Method.put:
-                string = "PUT";
-                break;
-            case Method.patch:
-                string = "PATCH";
-                break;
-            case Method.delete:
-                string = "DELETE";
-                break;
-            case Method.connect:
-                string = "CONNECT";
-                break;
-            case Method.head:
-                string = "HEAD";
-                break;
-            case Method.options:
-                string = "OPTIONS";
-                break;
-            case Method.trace:
-                string = "TRACE";
-                break;
-        }
-        return string;
+        return Enum.toString(pValue, Method.items, Method.name);
     }
 }

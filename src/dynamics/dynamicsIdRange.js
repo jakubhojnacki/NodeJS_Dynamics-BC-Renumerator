@@ -33,4 +33,19 @@ export default class DynamicsIdRange {
         stringBuilder.addNameValue("To", this.to);
         return stringBuilder.toString();        
     }
+
+    validate(pValidator, pRaiseError, pWithRenumbered) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        const withRenumbered = Boolean.validate(pWithRenumbered);
+        validator.testNotEmpty(DynamicsIdRange.name, "From", this.from);
+        validator.testNotEmpty(DynamicsIdRange.name, "To", this.to);
+        if (withRenumbered) {
+            validator.testNotEmpty(DynamicsIdRange.name, "Renumbered From", this.renumberedFrom);
+            validator.testNotEmpty(DynamicsIdRange.name, "Renumbered To", this.renumberedTo);
+        }
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }   
 }

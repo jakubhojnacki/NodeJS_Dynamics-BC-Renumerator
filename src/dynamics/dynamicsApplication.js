@@ -7,6 +7,7 @@
 import "../general/javaScript.js";
 import DynamicsApplicationBase from "./dynamicsApplicationBase.js";
 import StringBuilder from "../general/stringBuilder.js";
+import Validator from "../general/validator.js";
 
 export default class DynamicsApplication extends DynamicsApplicationBase {
     get logger() { return global.theApplication.logger; }
@@ -46,4 +47,18 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
             this.logger.writeLine(`Dynamics Application: ${this.toString()}`, indentation);
         }
     }        
+
+    validate(pValidator, pRaiseError, pWithRenumbered) {
+        const validator = pValidator ? pValidator : new Validator();
+        const raiseError = Boolean.validate(pRaiseError);
+        const withRenumbered = Boolean.validate(pWithRenumbered);
+        super.validate(DynamicsApplication.name, pValidator, withRenumbered);
+        if (this.dependencies)
+            this.dependencies.validate(validator, false, withRenumbered);
+        if (this.idRanges)
+            this.idRanges.validate(validator, false, withRenumbered);
+        if (raiseError)
+            validator.raiseErrorIfNotSuccess();
+        return validator;
+    }    
 }

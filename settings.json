@@ -1,6 +1,6 @@
 {
     "general" : {
-        "rangeCode": "SAAS",
+        "renumberationCode": "SAAS",
         "backupMode": "line",
         "endOfLineType": "windows"
     },
@@ -21,6 +21,7 @@
         "password": "P455w0rd",
         "apiPublisher": "the365People",
         "apiGroup": "nHancedIdManager",
-        "apiVersion": "1.0"
+        "apiVersion": "1.0",
+        "companyId": "5fdfd42d-0fda-eb11-bb70-000d3a4728c8"
     }
 }

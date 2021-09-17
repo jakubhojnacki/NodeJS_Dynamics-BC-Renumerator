@@ -6,6 +6,7 @@
 
 import "../general/javaScript.js";
 import Enum from "../general/enum.js";
+import EnumItem from "../general/enumItem.js";
 
 export default class Charset {
     static get ascii() { return "ASCII"; }
@@ -15,11 +16,11 @@ export default class Charset {
     static get utf8() { return "UTF-8"; }
 
     static get items() { return [
-        Charset.utf8,
-        Charset.ascii,
-        Charset.ansi,
-        Charset.iso88591,
-        Charset.windows1252
+        new EnumItem(Charset.utf8, "utf-8"),
+        new EnumItem(Charset.ascii, "ascii"),
+        new EnumItem(Charset.ansi, "ansi"),
+        new EnumItem(Charset.iso88591, "iso-8859-1"),
+        new EnumItem(Charset.windows1252, "windows-1252")
     ]; }
 
     static parse(pString) {
@@ -27,24 +28,6 @@ export default class Charset {
     }
 
     static toString(pValue) {
-        let string = "";
-        switch (pValue) {
-            case Charset.utf8:
-                string = "utf-8";
-                break;
-            case Charset.ascii:
-                string = "ascii";
-                break;
-            case Charset.ansi:
-                string = "ansi";
-                break;
-            case Charset.iso88591:
-                string = "iso-8859-1";
-                break;
-            case Charset.windows1252:
-                string = "windows-1252";
-                break;
-        }
-        return string;
+        return Enum.toString(pValue, Charset.items, Charset.name);
     }
 }
