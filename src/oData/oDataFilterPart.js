@@ -19,6 +19,6 @@ export default class ODataFilterPart {
     }
 
     toString() {
-        return `${this.Name} ${ODataOperator.toString(this.operator)} ${Object.toString(this.value)}`;
+        return `${this.name} ${ODataOperator.toString(this.operator)} ${Object.toString(this.value)}`;
     }
 }

@@ -54,6 +54,7 @@ export default class Engine {
 
     async process() {
         this.readDynamicsApp();
+        this.validateDynamicsApp();
         await this.dynamicsWebServiceAdapter.renumber();
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumber();
@@ -69,6 +70,10 @@ export default class Engine {
                 this.onDynamicsApp(this.dynamicsApp);
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
+    }
+
+    validateDynamicsApp() {
+        //TODO - Not implemented
     }
 
     async renumber() {

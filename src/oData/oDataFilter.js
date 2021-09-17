@@ -22,7 +22,7 @@ export default class ODataFilter {
         const multiple = (this.parts.length > 0);
         const prefix = multiple ? "(" : "";
         const suffix = multiple ? ")" : "";
-        for (const part in this.parts) {
+        for (const part of this.parts) {
             string += first ? "" : ` ${ODataOperator.toString(this.operator)} `;
             string += `${prefix}${part.toString()}${suffix}`;
         }

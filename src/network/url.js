@@ -31,8 +31,8 @@ export default class Url {
 	get password() { return this.mPassword; }
 	set password(pValue) { this.mPassword = pValue; }
 
-    get hostPortString() { return this.createHostPortString(); }
-    get pathString() { return this.createPathString(); }
+    get protocolCredentialsHostPortString() { return this.toProtocolCredentialsHostPortString(); }
+    get pathParametersString() { return this.toPathParametersString(); }
 
     constructor(pProtocol, pHost, pPort, pPath, pParameters, pUser, pPassword) {
         this.mProtocol = Protocol.parse(pProtocol);
@@ -45,28 +45,37 @@ export default class Url {
     }
 
     toString() {
-        const protocolString = this.createProtocolString();
-        const credentialsString = this.createCredentialsString();
-        const hostPortString = this.createHostPortString();
-        const pathString = this.createPathString();
-        const parametersString = this.createParametersString();
-        const string = `${protocolString}${credentialsString}${hostPortString}${pathString}${parametersString}`;
-        return string;
+        const protocolCredentialsHostPortString = this.toProtocolCredentialsHostPortString();
+        const pathParametersString = this.toPathParametersString();
+        return `${protocolCredentialsHostPortString}${pathParametersString}`;
     }
 
-    createProtocolString() {
+    toProtocolCredentialsHostPortString() {
+        const protocolString = this.toProtocolString();
+        const credentialsString = this.toCredentialsString();
+        const hostPortString = this.toHostPortString();
+        return `${protocolString}${credentialsString}${hostPortString}`;
+    }
+
+    toProtocolString() {
         return this.protocol ? `${Protocol.toString(this.protocol)}${Url.protocolSeparator}` : "";
     }
 
-    createCredentialsString() {
+    toCredentialsString() {
         return this.user ? ((this.password ? `${this.user}${Url.passwordSeparator}${this.password}` : this.user) + Url.credentialsSeparator) : "";
     }
 
-    createHostPortString() {
+    toHostPortString() {
         return this.port > 0 ? `${this.host}:${this.port}` : this.host;
     }
 
-    createPathString() {
+    toPathParametersString() {
+        const pathString = this.toPathString();
+        const parametersString = this.toParametersString();
+        return `${pathString}${parametersString}`;
+    }
+
+    toPathString() {
         let string = "";
         if (this.path != null) {
             let first = true;
@@ -83,7 +92,7 @@ export default class Url {
         return string;
     }
 
-    createParametersString() {
+    toParametersString() {
         let string = "";
         if (this.parameters != null) {
 			let first = true;

@@ -41,8 +41,8 @@ export default class RestWebService extends WebService {
 	async executeAsync() {
 		const options = {
 			method: Method.toString(this.method),
-			host: this.url.host,
-			path: "/" + this.url.pathString,
+			host: this.url.protocolCredentialsHostPortString,
+			path: "/" + this.url.pathParametersString,
 			headers: this.headers
 		};
 		if (this.debugMode)

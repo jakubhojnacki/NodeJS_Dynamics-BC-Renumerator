@@ -53,15 +53,15 @@ export default class DynamicsWebServiceSettings {
     }
 
     static deserialise(pData) {
-        let webServiceSettings = new DynamicsWebServiceSettings();
+        let object = new DynamicsWebServiceSettings();
         if (pData != null)
-            webServiceSettings = new DynamicsWebServiceSettings(pData.protocol, pData.server, pData.port, pData.instance, pData.user, pData.password,
+            object = new DynamicsWebServiceSettings(pData.protocol, pData.server, pData.port, pData.instance, pData.user, pData.password,
                 pData.apiPublisher, pData.apiGroup, pData.apiVersion, pData.companyName, pData.companyId);
-        return webServiceSettings;
+        return object;
     }    
 
     createUrl() {
         const path = [ this.instance, "api", this.apiPublisher, this.apiGroup, `v${this.apiVersion}`, "companies", this.companyId ];
-        return new Url(this.protocol, this.host, this.port, path);
+        return new Url(this.protocol, this.server, this.port, path);
     }
 }
