@@ -14,8 +14,8 @@ export default class DynamicsObject extends DynamicsObjectBase {
     get fields() { return this.mFields; }
     set fields(pValue) { this.mFields = pValue; }
 
-    constructor(pType, pId, pName, pRenumberedId, pFields) {
-        super(pId, pName, pRenumberedId);
+    constructor(pType, pNo, pName, pRenumberedId, pFields) {
+        super(pNo, pName, pRenumberedId);
         this.mType = DynamicsObjectType.parse(pType);
         this.mFields = DynamicsObjectFields.validate(pFields);
     }
@@ -24,12 +24,12 @@ export default class DynamicsObject extends DynamicsObjectBase {
         let dynamicsObject = null;
         if (pData != null) {
             const fields = DynamicsObjectFields.deserialise(pData.fields);
-            dynamicsObject = new DynamicsObject(pData.type, pData.id, pData.name, pData.renumberedId, fields);
+            dynamicsObject = new DynamicsObject(pData.type, pData.no, pData.name, pData.renumberedNo, fields);
         }
         return dynamicsObject;
     }
 
-    getField(pId) {
-        return this.fields != null ? this.fields.get(pId) : null;
+    getField(pNo) {
+        return this.fields != null ? this.fields.get(pNo) : null;
     }
 }

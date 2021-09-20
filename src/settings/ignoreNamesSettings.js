@@ -21,7 +21,7 @@ export default class IgnoreNamesSettings extends Array {
     static deserialise(pData) {
         let object = new IgnoreNamesSettings();
         if ((pData != null) && (Array.isArray(pData))) {
-            for (const dataItem of this)
+            for (const dataItem of pData)
                 object.push(dataItem);
         }
         return object;

@@ -25,7 +25,7 @@ export default class DynamicsManifestRenumberator extends Renumberator {
     async renumber(pFilePath) {
         this.initialise(pFilePath);
         this.createNewFile();
-        await this.renumberDynamicsApp();
+        await this.renumberDynamicsApplication();
         await this.renumberFile();
         //^^^
         // this.overwriteFileWithNewFile();
@@ -35,7 +35,7 @@ export default class DynamicsManifestRenumberator extends Renumberator {
         this.filePath = pFilePath;
     }
     
-    async renumberDynamicsApp() {
+    async renumberDynamicsApplication() {
         this.existingDynamicsApp = this.dynamicsManager.getApp(this.dynamicsApp.id);
         if (this.existingDynamicsApp != null)
             this.dynamicsApp.renumberedId = this.existingDynamicsApp.renumberedId;

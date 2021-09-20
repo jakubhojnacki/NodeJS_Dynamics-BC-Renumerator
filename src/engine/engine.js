@@ -11,6 +11,7 @@ import FileSystem from "fs";
 import Path from "path";
 import RenumberatorFactory from "./renumberatorFactory.js";
 import Validator from "../general/validator.js";
+import FileSystemMatcher from "../general/fileSystemMatcher.js";
 
 export default class Engine {
     get directoryPath() { return this.mDirectoryPath; }
@@ -19,8 +20,13 @@ export default class Engine {
     get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
+    
     get renumberators() { return this.mRenumberators; }
     set renumberators(pValue) { this.mRenumberators = pValue; }
+    get directoryMatchers() { return this.mDirectoryMatchers; }
+    set directoryMatchers(pValue) { this.mDirectoryMatchers = pValue; }
+    get fileMatchers() { return this.mFileMatchers; }
+    set fileMatchers(pValue) { this.mFileMatchers = pValue; }
 
     get onDynamicsApplication() { return this.mOnDynamicsApplication; }
     set onDynamicsApplication(pValue) { this.mOnDynamicsApplication = pValue; }
@@ -35,6 +41,8 @@ export default class Engine {
         this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
         this.mDynamicsApplication = null;
         this.mRenumberators = [];
+        this.mDirectoryMatchers = [];
+        this.mFileMatchers = [];
         this.mOnDynamicsApplication = null;
         this.mOnDirectory = null;
         this.mOnFile = null;
@@ -51,6 +59,13 @@ export default class Engine {
             throw new Error("Directory can't be empty.");
         if (!FileSystem.existsSync(this.directoryPath))
             throw new Error(`Directory ${this.directoryPath} doesn't exist.`);
+
+        if (this.settings.ignore.directories)
+            for (const ignoreDirectory of this.settings.ignore.directories)
+                this.directoryMatchers.push(new FileSystemMatcher(ignoreDirectory));
+        if (this.settings.ignore.files)
+            for (const ignoreFile of this.settings.ignore.files)
+                this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
     }
 
     async process() {
@@ -94,7 +109,8 @@ export default class Engine {
 
     async renumberDirectory(pDirectoryPath, pIndentation) {
         const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
-        if (this.shouldDirectoryBeRenumbered(directoryName)) {
+        const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
+        if (shouldBeRenumbered) {
             if (this.onDirectory)
                 this.onDirectory(directoryName, pIndentation);
             const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
@@ -110,7 +126,12 @@ export default class Engine {
     }	   
 
     shouldDirectoryBeRenumbered(pDirectoryName) {
-        let result = false;
+        let result = true;
+        for (const directoryMatcher of this.directoryMatchers)
+            if (directoryMatcher.matches(pDirectoryName)) {
+                result = false;
+                break;
+            }
         return result;
     }
 
@@ -131,7 +152,12 @@ export default class Engine {
     }
 
     shouldFileBeRenumbered(pFileName) {
-        let result = false;
+        let result = true;
+        for (const fileMatcher of this.fileMatchers)
+            if (fileMatcher.matches(pFileName)) {
+                result = false;
+                break;
+            }
         return result;
     }
 

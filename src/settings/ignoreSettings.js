@@ -27,8 +27,8 @@ export default class IgnoreSettings {
     static deserialise(pData) {
         let object = new IgnoreSettings();
         if (pData != null) {
-            const directories = IgnoreNamesSettings.deserialise(pData.general);
-            const files = IgnoreNamesSettings.deserialise(pData.ignore);
+            const directories = IgnoreNamesSettings.deserialise(pData.directories);
+            const files = IgnoreNamesSettings.deserialise(pData.files);
             object = new IgnoreSettings(directories, files);
         }
         return object;

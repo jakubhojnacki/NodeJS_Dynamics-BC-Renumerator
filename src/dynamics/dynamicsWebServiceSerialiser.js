@@ -17,8 +17,7 @@ import DynamicsVersion from "./dynamicsVersion.js";
 export default class DynamicsWebServiceSerialiser {
     static deserialiseDynamicsApplication(pData) {
         let object = null;
-        if ((pData != null) && (Array.isArray(pData)) && (pData.length > 0)) {
-            const dataItem = pData[0];
+        if (pData != null) {
             const version = DynamicsVersion.parse(pData.originalExtensionVersion);
             object = new DynamicsApplication(pData.originalExtensionId, pData.name, pData.extensionPublisher, version, null, null, pData.extensionId);
         }
@@ -63,7 +62,9 @@ export default class DynamicsWebServiceSerialiser {
             for (const dataItem of pData) {
                 const objectType = DynamicsObjectType.parse(pData.objectType);
                 const objectNo = pData.no;
-                object.push(DynamicsWebServiceSerialiser.deserialiseDynamicsObjectField(dataItem, pObjects));
+                const object = pObjects.get(objectType, objectNo);
+
+                pObjects.push(DynamicsWebServiceSerialiser.deserialiseDynamicsObjectField(dataItem, pObjects));
             }
     }    
 

@@ -17,6 +17,7 @@ import RegExpFlag from "../regExp/regExpFlag.js";
 import RegExpSchema from "../regExp/regExpSchema.js";
 import RegExpTemplate from "../regExp/regExpTemplate.js";
 import Renumberator from "../engine/renumberator.js";
+import RegExpFlags from "../regExp/regExpFlags.js";
 
 export default class DynamicsAlRenumberator extends Renumberator {
     get name() { return "Dynamics AL Renumberator"; }
@@ -35,23 +36,23 @@ export default class DynamicsAlRenumberator extends Renumberator {
             new RegExpTemplate(
                 DynamicsAlRegExpTemplateName.object, 
                 "Object",
-                "(?<prefix>\\s*)(?<type>table|page|codeunit|report|xmlport|query|enum)\\s*(?<id>\\d+)\\s*(?<name>.+)(?<suffix>.*)", 
+                "(?<prefix>\\s*)(?<type>table|page|codeunit|report|xmlport|query|enum)\\s*(?<no>\\d+)\\s*(?<name>.+)(?<suffix>.*)", 
                 RegExpFlag.ignoreCase,
-                "${prefix}${type} ${renumberedId} \"${name}\"${suffix}"
+                "${prefix}${type} ${renumberedNo} \"${name}\"${suffix}"
             ),
             new RegExpTemplate(
                 DynamicsAlRegExpTemplateName.objectExtension,
                 "Object Extension",
-                "(?<prefix>\\s*)(?<type>tableextension|pageextension|enumextension)\\s*(?<id>\\d+)\\s*(?<name>.+)\\s*extends(?<extends>.+)(?<suffix>.*)",
+                "(?<prefix>\\s*)(?<type>tableextension|pageextension|enumextension)\\s*(?<no>\\d+)\\s*(?<name>.+)\\s*extends(?<extends>.+)(?<suffix>.*)",
                 RegExpFlag.ignoreCase,
-                "${prefix}${type} ${renumberedId} \"${name}\" extends \"${extends}\"${suffix}"
+                "${prefix}${type} ${renumberedNo} \"${name}\" extends \"${extends}\"${suffix}"
             ),
             new RegExpTemplate(
                 DynamicsAlRegExpTemplateName.tableField,
                 "Table Field",
-                "(?<prefix>\\s*)field\\(\\s*(?<id>\\d+);\\s*(?<name>.+);\\s*(?<dataType>.+)\\)(?<suffix>.*)",
+                "(?<prefix>\\s*)field\\(\\s*(?<no>\\d+);\\s*(?<name>.+);\\s*(?<dataType>.+)\\)(?<suffix>.*)",
                 RegExpFlag.ignoreCase,
-                "${prefix}field(${renumberedId}; ${name}; ${dataType})${suffix}"
+                "${prefix}field(${renumberedNo}; ${name}; ${dataType})${suffix}"
             )
         ]);
         this.mDynamicsObject = null;
@@ -112,17 +113,17 @@ export default class DynamicsAlRenumberator extends Renumberator {
 
     parseDynamicsObject(pMatch) {
         const type = DynamicsObjectType.parse(pMatch.namedGroups.type);
-        const id = Number.validateAsInteger(pMatch.namedGroups.id);
+        const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = pMatch.namedGroups.name;
-        this.dynamicsObject = new DynamicsObject(type, id, name);
+        this.dynamicsObject = new DynamicsObject(type, no, name);
     }
 
     async renumberDynamicsObject() {
-        this.existingDynamicsObject = this.dynamicsManager.getObject(this.dynamicsObject.type, this.dynamicsObject.id);
+        this.existingDynamicsObject = this.dynamicsManager.getObject(this.dynamicsObject.type, this.dynamicsObject.no);
         if (this.existingDynamicsObject != null)
-            this.dynamicsObject.renumberedId = this.existingDynamicsObject.renumberedId;
+            this.dynamicsObject.renumberedNo = this.existingDynamicsObject.renumberedNo;
         else
-            this.dynamicsObject.renumberedId = await this.dynamicsManager.reserveObject(this.dynamicsObject.type);
+            this.dynamicsObject.renumberedNo = await this.dynamicsManager.reserveObject(this.dynamicsObject.type);
     }
 
     createDynamicsObjectNewLine(pMatch) {
@@ -137,21 +138,21 @@ export default class DynamicsAlRenumberator extends Renumberator {
     }
 
     parseDynamicsObjectField(pMatch) {
-        const id = Number.validateAsInteger(pMatch.namedGroups.id);
+        const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = pMatch.namedGroups.name;
         const dataType = pMatch.namedGroups.dataType;
-        this.dynamicsObjectField = new DynamicsObjectField(id, name, dataType);
+        this.dynamicsObjectField = new DynamicsObjectField(no, name, dataType);
     }
 
     async renumberDynamicsObjectField() {
         if (this.dynamicsObject != null) {
             let existingDynamicsObjectField = null;
             if (this.existingDynamicsObject != null)
-                existingDynamicsObjectField = this.existingDynamicsObject.getObject(this.dynamicsObjectField.id);
+                existingDynamicsObjectField = this.existingDynamicsObject.getObject(this.dynamicsObjectField.no);
             if (existingDynamicsObjectField != null)
-                this.dynamicsObjectField.renumberedId = existingDynamicsObjectField.renumberedId;
+                this.dynamicsObjectField.renumberedNo = existingDynamicsObjectField.renumberedNo;
             else
-                this.dynamicsObjectField.renumberedId = await this.dynamicsManager.reserveObjectField(this.dynamicsObject.type, this.dynamicsObject.id);
+                this.dynamicsObjectField.renumberedNo = await this.dynamicsManager.reserveObjectField(this.dynamicsObject.type, this.dynamicsObject.no);
         }
     }
 

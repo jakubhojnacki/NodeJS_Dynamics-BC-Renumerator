@@ -20,7 +20,7 @@ export default class DynamicsObjects extends Array {
         return dynamicsObjects;
     }      
 
-    get(pType, pId) {
-        return this.find((lObject) => { return ((lObject.type === pType) && (lObject.id === pId)); });
+    get(pType, pNo) {
+        return this.find((lObject) => { return ((lObject.type === pType) && (lObject.no === pNo)); });
     }    
 }

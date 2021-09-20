@@ -9,12 +9,12 @@ import "../general/javaScript.js";
 export default class DynamicsObjectBase {
     get no() { return this.mNo; }
     get name() { return this.mName; }
-    get renumberedId() { return this.mRenumberedId; }
-    set renumberedId(pValue) { this.mRenumberedId = pValue; }
+    get renumberedNo() { return this.mRenumberedNo; }
+    set renumberedNo(pValue) { this.mRenumberedNo = pValue; }
 
-    constructor(pNo, pName, pRenumberedId) {
+    constructor(pNo, pName, pRenumberedNo) {
         this.mNo = Number.validateAsInteger(pNo);
         this.mName = String.validate(pName).removeIfStartsWith("\"").removeIfEndsWith("\"");
-        this.mRenumberedId = Number.validate(pRenumberedId);
+        this.mRenumberedNo = Number.validate(pRenumberedNo);
     }
 }

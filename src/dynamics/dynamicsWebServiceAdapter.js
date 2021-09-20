@@ -116,65 +116,28 @@ export default class DynamicsWebServiceAdapter {
         if (!pResponse.body)
             throw new Error("Web service response doesn't have any data.");
         if ((!pResponse.body.value) || (!Array.isArray(pResponse.body.value)))
-            throw new Error("Web service response data is not of expected format.");
+            throw new Error("Web service response data are not of expected format.");
         if (pResponse.body.value.length == 0)
-            throw new Error("Web service response data is empty.");
+            throw new Error("Web service response data are empty.");
         return pResponse.body.value[0];
     }
 
     processApplication(pData) {
-        if ((pData) && (Array.isArray(pData)) && (pData.length > 0))
-            this.dynamicsApplication = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
-        else
-            this.cannotProcessResponse();
-    }
-
-    deserialiseApplication(pData) {
-        let application = null;
-        if (pData != null) {
-            const version = DynamicsVersion.parse(pData.version);
-            const dependencies = DynamicsDependencies.deserialise(pData.dependencies);
-            const idRanges = DynamicsIdRanges.deserialise(pData.idRanges);
-            application = new DynamicsApplication(pData.id, pData.name, pData.publisher, version, dependencies, idRanges);
-        }
-        return application;
+        this.dynamicsApplication = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
+        if (this.dynamicsApplication == null)
+            throw new Error("Application data are incorrect.");
     }
 
     processWebServiceResponseDependencies(pData) {
-        if ((this.dynamicsApplication) && (pData) && (Array.isArray(pData))) {
-            this.dynamicsApplication.dependencies = new DynamicsDependencies();  
-            for (const dataItem of pData) {
-                const dependency = DynamicsDependency.deserialise(dataItem);
-                this.dynamicsApplication.dependencies.push(dependency);
-            }
-        } else
-            this.cannotProcessResponse();
+        DynamicsWebServiceSerialiser.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
     }
 
     processWebServiceResponseObjects(pData) {
-        if ((pData) && (Array.isArray(pData))) {
-            this.objects = new DynamicsObjects();
-            for (const dataItem of pData) {
-                const object = DynamicsObject.deserialise(dataItem);
-                this.objects.push(object);
-            }
-        } else
-            this.cannotProcessResponse();
+        this.objects = DynamicsWebServiceSerialiser.deserialiseDynamicsObjects(pData);
     }
 
     processWebServiceResponseObjectFields(pData) {
-        if ((pData) && (Array.isArray(pData))) {
-            for (const dataItem of pData) {
-                if ((dataItem.objectType) && (dataItem.objectId)) {
-                    const object = this.objects.get(dataItem.objectType, dataItem.objectId);
-                    if (object) {
-                        const objectField = DynamicsObjectField.deserialise(dataItem);
-                        object.push(objectField);
-                    }
-                }
-            }
-        } else
-            this.cannotProcessResponse();
+        DynamicsWebServiceSerialiser.deserialiseDynamicsObjectFields(pData, this.objects);
     }
 
     finalise() {        

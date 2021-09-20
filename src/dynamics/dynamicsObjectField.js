@@ -10,15 +10,15 @@ import DynamicsObjectBase from "./dynamicsObjectBase.js";
 export default class DynamicsObjectField extends DynamicsObjectBase {
     get dataType() { return this.mDataType; }
 
-    constructor(pId, pName, pDataType, pRenumberedId) {
-        super(pId, pName, pRenumberedId);
+    constructor(pNo, pName, pDataType, pRenumberedNo) {
+        super(pNo, pName, pRenumberedNo);
         this.mDataType = String.validate(pDataType);
     }
 
     static deserialise(pData) {
         let dynamicsObjectField = null;
         if (pData != null)
-            dynamicsObjectField = new DynamicsObjectField(pData.extensionId, pData.name, pData.renumberedId);
+            dynamicsObjectField = new DynamicsObjectField(pData.extensionId, pData.name, pData.renumberedNo);
         return dynamicsObjectField;
     }
 }

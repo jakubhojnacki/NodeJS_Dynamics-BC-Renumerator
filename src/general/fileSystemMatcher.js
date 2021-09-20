@@ -1,17 +1,17 @@
 /**
- * @module "FileMatcher" class
- * @description Matches file name to a filter
- * @version 0.0.2 (2021-08-29)
+ * @module "FileSystemMatcher" class
+ * @description Matches directory / file name to a filter
+ * @version 0.0.3 (2021-09-20)
  */
 
 import "./javaScript.js";
 
-export default class FileMatcher {
+export default class FileSystemMatcher {
     get regex() { return this.mRegex; }
 
 	constructor(pFilter) {
         const filter = String.validate(pFilter);
-		const pattern = FileMatcher.createPattern(filter);
+		const pattern = FileSystemMatcher.createPattern(filter);
 		this.mRegex = new RegExp(pattern);
 	}
 
@@ -22,7 +22,7 @@ export default class FileMatcher {
 			pattern = pattern.replace(specialCharacter, "\\" + specialCharacter);
         pattern = pattern.replace("*", ".*");
         pattern = pattern.replace("?", ".");
-        return pattern;
+        return '^' + pattern + '$';
 	}
 
 	matches(pName) {

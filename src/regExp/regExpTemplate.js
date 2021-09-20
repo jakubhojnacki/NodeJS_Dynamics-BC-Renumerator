@@ -18,7 +18,7 @@ export default class RegExpTemplate {
         this.mName = String.validate(pName);
         this.mDescription = String.validate(pDescription);
         this.mPattern = String.validate(pPattern);
-        this.mFlags = Object.validate(pFlags, new RegExpFlags());
+        this.mFlags = new RegExpFlags(pFlags);
         this.mReplaceWith = String.validate(pReplaceWith);
     }
 }
