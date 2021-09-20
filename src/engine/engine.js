@@ -20,6 +20,8 @@ export default class Engine {
     get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
+    get dynamicsObjects() { return this.mDynamicsObjects; }
+    set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
     
     get renumberators() { return this.mRenumberators; }
     set renumberators(pValue) { this.mRenumberators = pValue; }
@@ -38,8 +40,9 @@ export default class Engine {
     constructor(pDirectoryPath, pSettings) {
         this.mDirectoryPath = String.validate(pDirectoryPath);
         this.mSettings = pSettings;
-        this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter(this.settings.dynamicsWebService);
+        this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter();
         this.mDynamicsApplication = null;
+        this.mDynamicsObjects = [];
         this.mRenumberators = [];
         this.mDirectoryMatchers = [];
         this.mFileMatchers = [];
@@ -70,7 +73,8 @@ export default class Engine {
 
     async process() {
         this.readDynamicsApplication();
-        await this.callWebService();
+        await this.callRenumberWebService();
+        this.processRenumberWebServiceResponse();
         await this.renumber();
     }
 
@@ -94,12 +98,32 @@ export default class Engine {
             this.dynamicsApplication.validate(validator, true);
     }
 
-    async callWebService() {
+    async callRenumberWebService() {
         const renumberationCode = this.settings.general.renumberationCode;
         this.dynamicsWebServiceAdapter.initialise(this.dynamicsApplication, renumberationCode);
         this.dynamicsWebServiceAdapter.validate(null, true);
         await this.dynamicsWebServiceAdapter.renumber();
         this.dynamicsWebServiceAdapter.finalise();
+    }
+
+    processRenumberWebServiceResponse() {
+        const webServiceDynamicsApplication = this.dynamicsWebServiceAdapter.dynamicsApplication;
+        this.dynamicsApplication.renumberedId = webServiceDynamicsApplication.renumberedId;
+        if (webServiceDynamicsApplication.dependencies)
+            for (const dynamicsDependency of this.dynamicsApplication.dependencies) {
+                const webServiceDynamicsDependency = webServiceDynamicsApplication.dependencies.get(dynamicsDependency.id);
+                if (webServiceDynamicsDependency)
+                    dynamicsDependency.renumberedId = webServiceDynamicsDependency.renumberedId;
+            }
+        if (webServiceDynamicsApplication.idRanges) 
+            for (const dynamicsIdRange of this.dynamicsApplication.idRanges) {
+                const webServiceDynamicsIdRange = webServiceDynamicsApplication.idRanges.get(dynamicsIdRange.from, dynamicsIdRange.to);
+                if (webServiceDynamicsIdRange) {
+                    dynamicsIdRange.renumberedFrom = webServiceDynamicsIdRange.renumberedFrom;
+                    dynamicsIdRange.renumberedTo = webServiceDynamicsIdRange.renumberedTo;
+                }
+            }
+        this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
     }
 
     async renumber() {

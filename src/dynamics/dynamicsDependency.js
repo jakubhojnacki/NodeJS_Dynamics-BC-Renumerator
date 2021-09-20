@@ -12,13 +12,6 @@ export default class DynamicsDependency extends DynamicsApplicationBase {
         super(pId, pName, pPublisher, pVersion, pRenumberedId);
     }
 
-    inject(pData) {
-        if ("id" in pData)
-            pData.id = this.renumberedId;
-        else
-            pData.appId = this.renumberedId;
-    }
-
     toString() {
         return super.toStringBuilder().toString();
     }

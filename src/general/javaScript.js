@@ -94,8 +94,8 @@ Date.createTimeStamp = function() {
 	return (new Date()).toTimeStamp();
 }
 
-Date.createFileTimeStamp = function() {
-	return (new Date()).toFileTimeStamp();
+Date.createFileTimeStamp = function(pSeparator) {
+	return (new Date()).toFileTimeStamp(pSeparator);
 }
 
 Date.isDate = function(pValue) {
@@ -127,8 +127,9 @@ Date.prototype.toTimeStamp = function() {
 	return this.format("yyyyMMddhhmmsszzz");
 }
 
-Date.prototype.toFileTimeStamp = function() {
-	return this.format("yyyyMMdd.hhmmsszzz");
+Date.prototype.toFileTimeStamp = function(pSeparator) {
+    const separator = String.validate(pSeparator, ".");
+	return this.format(`yyyyMMdd${separator}hhmmsszzz`);
 }
 
 Number.compare = function(pNumber) {

@@ -1,13 +1,13 @@
 /**
- * @module "Logger" class
- * @description Logs application messages as text
- * @version 0.0.3 (2021-08-10)
+ * @module "Terminal" class
+ * @description Performs terminal-related tasks
+ * @version 0.0.4 (2021-09-20)
  */
 
 import "./javaScript.js";
 import StringBuilder from "./stringBuilder.js";
 
-export default class Logger {
+export default class Terminal {
     get width() { return this.mWidth; }
     get tab() { return this.mTab; }
     

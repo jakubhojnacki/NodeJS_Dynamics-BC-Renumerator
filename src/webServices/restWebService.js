@@ -15,8 +15,8 @@ import WebService from "./webService.js";
 import Protocol from "../network/protocol.js";
 
 export default class RestWebService extends WebService {
-    get logger() { return global.theApplication.logger; }
-	get debugMode() { return global.theApplication.debugMode; }
+    get terminal() { return global.theApplication.terminal; }
+	get debug() { return global.theApplication.debug; }
 
     constructor(pUrl, pMethod, pHeaders, pBody, pAuthentication, pContentType, pAccept) {
 		super(pUrl, pMethod, pHeaders, pBody, pAuthentication, pContentType, pAccept)
@@ -48,7 +48,7 @@ export default class RestWebService extends WebService {
 			path: encodeURI("/" + this.url.toPathParametersString()),
 			headers: this.headers
 		};
-		if (this.debugMode)
+		if (this.debug.enabled)
 			this.logRequest(options);
 		const __this = this;
 		return new Promise((lResolve, lReject) => { __this.executeRequest(options, lResolve, lReject); });
@@ -95,24 +95,24 @@ export default class RestWebService extends WebService {
 
 	logRequest(pOptions, pIndentation) {
 		const indentation = Number.validate(pIndentation);
-        this.logger.writeLine("REST Web Service Request:", indentation);
-		this.logger.writeLine(StringBuilder.nameValue("Method", pOptions.method), indentation + 1);
-		this.logger.writeLine(StringBuilder.nameValue("Host", pOptions.host), indentation + 1);
-		this.logger.writeLine(StringBuilder.nameValue("Port", pOptions.port), indentation + 1);
-		this.logger.writeLine(StringBuilder.nameValue("Path", pOptions.path), indentation + 1);
+        this.terminal.writeLine("REST Web Service Request:", indentation);
+		this.terminal.writeLine(StringBuilder.nameValue("Method", pOptions.method), indentation + 1);
+		this.terminal.writeLine(StringBuilder.nameValue("Host", pOptions.host), indentation + 1);
+		this.terminal.writeLine(StringBuilder.nameValue("Port", pOptions.port), indentation + 1);
+		this.terminal.writeLine(StringBuilder.nameValue("Path", pOptions.path), indentation + 1);
 		if (pOptions.headers) {
-			this.logger.writeLine("Headers:", indentation + 1);
-			this.logger.writeObject(pOptions.headers, indentation + 2);
+			this.terminal.writeLine("Headers:", indentation + 1);
+			this.terminal.writeObject(pOptions.headers, indentation + 2);
 		}
 		if (this.body) {
-			this.logger.writeLine("Body:", indentation + 1);
-			this.logger.writeObject(this.body, indentation + 2);
+			this.terminal.writeLine("Body:", indentation + 1);
+			this.terminal.writeObject(this.body, indentation + 2);
 		}
 	}
 
 	logResponse(pIndentation) {
 		const indentation = Number.validate(pIndentation);
-        this.logger.writeLine("REST Web Service Response:", indentation);
-		this.logger.writeObject(this.response, indentation + 1);
+        this.terminal.writeLine("REST Web Service Response:", indentation);
+		this.terminal.writeObject(this.response, indentation + 1);
 	}
 }	

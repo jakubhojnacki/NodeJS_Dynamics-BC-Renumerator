@@ -8,46 +8,49 @@ import "../general/javaScript.js";
 import FileSystem from "fs";
 import Path from "path";
 import Renumberator from "../engine/renumberator.js";
+import DynamicsManifestSerialiser from "./dynamicsManifestSerialiser.js";
 
 export default class DynamicsManifestRenumberator extends Renumberator {
+    get code() { return "Manifest"; }
     get name() { return "Dynamics AL Manifest Renumberator"; }
-    get dynamicsManager() { return this.engine.dynamicsManager; }
-    get dynamicsApp() { return this.engine.dynamicsApp; }
 
-    constructor(pRenumberation) {
-        super(pRenumberation);
+    get dynamicsApplication() { return this.engine.dynamicsApplication; }
+    get data() { return this.mData; }
+    set data(pValue) { this.mData = pValue; }
+
+    constructor(pEngine) {
+        super(pEngine);
+        this.mData = null;
     }
 
     canRenumber(pFilePath) {
         return Path.basename(pFilePath).trim().toLowerCase() === "app.json";
     }
 
-    async renumber(pFilePath) {
+    renumber(pFilePath) {
         this.initialise(pFilePath);
-        this.createNewFile();
-        await this.renumberDynamicsApplication();
-        await this.renumberFile();
-        //^^^
-        // this.overwriteFileWithNewFile();
+        this.readData();
+        this.renumberData();
+        this.writeData();
     }
 
     initialise(pFilePath) {
         this.filePath = pFilePath;
     }
     
-    async renumberDynamicsApplication() {
-        this.existingDynamicsApp = this.dynamicsManager.getApp(this.dynamicsApp.id);
-        if (this.existingDynamicsApp != null)
-            this.dynamicsApp.renumberedId = this.existingDynamicsApp.renumberedId;
-        else
-            this.dynamicsApp.renumberedId = await this.dynamicsManager.createNewAppId();
+    readData() {
+        let rawData = FileSystem.readFileSync(this.filePath);
+        this.data = JSON.parse(rawData);
     }
 
-    async renumberFile() {
-        let rawData = FileSystem.readFileSync(this.filePath);
-        let data = JSON.parse(rawData);
-        this.dynamicsApp.inject(data);
-        rawData = JSON.stringify(data, null, 4);
+    renumberData() {
+        DynamicsManifestSerialiser.serialiseDynamicsApplication(this.dynamicsApplication, this.data);
+    }
+
+    async writeData() {
+        this.createNewFile();
+        const rawData = JSON.stringify(this.data, null, 4);
         this.newFile.write(rawData);
+        this.overwriteFileWithNewFile();
     }    
 }

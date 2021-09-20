@@ -8,7 +8,7 @@ import "../general/javaScript.js";
 import Arg from "./arg.js";
 
 export default class Args extends Array {
-    get logger() { return global.theApplication.logger; }
+    get terminal() { return global.theApplication.terminal; }
 
     get argTemplates() { return this.mArgTemplates; }
 
@@ -69,17 +69,17 @@ export default class Args extends Array {
         return result;
     }
 
-    reportInvalid(pLogger, pIndentation) {
+    reportInvalid(pIndentation) {
         let indentation = Number.validate(pIndentation);
-        pLogger.writeLine("Application args:", indentation);
+        this.terminal.writeLine("Application args:", indentation);
         indentation += 1;
         for (const argTemplate of this.argTemplates) {
-            pLogger.writeLine(argTemplate.toString(this), indentation);
+            this.terminal.writeLine(argTemplate.toString(this), indentation);
             const arg = this.find((lArg) => { return lArg.name === argTemplate.name; });
             if (arg != null)
-                pLogger.writeLine(`Passed: ${arg.value}; Valid: ${arg.valid}.`, indentation + 1);
+                this.terminal.writeLine(`Passed: ${arg.value}; Valid: ${arg.valid}.`, indentation + 1);
             else
-                pLogger.writeLine("Not passed.", indentation + 1);
+                this.terminal.writeLine("Not passed.", indentation + 1);
         }
     }
 
@@ -98,8 +98,8 @@ export default class Args extends Array {
 
     log(pIndentation) {
         const indentation = Number.validate(pIndentation);
-        this.logger.writeLine("Args:", indentation);
+        this.terminal.writeLine("Args:", indentation);
         for (const arg of this)
-            this.logger.writeLine(arg.toString(), indentation + 1);
+            this.terminal.writeLine(arg.toString(), indentation + 1);
     }
 }

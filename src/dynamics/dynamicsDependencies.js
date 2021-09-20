@@ -8,7 +8,7 @@ import "../general/javaScript.js";
 import Guid from "../general/guid.js";
 
 export default class DynamicsDependencies extends Array {
-    get logger() { return global.theApplication.logger; }
+    get terminal() { return global.theApplication.terminal; }
 
     constructor() {        
         super();
@@ -16,18 +16,9 @@ export default class DynamicsDependencies extends Array {
 
     log(pIndentation) {
         const indentation = Number.validate(pIndentation);
-        this.logger.writeLine("Dependencies:", indentation);
+        this.terminal.writeLine("Dependencies:", indentation);
         for (const dynamicsDependency of this)
-            this.logger.writeLine(dynamicsDependency.toString(), indentation + 1);
-    }
-
-    inject(pData) {
-        for (let data of pData) {
-            const dataId = Guid.validate(data.id, data.appId);
-            const dependency = this.find((lDependency) => { return lDependency.id === dataId; });
-            if (dependency)
-                dependency.inject(data);
-        }
+            this.terminal.writeLine(dynamicsDependency.toString(), indentation + 1);
     }
 
     validate(pValidator, pRaiseError, pWithRenumbered) {
@@ -39,4 +30,8 @@ export default class DynamicsDependencies extends Array {
             validator.raiseErrorIfNotSuccess();
         return validator;
     }   
+
+    get(pId) {
+        return this.find((lDynamicsDependency) => { return (lDynamicsDependency.id === pId); });
+    }      
 }

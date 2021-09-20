@@ -12,6 +12,6 @@ export default class DynamicsApplications extends Array {
     }
 
     get(pId) {
-        return this.find((lApp) => { return (lApp.id === pId); });
+        return this.find((lDynamicsApplication) => { return (lDynamicsApplication.id === pId); });
     }   
 }

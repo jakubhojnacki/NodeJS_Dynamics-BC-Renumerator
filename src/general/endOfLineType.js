@@ -14,7 +14,7 @@ export default class EndOfLineType {
 
     static get items() { return [
         new EnumItem(EndOfLineType.linux, "\n"),
-        new EnumItem(EndOfLineType.windows, "\n\r")
+        new EnumItem(EndOfLineType.windows, "\r\n")
     ]; }
 
     static parse(pString) {

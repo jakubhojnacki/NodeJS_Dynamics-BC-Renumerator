@@ -32,9 +32,11 @@ export default class Renumberator {
 
     overwriteFileWithNewFile() {
         this.newFile.close();
+        /*TODO - Uncomment when ready
         FileSystem.unlinkSync(this.filePath);
         FileSystem.renameSync(this.newFilePath, this.filePath);
         this.filePath = this.newFilePath;
+        */
         this.newFilePath = "";
         this.newFile = null;
     }

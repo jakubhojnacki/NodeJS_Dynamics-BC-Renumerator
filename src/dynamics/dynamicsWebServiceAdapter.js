@@ -8,11 +8,6 @@ import "../general/javaScript.js";
 import BasicAuthentication from "../webServices/basicAuthentication.js";
 import Charset from "../network/charset.js";
 import ContentType from "../network/contentType.js";
-import DynamicsApplication from "./dynamicsApplication.js";
-import DynamicsDependencies from "./dynamicsDependencies.js";
-import DynamicsDependency from "./dynamicsDependency.js";
-import DynamicsObjects from "./dynamicsObjects.js";
-import DynamicsObject from "./dynamicsObject.js";
 import DynamicsWebServiceSerialiser from "./dynamicsWebServiceSerialiser.js";
 import MediaType from "../network/mediaType.js";
 import Method from "../network/method.js";
@@ -24,19 +19,20 @@ import UrlParameter from "../network/urlParameter.js";
 import Validator from "../general/validator.js";
 
 export default class DynamicsWebServiceAdapter {
-    get settings() { return this.mSettings; }
+    get settings() { return global.theApplication.settings; }
+    get debug() { return global.theApplication.debug; }
+
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get renumberationCode() { return this.mRenumberationCode; }
     set renumberationCode(pValue) { this.mRenumberationCode = pValue; }
-    get objects() { return this.mObjects; }
-    set objects(pValue) { this.mObjects = pValue; }
+    get dynamicsObjects() { return this.mDynamicsObjects; }
+    set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
 
-    constructor(pSettings) {
-        this.mSettings = pSettings;
+    constructor() {
         this.mDynamicsApplication = null;
         this.mRenumberationCode = "";
-        this.mObjects = null;
+        this.mDynamicsObjects = null;
     }
 
     async renumber(pApp, pRenumberationCode) {
@@ -51,17 +47,11 @@ export default class DynamicsWebServiceAdapter {
         this.validate();
     }
 
-    getValidator() {
-        const validator = new Validator();
-        this.settings.validate(validator);
-    }
-
     validate(pValidator, pRaiseError) {
         const validator = pValidator ? pValidator : new Validator();
         const raiseError = Boolean.validate(pRaiseError);
-        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Settings", this.settings);
-        if (this.settings)
-            this.settings.validate(validator);
+        if (this.settings.dynamicsWebService)
+            this.settings.dynamicsWebService.validate(validator);
         validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
             this.dynamicsApplication.validate(validator);
@@ -86,13 +76,13 @@ export default class DynamicsWebServiceAdapter {
     }
 
     createAuthentication() {
-        const user = this.settings.user;
-        const password = this.settings.password;
+        const user = this.settings.dynamicsWebService.user;
+        const password = this.settings.dynamicsWebService.password;
         return new BasicAuthentication(user, password);
     }
 
     createUrl(pWebService) {
-        const url = this.settings.createUrl(pWebService);
+        const url = this.settings.dynamicsWebService.createUrl(pWebService);
         const oDataFilter = new ODataFilter([ 
             new ODataFilterPart("extensionId", ODataOperator.equals, "d4688c1b-70bd-47f3-8087-f462a8a88f0b"),
             new ODataFilterPart("renumberationCode", ODataOperator.equals, "'SAAS'")
@@ -105,11 +95,12 @@ export default class DynamicsWebServiceAdapter {
     }
 
     processResponse(pResponse) {
+        this.debug.dumpJson("Web Service Response", pResponse);
         const data = this.extractResponseData(pResponse);
-        this.processApplication(data.applications);
-        this.processWebServiceResponseDependencies(data.applicationDependencies);
-        this.processWebServiceResponseObjects(data.objects);
-        this.processWebServiceResponseObjectFields(data.objectFields);
+        this.processResponseDynamicsApplication(data.applications);
+        this.processResponseDynamicsDependencies(data.applicationDependencies);
+        this.processResponseDynamicsObjects(data.objects);
+        this.processResponseDynamicsObjectFields(data.objectFields);
     }
 
     extractResponseData(pResponse) {
@@ -122,22 +113,22 @@ export default class DynamicsWebServiceAdapter {
         return pResponse.body.value[0];
     }
 
-    processApplication(pData) {
+    processResponseDynamicsApplication(pData) {
         this.dynamicsApplication = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
         if (this.dynamicsApplication == null)
             throw new Error("Application data are incorrect.");
     }
 
-    processWebServiceResponseDependencies(pData) {
+    processResponseDynamicsDependencies(pData) {
         DynamicsWebServiceSerialiser.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
     }
 
-    processWebServiceResponseObjects(pData) {
-        this.objects = DynamicsWebServiceSerialiser.deserialiseDynamicsObjects(pData);
+    processResponseDynamicsObjects(pData) {
+        this.dynamicsObjects = DynamicsWebServiceSerialiser.deserialiseDynamicsObjects(pData);
     }
 
-    processWebServiceResponseObjectFields(pData) {
-        DynamicsWebServiceSerialiser.deserialiseDynamicsObjectFields(pData, this.objects);
+    processResponseDynamicsObjectFields(pData) {
+        DynamicsWebServiceSerialiser.deserialiseDynamicsObjectFields(pData, this.dynamicsObjects);
     }
 
     finalise() {        

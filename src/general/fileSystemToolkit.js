@@ -27,6 +27,12 @@ export default class FileSystemToolkit {
         return directoryName;
     }
 
+    static toFileName(pString) {
+        const string = String.validate(pString);
+        const directoryName = string.replace(/[/\\?%*:|"<>,;=]/g, "_");
+        return directoryName;
+    }
+    
     static createDirectoryIfDoesntExist(pPath) {
         if (!FileSystem.existsSync(pPath))
             FileSystem.mkdirSync(pPath, { recursive: true });

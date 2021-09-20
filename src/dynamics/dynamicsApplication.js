@@ -10,8 +10,8 @@ import StringBuilder from "../general/stringBuilder.js";
 import Validator from "../general/validator.js";
 
 export default class DynamicsApplication extends DynamicsApplicationBase {
-    get logger() { return global.theApplication.logger; }
-    get debugMode() { return global.theApplication.debugMode; }
+    get terminal() { return global.theApplication.terminal; }
+    get debug() { return global.theApplication.debug; }
 
     get dependencies() { return this.mDependencies; }
     set dependencies(pValue) { this.mDependencies = pValue; }
@@ -23,28 +23,22 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
         this.mIdRanges = pIdRanges;
     }
 
-    inject(pData) {
-        pData.id = this.renumberedlId;
-        this.dependencies.inject(pData.dependencies);
-        this.idRanges.inject(pData.idRanges);
-    }
-
     toString() {
         return `${this.name} ${this.version} (ID: ${this.id}; Publisher: ${this.publisher})`;
     }
 
     log(pIndentation) {
         const indentation = Number.validate(pIndentation);
-        if (this.debugMode) {
-            this.logger.writeLine("Dynamics Application:", indentation);
-            this.logger.writeLine(StringBuilder.nameValue("ID", this.id), indentation + 1);
-            this.logger.writeLine(StringBuilder.nameValue("Name", this.name), indentation + 1);
-            this.logger.writeLine(StringBuilder.nameValue("Publisher", this.publisher), indentation + 1);
-            this.logger.writeLine(StringBuilder.nameValue("Version", this.version.toString()), indentation + 1);
+        if (this.debug.enabled) {
+            this.terminal.writeLine("Dynamics Application:", indentation);
+            this.terminal.writeLine(StringBuilder.nameValue("ID", this.id), indentation + 1);
+            this.terminal.writeLine(StringBuilder.nameValue("Name", this.name), indentation + 1);
+            this.terminal.writeLine(StringBuilder.nameValue("Publisher", this.publisher), indentation + 1);
+            this.terminal.writeLine(StringBuilder.nameValue("Version", this.version.toString()), indentation + 1);
             this.dependencies.log(indentation + 1);
             this.idRanges.log(indentation + 1);
         } else {
-            this.logger.writeLine(`Dynamics Application: ${this.toString()}`, indentation);
+            this.terminal.writeLine(`Dynamics Application: ${this.toString()}`, indentation);
         }
     }        
 

@@ -65,4 +65,41 @@ export default class DynamicsManifestSerialiser {
             object = new DynamicsIdRange(pData.from, pData.to);
         return object;
     }    
+
+    static serialiseDynamicsApplication(pDynamicsApplication, pData) {
+        pData.id = pDynamicsApplication.renumberedId;
+        DynamicsManifestSerialiser.serialiseDynamicsDependencies(pDynamicsApplication.dependencies, pData.dependencies);
+        DynamicsManifestSerialiser.serialiseDynamicsIdRanges(pDynamicsApplication.idRanges, pData.idRanges);
+    }    
+
+    static serialiseDynamicsDependencies(pDynamicsDependencies, pData) {
+        if (pDynamicsDependencies)
+            for (const dataItem of pData) {
+                const dynamicsDependency = pDynamicsDependencies.find((lDynamicsDependency) => { return lDynamicsDependency.id === dataItem.id});
+                if (dynamicsDependency)
+                    DynamicsManifestSerialiser.serialiseDynamicsDependency(dynamicsDependency, dataItem);
+            }
+    }
+
+    static serialiseDynamicsDependency(pDynamicsDependency, pData) {
+        if ("id" in pData)
+            pData.id = pDynamicsDependency.renumberedId;
+        else
+            pData.appId = pDynamicsDependency.renumberedId;
+    }
+
+    static serialiseDynamicsIdRanges(pDynamicsIdRanges, pData) {
+        if (pDynamicsIdRanges)
+            for (const dataItem of pData) {
+                const dynamicsIdRange = pDynamicsIdRanges.find((lDynamicsIdRange) => { return ((lDynamicsIdRange.from === dataItem.from) && 
+                    (lDynamicsIdRange.to === dataItem.to)); });
+                if (dynamicsIdRange)
+                    DynamicsManifestSerialiser.serialiseDynamicsIdRange(dynamicsIdRange, dataItem);
+            }
+    }
+
+    static serialiseDynamicsIdRange(pDynamicsIdRange, pData) {
+        pData.from = pDynamicsIdRange.renumberedFrom;
+        pData.to = pDynamicsIdRange.renumberedTo;
+    }    
 }

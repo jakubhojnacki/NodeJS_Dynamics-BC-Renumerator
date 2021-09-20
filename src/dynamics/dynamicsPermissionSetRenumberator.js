@@ -11,6 +11,7 @@ import XmlDoc from "xmldoc";
 import Renumberator from "../engine/renumberator.js";
 
 export default class DynamicsPermissionSetRenumberator extends Renumberator {
+    get code() { return "Permission Set"; }
     get name() { return "Dynamics AL Permission Set Renumberator"; }
 
     constructor(pRenumberation) {

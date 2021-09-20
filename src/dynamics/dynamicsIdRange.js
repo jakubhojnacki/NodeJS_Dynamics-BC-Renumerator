@@ -21,12 +21,7 @@ export default class DynamicsIdRange {
         this.mRenumberedFrom = Number.validate(pRenumberedFrom);
         this.mRenumberedTo = Number.validate(pRenumberedTo);
     }
-
-    inject(pData) {
-        pData.from = this.renumberedFrom;
-        pData.to = this.renumberedTo;
-    }
-
+    
     toString() {
         const stringBuilder = new StringBuilder();
         stringBuilder.addNameValue("From", this.from);
