@@ -5,12 +5,13 @@
  */
 
 import "../general/javaScript.js";
-import FileSystem from "fs";
 import Path from "path";
-import XmlDoc from "xmldoc";
 import Renumberator from "../engine/renumberator.js";
+import XmlToolkit from "../xml/xmlToolkit.js";
 
 export default class DynamicsPermissionSetRenumberator extends Renumberator {
+    get debug() { return global.theApplication.debug; }
+
     get code() { return "Permission Set"; }
     get name() { return "Dynamics AL Permission Set Renumberator"; }
 
@@ -18,17 +19,17 @@ export default class DynamicsPermissionSetRenumberator extends Renumberator {
         super(pRenumberation);
     }
     
-    canRenumber(pFilePath) {
+    async canRenumber(pFilePath) {
         let result = false;
         if (Path.extname(pFilePath).trim().toLowerCase() === ".xml") {
-            const xmlFile = FileSystem.readFileSync(pFilePath);
-            const xmlDoc = new XmlDoc.XmlDocument(xmlFile);
-            result = (xmlDoc.name === "PermissionSets");
+            const xmlDocument = await XmlToolkit.readFile(pFilePath);
+            result = (xmlDocument.PermissionSets != null);
         };
         return result;
     }
 
-    renumber(pFilePath) {
-        //TODO - Not implemented
+    async renumber(pFilePath) {
+        const xmlDocument = await XmlToolkit.readFile(pFilePath);
+        this.debug.dumpJson("Permission Set", xmlDocument);
     }
 }

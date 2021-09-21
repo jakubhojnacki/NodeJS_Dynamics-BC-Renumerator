@@ -62,7 +62,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
         this.mDynamicsObject = null;
     }
 
-    canRenumber(pFilePath) {
+    async canRenumber(pFilePath) {
         return Path.extname(pFilePath).trim().toLowerCase() === ".al";
     }
 

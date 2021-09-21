@@ -101,7 +101,6 @@ export default class DynamicsWebServiceAdapter {
         this.processResponseDynamicsDependencies(data.applicationDependencies);
         this.processResponseDynamicsObjects(data.objects);
         this.processResponseDynamicsObjectFields(data.objectFields);
-        this.debug.dumpJson("Dynamics Objects", this.dynamicsObjects.serialise()); //TODO - Remove
     }
 
     extractResponseData(pResponse) {

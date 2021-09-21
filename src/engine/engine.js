@@ -197,7 +197,7 @@ export default class Engine {
             if (this.shouldFileBeRenumbered(fileName)) {
                 this.triggerOnProgress(1, pFilePath);
                 let renumbered = false;
-                const renumberator = this.renumberators.find((lRenumberator) => { return lRenumberator.canRenumber(pFilePath); });
+                const renumberator = await this.findRenumberator(pFilePath);
                 if (renumberator) {
                     await renumberator.renumber(pFilePath);
                     renumbered = true;
@@ -205,6 +205,16 @@ export default class Engine {
                 this.triggerOnFile(pFilePath, fileName, renumbered, renumberator, pIndentation);
             }
         }
+    }
+
+    async findRenumberator(pFilePath) {
+        let renumberatorFound = null;
+        for (const renumberator of this.renumberators)
+            if (await renumberator.canRenumber(pFilePath)) {
+                renumberatorFound = renumberator;
+                break;
+            }
+        return renumberatorFound;
     }
 
     shouldFileBeRenumbered(pFileName) {

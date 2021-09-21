@@ -23,7 +23,7 @@ export default class DynamicsManifestRenumberator extends Renumberator {
         this.mData = null;
     }
 
-    canRenumber(pFilePath) {
+    async canRenumber(pFilePath) {
         return Path.basename(pFilePath).trim().toLowerCase() === "app.json";
     }
 

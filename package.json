@@ -18,6 +18,7 @@
     "license": "ISC",
     "dependencies": {
         "uuid": "^8.3.2",
+        "xml2js": "^0.4.23",
         "xmldoc": "^1.1.2"
     }
 }
