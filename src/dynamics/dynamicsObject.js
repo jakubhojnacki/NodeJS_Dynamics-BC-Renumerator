@@ -17,19 +17,17 @@ export default class DynamicsObject extends DynamicsObjectBase {
     constructor(pType, pNo, pName, pRenumberedId, pFields) {
         super(pNo, pName, pRenumberedId);
         this.mType = DynamicsObjectType.parse(pType);
-        this.mFields = DynamicsObjectFields.validate(pFields);
+        this.mFields = pFields ? pFields : new DynamicsObjectFields();
     }
-
-    static deserialise(pData) {
-        let dynamicsObject = null;
-        if (pData != null) {
-            const fields = DynamicsObjectFields.deserialise(pData.fields);
-            dynamicsObject = new DynamicsObject(pData.type, pData.no, pData.name, pData.renumberedNo, fields);
-        }
-        return dynamicsObject;
-    }
-
+    
     getField(pNo) {
         return this.fields != null ? this.fields.get(pNo) : null;
     }
+
+    serialise() {
+        let data = super.serialise();
+        data.type = this.type;
+        data.fields = this.fields.serialise();
+        return data;
+    }            
 }

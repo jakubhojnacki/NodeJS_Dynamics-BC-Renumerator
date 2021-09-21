@@ -29,5 +29,12 @@ export default class DynamicsIdRanges extends Array {
         if (raiseError)
             validator.raiseErrorIfNotSuccess();
         return validator;
-    }        
+    }     
+
+    serialise() {
+        let data = [];
+        for (const idRange of this)
+            data.push(idRange.serialise());
+        return data;
+    }    
 }

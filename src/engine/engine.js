@@ -5,13 +5,17 @@
  */
 
 import "../general/javaScript.js";
+import DirectoryEventInfo from "./directoryEventInfo.js";
+import DynamicsApplicationEventInfo from "./dynamicsApplicationEventInfo.js";
 import DynamicsManifestSerialiser from "../dynamics/dynamicsManifestSerialiser.js";
 import DynamicsWebServiceAdapter from "../dynamics/dynamicsWebServiceAdapter.js";
+import FileEventInfo from "./fileEventInfo.js";
 import FileSystem from "fs";
+import FileSystemMatcher from "../general/fileSystemMatcher.js";
 import Path from "path";
+import Progress from "../general/progress.js";
 import RenumberatorFactory from "./renumberatorFactory.js";
 import Validator from "../general/validator.js";
-import FileSystemMatcher from "../general/fileSystemMatcher.js";
 
 export default class Engine {
     get directoryPath() { return this.mDirectoryPath; }
@@ -29,7 +33,10 @@ export default class Engine {
     set directoryMatchers(pValue) { this.mDirectoryMatchers = pValue; }
     get fileMatchers() { return this.mFileMatchers; }
     set fileMatchers(pValue) { this.mFileMatchers = pValue; }
+    get progress() { return this.mProgress; }
 
+    get onProgress() { return this.mOnProgress; }
+    set onProgress(pValue) { this.mOnProgress = pValue; }
     get onDynamicsApplication() { return this.mOnDynamicsApplication; }
     set onDynamicsApplication(pValue) { this.mOnDynamicsApplication = pValue; }
     get onDirectory() { return this.mOnDirectory; }
@@ -46,6 +53,8 @@ export default class Engine {
         this.mRenumberators = [];
         this.mDirectoryMatchers = [];
         this.mFileMatchers = [];
+        this.mProgress = new Progress();
+        this.mOnProgress = null;
         this.mOnDynamicsApplication = null;
         this.mOnDirectory = null;
         this.mOnFile = null;
@@ -75,17 +84,18 @@ export default class Engine {
         this.readDynamicsApplication();
         await this.callRenumberWebService();
         this.processRenumberWebServiceResponse();
+        this.count();
         await this.renumber();
+        this.triggerOnProgress(null, "Completed");
     }
 
-    readDynamicsApplication() {
+    readDynamicsApplication() {        
         const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
             this.dynamicsApplication = DynamicsManifestSerialiser.deserialiseDynamicsApplication(data);
-            if (this.onDynamicsApplication)
-                this.onDynamicsApplication(this.dynamicsApplication);
+            this.triggerOnDynamicsApplication();
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
         this.validateDynamicsApplication();
@@ -126,6 +136,28 @@ export default class Engine {
         this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
     }
 
+    count() {
+        const count = this.countDirectory(this.directoryPath, 0, 0);
+        this.progress.count = count;
+    }
+
+    countDirectory(pDirectoryPath, pIndentation, pCountSoFar) {
+        let count = pCountSoFar;
+        const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
+        const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
+        const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
+        if (shouldBeRenumbered)
+            for (const directoryEntry of directoryEntries) {
+                const directoryEntryPath = Path.join(pDirectoryPath, directoryEntry.name);
+                if (directoryEntry.isDirectory())
+                    count = this.countDirectory(directoryEntryPath, pIndentation + 1, count);
+                else if (directoryEntry.isFile())
+                    if (this.shouldFileBeRenumbered(directoryEntry.name))
+                        count += 1;
+            };
+        return count;
+    }
+
     async renumber() {
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumberDirectory(this.directoryPath, 0);
@@ -135,8 +167,8 @@ export default class Engine {
         const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
         const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
         if (shouldBeRenumbered) {
-            if (this.onDirectory)
-                this.onDirectory(directoryName, pIndentation);
+            this.triggerOnProgress(0, pDirectoryPath);
+            this.triggerOnDirectory(pDirectoryPath, directoryName, pIndentation);
             const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
             for (const directoryEntry of directoryEntries) {
                 const directoryEntryPath = Path.join(pDirectoryPath, directoryEntry.name);
@@ -163,14 +195,14 @@ export default class Engine {
         if (Path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
             const fileName = Path.basename(pFilePath);
             if (this.shouldFileBeRenumbered(fileName)) {
+                this.triggerOnProgress(1, pFilePath);
                 let renumbered = false;
                 const renumberator = this.renumberators.find((lRenumberator) => { return lRenumberator.canRenumber(pFilePath); });
                 if (renumberator) {
                     await renumberator.renumber(pFilePath);
                     renumbered = true;
                 }
-                if (this.onFile)
-                    this.onFile(fileName, renumbered, renumberator, pIndentation);
+                this.triggerOnFile(pFilePath, fileName, renumbered, renumberator, pIndentation);
             }
         }
     }
@@ -183,6 +215,30 @@ export default class Engine {
                 break;
             }
         return result;
+    }
+
+    triggerOnProgress(pDelta, pMessage) {
+        if (pDelta == null)
+            this.progress.complete(pMessage);
+        else
+            this.progress.move(pDelta, pMessage);
+        if (this.onProgress)
+            this.onProgress(this.progress);
+    }
+
+    triggerOnDynamicsApplication() {
+        if (this.onDynamicsApplication)
+            this.onDynamicsApplication(new DynamicsApplicationEventInfo(this.dynamicsApplication, 0));
+    }
+
+    triggerOnDirectory(pDirectoryPath, pDirectoryName, pIndentation) {
+        if (this.onDirectory)
+            this.onDirectory(new DirectoryEventInfo(pDirectoryPath, pDirectoryName, pIndentation));
+    }
+
+    triggerOnFile(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation) {
+        if (this.onFile)
+            this.onFile(new FileEventInfo(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation));
     }
 
     finalise() {        

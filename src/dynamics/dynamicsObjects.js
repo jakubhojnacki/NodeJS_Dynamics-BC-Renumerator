@@ -12,15 +12,14 @@ export default class DynamicsObjects extends Array {
         super();
     }
 
-    static deserialise(pData) {
-        let dynamicsObjects = new DynamicsObjects();
-        if (pData != null)
-            for (const data of pData)
-                dynamicsObjects.push(DynamicsObject.deserialise(data));
-        return dynamicsObjects;
-    }      
-
     get(pType, pNo) {
         return this.find((lObject) => { return ((lObject.type === pType) && (lObject.no === pNo)); });
     }    
+
+    serialise() {
+        let data = [];
+        for (const object of this)
+            data.push(object.serialise());
+        return data;
+    }           
 }

@@ -17,4 +17,12 @@ export default class DynamicsObjectBase {
         this.mName = String.validate(pName).removeIfStartsWith("\"").removeIfEndsWith("\"");
         this.mRenumberedNo = Number.validate(pRenumberedNo);
     }
+
+    serialise() {
+        return {
+            "no": this.no,
+            "name": this.name,
+            "renumberedNo": this.renumberedNo
+        };
+    }
 }

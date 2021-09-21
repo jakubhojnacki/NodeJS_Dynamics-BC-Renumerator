@@ -15,7 +15,6 @@ export default class ArgTemplateFactory {
         return new ArgTemplates([
             new ArgTemplate(0, ArgName.directoryPath, "Path to a directory with Dynamics solution", DataType.string, true),
             new ArgTemplate([ "s", "settings" ], ArgName.settings, "Path to settings file", DataType.string),
-            new ArgTemplate([ "v", "verbose" ], ArgName.debug, "Shows more details (\"true\" or \"false\")", DataType.boolean),
             new ArgTemplate([ "d", "debug" ], ArgName.debug, "Defines debug mode (\"true\" or \"false\")", DataType.boolean),
             new ArgTemplate([ "dd", "debugDirectoryPath" ], ArgName.debugDirectoryPath, "Path where the application dumps debug information", DataType.string)
         ]);        

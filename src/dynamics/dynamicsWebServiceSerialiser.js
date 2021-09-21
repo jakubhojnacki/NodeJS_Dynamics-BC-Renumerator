@@ -51,7 +51,7 @@ export default class DynamicsWebServiceSerialiser {
     static deserialiseDynamicsObject(pData) {
         let object = null;
         if (pData != null) {
-            const type = DynamicsObjectType.parse(pData.type);
+            const type = DynamicsWebServiceSerialiser.parseObjectType(pData.type);
             object = new DynamicsObject(type, pData.originalNo, pData.name, pData.no);
         }
         return object;
@@ -60,19 +60,28 @@ export default class DynamicsWebServiceSerialiser {
     static deserialiseDynamicsObjectFields(pData, pObjects) {
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData) {
-                const objectType = DynamicsObjectType.parse(pData.objectType);
-                const objectNo = pData.no;
+                let objectType = DynamicsWebServiceSerialiser.parseObjectType(dataItem.originalObjectType);
+                let objectNo = dataItem.originalObjectNo;
+                const extensionObjectType = DynamicsWebServiceSerialiser.parseObjectType(dataItem.originalExtensionObjectType);
+                if (extensionObjectType.length > 0) {
+                    objectType = extensionObjectType;
+                    objectNo = dataItem.originalExtensionObjectNo;
+                }
                 const object = pObjects.get(objectType, objectNo);
-
-                pObjects.push(DynamicsWebServiceSerialiser.deserialiseDynamicsObjectField(dataItem, pObjects));
+                if (object != null)
+                    object.fields.push(DynamicsWebServiceSerialiser.deserialiseDynamicsObjectField(dataItem, pObjects));
             }
     }    
 
     static deserialiseDynamicsObjectField(pData) {
         let object = null;
-        if (pData != null) {
+        if (pData != null)
             object = new DynamicsObjectField(pData.originalNo, pData.name, null, pData.no);
-        }
         return object;
     }     
+
+    static parseObjectType(pString) {
+        const string = String.validate(pString).replace(" ", "");
+        return DynamicsObjectType.parse(string);
+    }
 }

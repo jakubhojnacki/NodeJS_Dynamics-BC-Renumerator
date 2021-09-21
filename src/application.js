@@ -34,6 +34,8 @@ export default class Application {
             if (this.initialise())
                 await this.runEngine();
         } catch (tError) {
+            if (!this.debug.enabled)
+                this.terminal.newLine();
             const message = (tError ? (this.debug.enabled ? tError.stack : tError.message) : "Unknown error");
             this.terminal.writeError(message);
         } finally {
@@ -45,36 +47,47 @@ export default class Application {
         const __this = this;
         const directoryPath = this.args.get(ArgName.directoryPath);
         const engine = new Engine(directoryPath, this.settings);
-        engine.onDynamicsApplication = (lDynamicsApplication) => { __this.engine_onDynamicsApplication(lDynamicsApplication); };
-        engine.onDirectory = (lDirectoryName, lIndentation) => { __this.engine_onDirectory(lDirectoryName, lIndentation); };
-        engine.onFile = (lFileName, lRenumbered, lRenumberator, lIndentation) => { __this.engine_onFile(lFileName, lRenumbered, lRenumberator, lIndentation); };
+        engine.onDynamicsApplication = (lDynamicsApplicationEventInfo) => { __this.engine_onDynamicsApplication(lDynamicsApplicationEventInfo); };
+        if (this.debug.enabled) {
+            engine.onDirectory = (lDirectoryEventInfo) => { __this.engine_onDirectory(lDirectoryEventInfo); };
+            engine.onFile = (lFileEventInfo) => { __this.engine_onFile(lFileEventInfo); };
+        } else
+            engine.onProgress = (lProgress) => { __this.engine_onProgress(lProgress); }
         await engine.run(directoryPath, this.setings);
+        if (!this.debug.enabled)
+            this.terminal.newLine();
     }
 
-    engine_onDynamicsApplication(pDynamicsApplication) {
-        pDynamicsApplication.log(0);
+    engine_onProgress(pProgress) {
+        this.terminal.moveLeft(1000);
+        this.terminal.clearLine();
+        this.terminal.write(pProgress.toString('[', '#', ']', 20));
     }
 
-    engine_onDirectory(pDirectoryName, pIndentation) {
-        this.terminal.writeLine(`[${pDirectoryName}]`, pIndentation); 
+    engine_onDynamicsApplication(pDynamicsApplicationEventInfo) {
+        if (this.debug.enabled)
+            pDynamicsApplicationEventInfo.dynamicsApplication.log(pDynamicsApplicationEventInfo.indentation);
+        else
+            this.terminal.writeLine(pDynamicsApplicationEventInfo.dynamicsApplication.toString(), pDynamicsApplicationEventInfo.indentation);
     }
 
-    engine_onFile(pFileName, pRenumbered, pRenumberator, pIndentation) {
-        if ((pRenumbered) || (this.debug.enabled)) {
-            const line = pRenumbered ? `${pRenumberator.code}: ${pFileName}` : pFileName;
-            this.terminal.writeLine(line, pIndentation);
-        }
+    engine_onDirectory(pDirectoryEventInfo) {
+        this.terminal.writeLine(`[${pDirectoryEventInfo.name}]`, pDirectoryEventInfo.indentation); 
+    }
+
+    engine_onFile(pFileEventInfo) {
+        if (pFileEventInfo.renumbered)
+            this.terminal.writeLine(`${pFileEventInfo.name} ==> ${pFileEventInfo.renumberator.code}`, pFileEventInfo.indentation);
     }
 
     initialise() {
         this.terminal.writeLine(Application.manifest.toString());
-        this.terminal.writeSeparator();
         const result = this.args.validate();
         return result;
     }
 
     finalise() {
-        this.terminal.writeSeparator();
-        this.terminal.writeLine("Completed.");
+        if (this.debug.enabled)
+            this.terminal.writeLine("Completed.");
     }
 }

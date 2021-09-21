@@ -12,13 +12,12 @@ export default class DynamicsObjectFields extends Array {
         super();
     }
 
-    static deserialise(pData) {
-        let dynamicsObjectFields = new DynamicsObjectFields();
-        if (pData != null)
-            for (const data of pData)
-                dynamicsObjectFields.push(DynamicsObjectField.deserialise(data));
-        return dynamicsObjectFields;
-    }      
+    serialise() {
+        let data = [];
+        for (const field of this)
+            data.push(field.serialise());
+        return data;
+    }   
 
     get(pNo) {
         return this.find((lObjectField) => { return (lObjectField.no === pNo); });

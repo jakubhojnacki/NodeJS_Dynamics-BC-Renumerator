@@ -2,42 +2,49 @@
 	"Init": {
 		"prefix": "xini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = $2.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = $2.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"ArrayInit": {
 		"prefix": "xarrini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Array.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Array.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"BooleanInit": {
 		"prefix": "xbooini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Boolean.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Boolean.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
+		]
+	},
+
+	"IntegerInit": {
+		"prefix": "xintini",
+		"body": [
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.validateAsInteger(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"NumberInit": {
 		"prefix": "xnumini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Number.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"ObjectInit": {
 		"prefix": "xobjini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Object.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = Object.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
 	"StringInit": {
 		"prefix": "xstrini",
 		"body": [
-			"this.m${1/(.)(.*)/${1:/upcase}$2/} = String.default(p${1/(.)(.*)/${1:/upcase}$2/});"
+			"this.m${1/(.)(.*)/${1:/upcase}$2/} = String.validate(p${1/(.)(.*)/${1:/upcase}$2/});"
 		]
 	},
 
@@ -72,7 +79,7 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"import \"../general/javaScript\";",
+			"import \"../general/javaScript.js\";",
 			"",
 			"export default class $1 {",
 			"    constructor() {",
@@ -81,22 +88,22 @@
 		]
 	},
 
-	"Require": {
+	"Import": {
 		"prefix": "ximp",
 		"body": [
-			"import ${1/(.)(.*)/${1:/upcase}$2/} from \"../$2/${1/(.)(.*)/${1:/downcase}$2/}\";"
+			"import ${1/(.)(.*)/${1:/upcase}$2/} from \"../$2/${1/(.)(.*)/${1:/downcase}$2/}.js\";"
 		]
 	},
 
 	"JavaScript": {
-		"prefix": "xjavscr",
+		"prefix": "xjs",
 		"body": [
-			"import \"../general/javaScript\";"
+			"import \"../general/javaScript.js\";"
 		]
 	},
 
 	"Module": {
-		"prefix": "xclahdr",
+		"prefix": "xmod",
 		"body": [
 			"/**",
 			" * @module \"$1\" class",
@@ -115,8 +122,9 @@
 			" * @version 0.0.1 ($CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE)",
 			" */",
 			"",
-			"import \"../general/javaScript\";",
-			"import Enum from \"../general/enum\";",
+			"import \"../general/javaScript.js\";",
+			"import Enum from \"../general/enum.js\";",
+			"import EnumItem from \"../general/enumItem.js\";",
 			"",
 			"export default class $1 {",
 			"    static get one() { return \"one\"; }",
@@ -124,13 +132,17 @@
 			"    static get three() { return \"three\"; }",
 			"",
 			"    static get values() { return [",
-			"        $1.one,",
-			"        $1.two,",
-			"        $1.three",
+			"        new EnumItem($1.one),",
+			"        new EnumItem($1.two),",
+			"        new EnumItem($1.three)",
 			"    ]; }",
 			"",
 			"    static parse(pText) {",
 			"        return Enum.parse(pText, $1.values, $1.name);",
+			"    }",
+			"",
+			"    static toString(pValue) {",
+			"        return Enum.toString(pValue, $1.values, $1.name);",
 			"    }",
 			"}"
 		]

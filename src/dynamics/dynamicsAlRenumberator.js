@@ -97,11 +97,11 @@ export default class DynamicsAlRenumberator extends Renumberator {
             switch (match.template.name) {
                 case DynamicsAlRegExpTemplateName.object:
                 case DynamicsAlRegExpTemplateName.objectExtension:
-                    object = this.renumberDynamicsObject(match);
+                    object = this.findRenumberedDynamicsObject(match);
                     break;
                 case DynamicsAlRegExpTemplateName.tableField:
                 case DynamicsAlRegExpTemplateName.enumValue:
-                    object = this.renumberDynamicsObjectField(match);
+                    object = this.findRenumberedDynamicsObjectField(match);
                     break;
             }
             if (object != null) {
@@ -112,28 +112,29 @@ export default class DynamicsAlRenumberator extends Renumberator {
         return newLine ? newLine : pLine;
     }
 
-    renumberDynamicsObject(pMatch) {
-        const parsedDynamicsObject = this.parseDynamicsObject(pMatch);
-        return this.engine.dynamicsObjects.get(parsedDynamicsObject.type, parsedDynamicsObject.no);
+    findRenumberedDynamicsObject(pMatch) {
+        const dynamicsObjectMatched = this.parseDynamicsObjectMatched(pMatch);
+        this.dynamicsObject = this.engine.dynamicsObjects.get(dynamicsObjectMatched.type, dynamicsObjectMatched.no);
+        return this.dynamicsObject;
     }
 
-    parseDynamicsObject(pMatch) {
+    parseDynamicsObjectMatched(pMatch) {
         const type = DynamicsObjectType.parse(pMatch.namedGroups.type);
         const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = pMatch.namedGroups.name;
         return new DynamicsObject(type, no, name);
     }
 
-    renumberDynamicsObjectField(pMatch) {
+    findRenumberedDynamicsObjectField(pMatch) {
         let dynamicsObjectField = null;
         if (this.dynamicsObject != null) {
-            const parsedDynamicsObjectField = this.parseDynamicsObjectField(pMatch);
-            dynamicsObjectField = this.dynamicsObject.fields.get(parsedDynamicsObjectField.no);
+            const dynamicsObjectFieldMatched = this.parseDynamicsObjectFieldMatched(pMatch);
+            dynamicsObjectField = this.dynamicsObject.fields.get(dynamicsObjectFieldMatched.no);
         }
         return dynamicsObjectField;
     }
 
-    parseDynamicsObjectField(pMatch) {
+    parseDynamicsObjectFieldMatched(pMatch) {
         const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = pMatch.namedGroups.name;
         const dataType = pMatch.namedGroups.dataType;

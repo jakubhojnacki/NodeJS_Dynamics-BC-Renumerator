@@ -24,4 +24,8 @@ export default class DynamicsDependency extends DynamicsApplicationBase {
             validator.raiseErrorIfNotSuccess();
         return validator;
     }   
+
+    serialise() {
+        return super.serialise();
+    }
 }

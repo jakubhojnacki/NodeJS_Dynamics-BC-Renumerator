@@ -42,4 +42,14 @@ export default class DynamicsApplicationBase {
         if (withRenumbered)
             pValidator.testNotEmpty(pClass, "Renumbered ID", this.renumberedId);
     }        
+
+    serialise() {
+        return {
+            "id": this.id,
+            "name": this.name,
+            "publisher": this.publisher,
+            "version": this.version,
+            "renumberedId": this.renumberedId
+        };
+    }
 }

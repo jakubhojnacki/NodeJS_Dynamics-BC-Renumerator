@@ -43,4 +43,13 @@ export default class DynamicsIdRange {
             validator.raiseErrorIfNotSuccess();
         return validator;
     }   
+
+    serialise() {
+        return {
+            "from": this.from,
+            "to": this.to,
+            "renumberedFrom": this.renumberedFrom,
+            "renumberedTo": this.renumberedTo
+        };
+    }
 }

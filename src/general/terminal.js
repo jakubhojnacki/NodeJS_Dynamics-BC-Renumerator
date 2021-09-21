@@ -63,4 +63,61 @@ export default class Terminal {
         } else
             this.writeLine("null", pIndentation);
     }
+
+    moveUp(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}A`));
+    }
+
+    moveDown(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}B`));
+    }
+
+    moveRight(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}C`));
+    }
+
+    moveLeft(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}D`));
+    }
+
+    moveUpLines(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}F`));
+    }
+
+    moveDownLines(pSteps) {
+        const steps = Number.validateAsInteger(pSteps, 1);
+        this.write(this.escape(`${steps}E`));
+    }
+
+    moveTo(pRow, pColumn) {
+        const row = Number.validateAsInteger(pRow);
+        const column = Number.validateAsInteger(pColumn);
+        if ((row > 0) && (column > 0))
+            this.write(this.escape(`${row};${column}H`));
+    }
+
+    clearScreen() {
+        this.write(this.escape("2J"));
+    }
+
+    clearLine() {
+        this.write(this.escape("2K"));
+    }
+
+    savePosition() {
+        this.write(this.escape("s"))
+    }
+
+    restorePosition() {
+        this.write(this.escape("u"));
+    }
+        
+    escape(pCommand) {
+        return "\u001b[" + pCommand;
+    }   
 }

@@ -10,18 +10,22 @@ export default class Enum {
     static parse(pString, pItems, pEnumName) {
         Enum.validateItems(pItems, pEnumName);
         const string = String.validate(pString).trim().toLowerCase();
+        let value = "";
         let item = null;
-        if (item == null)
-            item = pItems.find((lItem) => { return lItem.string ? lItem.string.trim().toLowerCase() === string : false; });
-        if (item == null)          
-            item = pItems.find((lItem) => { return lItem.value ? lItem.value.trim().toLowerCase() === string : false; });
-        if (item == null) {
-            const firstItem = pItems[0];
-            item = firstItem.string ? firstItem.string : firstItem.value;
+        if (string.length > 0) {
+            if (item == null)
+                item = pItems.find((lItem) => { return lItem.string ? lItem.string.trim().toLowerCase() === string : false; });
+            if (item == null)          
+                item = pItems.find((lItem) => { return lItem.value ? lItem.value.trim().toLowerCase() === string : false; });
+            if (item == null) {
+                const firstItem = pItems[0];
+                item = firstItem.string ? firstItem.string : firstItem.value;
+            }
+            if (item == null)
+                throw new Error(`Value ${pString} cannot be parsed into ${pEnumName}.`);
+            value = item.value;
         }
-        if (item == null)
-            throw new Error(`Value ${pString} cannot be parsed into ${pEnumName}.`);
-        return item.value;
+        return value;
     }
 
     static toString(pValue, pItems, pEnumName) {

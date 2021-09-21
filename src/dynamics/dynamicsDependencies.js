@@ -34,4 +34,11 @@ export default class DynamicsDependencies extends Array {
     get(pId) {
         return this.find((lDynamicsDependency) => { return (lDynamicsDependency.id === pId); });
     }      
+
+    serialise() {
+        let data = [];
+        for (const dependency of this)
+            data.push(dependency.serialise());
+        return data;
+    }       
 }

@@ -21,4 +21,10 @@ export default class DynamicsObjectField extends DynamicsObjectBase {
             dynamicsObjectField = new DynamicsObjectField(pData.extensionId, pData.name, pData.renumberedNo);
         return dynamicsObjectField;
     }
+
+    serialise() {
+        let data = super.serialise();
+        data.dataType = this.dataType;
+        return data;
+    }      
 }

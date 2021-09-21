@@ -55,4 +55,11 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
             validator.raiseErrorIfNotSuccess();
         return validator;
     }    
+
+    serialise() {
+        let data = super.serialise();
+        data.dependencies = this.dependencies.serialise();
+        data.idRanges = this.idRanges.seriallise();
+        return data;
+    }    
 }
