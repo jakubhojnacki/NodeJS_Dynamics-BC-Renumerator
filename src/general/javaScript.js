@@ -24,6 +24,10 @@ Array.validate = function(pInput, pDefaultValue, pAllowNull) {
 	return value;
 }
 
+Array.prototype.clear = function() {
+    this.splice(0, this.length);
+}
+
 Array.prototype.clone = function() {
 	return this.slice(0);
 };

@@ -12,6 +12,8 @@ import DynamicsObject from "./dynamicsObject.js";
 import DynamicsObjects from "./dynamicsObjects.js";
 import DynamicsObjectField from "./dynamicsObjectField.js";
 import DynamicsObjectType from "./dynamicsObjectType.js";
+import DynamicsRange from "./dynamicsRange.js";
+import DynamicsRanges from "./dynamicsRanges.js";
 import DynamicsVersion from "./dynamicsVersion.js";
 
 export default class DynamicsWebServiceSerialiser {
@@ -40,6 +42,20 @@ export default class DynamicsWebServiceSerialiser {
         return object;
     }    
         
+    static deserialiseDynamicsRanges(pData, pDynamicsApplication) {
+        pDynamicsApplication.ranges = new DynamicsRanges();
+        if ((pData != null) && (Array.isArray(pData)))
+            for (const dataItem of pData)
+                pDynamicsApplication.ranges.push(DynamicsWebServiceSerialiser.deserialiseDynamicsRange(dataItem));
+    }
+
+    static deserialiseDynamicsRange(pData) {
+        let object = null;
+        if (pData != null)
+            object = new DynamicsRange(pData.noFrom, pData.noTo);
+        return object;
+    }    
+
     static deserialiseDynamicsObjects(pData) {
         let object = new DynamicsObjects();
         if ((pData != null) && (Array.isArray(pData)))

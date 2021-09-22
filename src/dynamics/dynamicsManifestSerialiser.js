@@ -9,8 +9,8 @@ import DynamicsApplication from "./dynamicsApplication.js";
 import DynamicsApplications from "./dynamicsApplications.js";
 import DynamicsDependency from "./dynamicsDependency.js";
 import DynamicsDependencies from "./dynamicsDependencies.js";
-import DynamicsIdRange from "./dynamicsIdRange.js";
-import DynamicsIdRanges from "./dynamicsIdRanges.js";
+import DynamicsRange from "./dynamicsRange.js";
+import DynamicsRanges from "./dynamicsRanges.js";
 import DynamicsVersion from "./dynamicsVersion.js";
 
 export default class DynamicsManifestSerialiser {
@@ -27,8 +27,8 @@ export default class DynamicsManifestSerialiser {
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.version);
             const dependencies = DynamicsManifestSerialiser.deserialiseDynamicsDependencies(pData.dependencies);
-            const idRanges = DynamicsManifestSerialiser.deserialiseDynamicsIdRanges(pData.idRanges);
-            object = new DynamicsApplication(pData.id, pData.name, pData.publisher, version, dependencies, idRanges);
+            const ranges = DynamicsManifestSerialiser.deserialiseDynamicsRanges(pData.idRanges);
+            object = new DynamicsApplication(pData.id, pData.name, pData.publisher, version, dependencies, ranges);
         }
         return object;
     }
@@ -51,55 +51,56 @@ export default class DynamicsManifestSerialiser {
         return object;
     }
 
-    static deserialiseDynamicsIdRanges(pData) {
-        let object = new DynamicsIdRanges();
+    static deserialiseDynamicsRanges(pData) {
+        let object = new DynamicsRanges();
         if ((pData != null) && (Array.isArray(pData)))
             for (const data of pData)
-                object.push(DynamicsManifestSerialiser.deserialiseDynamicsIdRange(data));
+                object.push(DynamicsManifestSerialiser.deserialiseDynamicsRange(data));
         return object;
     }    
 
-    static deserialiseDynamicsIdRange(pData) {
+    static deserialiseDynamicsRange(pData) {
         let object = null;
         if (pData != null)
-            object = new DynamicsIdRange(pData.from, pData.to);
+            object = new DynamicsRange(pData.from, pData.to);
         return object;
     }    
 
-    static serialiseDynamicsApplication(pDynamicsApplication, pData) {
+    static applyDynamicsApplication(pDynamicsApplication, pData) {
         pData.id = pDynamicsApplication.renumberedId;
-        DynamicsManifestSerialiser.serialiseDynamicsDependencies(pDynamicsApplication.dependencies, pData.dependencies);
-        DynamicsManifestSerialiser.serialiseDynamicsIdRanges(pDynamicsApplication.idRanges, pData.idRanges);
+        DynamicsManifestSerialiser.applyDynamicsDependencies(pDynamicsApplication.dependencies, pData.dependencies);
+        DynamicsManifestSerialiser.applyDynamicsRanges(pDynamicsApplication.ranges, pData.idRanges);
     }    
 
-    static serialiseDynamicsDependencies(pDynamicsDependencies, pData) {
+    static applyDynamicsDependencies(pDynamicsDependencies, pData) {
         if (pDynamicsDependencies)
             for (const dataItem of pData) {
                 const dynamicsDependency = pDynamicsDependencies.find((lDynamicsDependency) => { return lDynamicsDependency.id === dataItem.id});
                 if (dynamicsDependency)
-                    DynamicsManifestSerialiser.serialiseDynamicsDependency(dynamicsDependency, dataItem);
+                    DynamicsManifestSerialiser.applyDynamicsDependency(dynamicsDependency, dataItem);
             }
     }
 
-    static serialiseDynamicsDependency(pDynamicsDependency, pData) {
+    static applyDynamicsDependency(pDynamicsDependency, pData) {
         if ("id" in pData)
             pData.id = pDynamicsDependency.renumberedId;
         else
             pData.appId = pDynamicsDependency.renumberedId;
     }
 
-    static serialiseDynamicsIdRanges(pDynamicsIdRanges, pData) {
-        if (pDynamicsIdRanges)
-            for (const dataItem of pData) {
-                const dynamicsIdRange = pDynamicsIdRanges.find((lDynamicsIdRange) => { return ((lDynamicsIdRange.from === dataItem.from) && 
-                    (lDynamicsIdRange.to === dataItem.to)); });
-                if (dynamicsIdRange)
-                    DynamicsManifestSerialiser.serialiseDynamicsIdRange(dynamicsIdRange, dataItem);
+    static applyDynamicsRanges(pDynamicsRanges, pData) {
+        pData.clear();
+        if (pDynamicsRanges)
+            for (const dynamicsRange of pDynamicsRanges) {
+                let dataItem = DynamicsManifestSerialiser.serialiseDynamicsRange(dynamicsRange);
+                pData.push(dataItem);
             }
     }
 
-    static serialiseDynamicsIdRange(pDynamicsIdRange, pData) {
-        pData.from = pDynamicsIdRange.renumberedFrom;
-        pData.to = pDynamicsIdRange.renumberedTo;
+    static serialiseDynamicsRange(pDynamicsRange) {
+        return {
+            "from": pDynamicsRange.from,
+            "to": pDynamicsRange.to
+        };
     }    
 }

@@ -15,12 +15,13 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
 
     get dependencies() { return this.mDependencies; }
     set dependencies(pValue) { this.mDependencies = pValue; }
-    get idRanges() { return this.mIdRanges; }
+    get ranges() { return this.mRanges; }
+    set ranges(pValue) { this.mRanges = pValue; }
 
-    constructor(pId, pName, pPublisher, pVersion, pDependencies, pIdRanges, pRenumberedId) {
+    constructor(pId, pName, pPublisher, pVersion, pDependencies, pRanges, pRenumberedId) {
         super(pId, pName, pPublisher, pVersion, pRenumberedId);
         this.mDependencies = pDependencies;
-        this.mIdRanges = pIdRanges;
+        this.mRanges = pRanges;
     }
 
     toString() {
@@ -36,7 +37,7 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
             this.terminal.writeLine(StringBuilder.nameValue("Publisher", this.publisher), indentation + 1);
             this.terminal.writeLine(StringBuilder.nameValue("Version", this.version.toString()), indentation + 1);
             this.dependencies.log(indentation + 1);
-            this.idRanges.log(indentation + 1);
+            this.ranges.log(indentation + 1);
         } else {
             this.terminal.writeLine(`Dynamics Application: ${this.toString()}`, indentation);
         }
@@ -49,8 +50,8 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
         super.validate(DynamicsApplication.name, pValidator, withRenumbered);
         if (this.dependencies)
             this.dependencies.validate(validator, false, withRenumbered);
-        if (this.idRanges)
-            this.idRanges.validate(validator, false, withRenumbered);
+        if (this.ranges)
+            this.ranges.validate(validator, false, withRenumbered);
         if (raiseError)
             validator.raiseErrorIfNotSuccess();
         return validator;
@@ -59,7 +60,7 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
     serialise() {
         let data = super.serialise();
         data.dependencies = this.dependencies.serialise();
-        data.idRanges = this.idRanges.seriallise();
+        data.ranges = this.ranges.seriallise();
         return data;
     }    
 }

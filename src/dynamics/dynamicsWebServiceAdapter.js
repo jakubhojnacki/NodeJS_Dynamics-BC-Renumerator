@@ -89,7 +89,7 @@ export default class DynamicsWebServiceAdapter {
         ], ODataOperator.and);
         url.parameters = [ 
             new UrlParameter("$filter", oDataFilter.toString()),
-            new UrlParameter("$expand", "applications,applicationDependencies,objects,objectFields")
+            new UrlParameter("$expand", "applications,applicationDependencies,ranges,objects,objectFields")
         ];
         return url;
     }
@@ -99,6 +99,7 @@ export default class DynamicsWebServiceAdapter {
         const data = this.extractResponseData(pResponse);
         this.processResponseDynamicsApplication(data.applications);
         this.processResponseDynamicsDependencies(data.applicationDependencies);
+        this.processResponseRanges(data.ranges);
         this.processResponseDynamicsObjects(data.objects);
         this.processResponseDynamicsObjectFields(data.objectFields);
     }
@@ -121,6 +122,10 @@ export default class DynamicsWebServiceAdapter {
 
     processResponseDynamicsDependencies(pData) {
         DynamicsWebServiceSerialiser.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
+    }
+
+    processResponseRanges(pData) {
+        DynamicsWebServiceSerialiser.deserialiseDynamicsRanges(pData, this.dynamicsApplication);
     }
 
     processResponseDynamicsObjects(pData) {

@@ -16,6 +16,7 @@ import Path from "path";
 import Progress from "../general/progress.js";
 import RenumberatorFactory from "./renumberatorFactory.js";
 import Validator from "../general/validator.js";
+import DynamicsRanges from "../dynamics/dynamicsRanges.js";
 
 export default class Engine {
     get directoryPath() { return this.mDirectoryPath; }
@@ -125,14 +126,10 @@ export default class Engine {
                 if (webServiceDynamicsDependency)
                     dynamicsDependency.renumberedId = webServiceDynamicsDependency.renumberedId;
             }
-        if (webServiceDynamicsApplication.idRanges) 
-            for (const dynamicsIdRange of this.dynamicsApplication.idRanges) {
-                const webServiceDynamicsIdRange = webServiceDynamicsApplication.idRanges.get(dynamicsIdRange.from, dynamicsIdRange.to);
-                if (webServiceDynamicsIdRange) {
-                    dynamicsIdRange.renumberedFrom = webServiceDynamicsIdRange.renumberedFrom;
-                    dynamicsIdRange.renumberedTo = webServiceDynamicsIdRange.renumberedTo;
-                }
-            }
+        this.dynamicsApplication.ranges = new DynamicsRanges();
+        if (webServiceDynamicsApplication.ranges) 
+            for (const range of webServiceDynamicsApplication.ranges)
+                this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
     }
 

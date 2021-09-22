@@ -32,7 +32,7 @@ export default class DynamicsManifestRenumberator extends Renumberator {
     async process() {
         const rawData = FileSystem.readFileSync(this.filePath);
         const data = JSON.parse(rawData);
-        DynamicsManifestSerialiser.serialiseDynamicsApplication(this.dynamicsApplication, data);
+        DynamicsManifestSerialiser.applyDynamicsApplication(this.dynamicsApplication, data);
         const renumberedRawData = JSON.stringify(data, null, 4);
         this.temporaryFile.write(renumberedRawData);
     }
