@@ -28,13 +28,13 @@ export default class DynamicsPermissionSetRenumberator extends Renumberator {
     }
 
     async renumber(pFilePath) {
-        this.initialise(pFilePath, false);
-        await this.process(pFilePath);
+        this.initialise(pFilePath);
+        await this.process();
         this.finalise();
     }
 
-    async process(pFilePath) {
-        const xmlDocument = await XmlToolkit.readFromFile(pFilePath);
+    async process() {
+        const xmlDocument = await XmlToolkit.readFromFile(this.filePath);
         for (const permissionSet of xmlDocument.PermissionSets.PermissionSet)
             for (const permission of permissionSet.Permission) {
                 const objectType = DynamicsPermissionSetRenumberator.parseObjectType(permission.ObjectType[0]);
@@ -45,7 +45,7 @@ export default class DynamicsPermissionSetRenumberator extends Renumberator {
                         permission.ObjectID[0] = dynamicsObject.renumberedNo;
                 }
             }
-        await XmlToolkit.writeToFile(xmlDocument, this.temporaryFilePath);
+        await XmlToolkit.writeToFile(xmlDocument, this.filePath);
     }
 
     static parseObjectType(pObjectTypeString) {

@@ -34,6 +34,6 @@ export default class DynamicsManifestRenumberator extends Renumberator {
         const data = JSON.parse(rawData);
         DynamicsManifestSerialiser.applyDynamicsApplication(this.dynamicsApplication, data);
         const renumberedRawData = JSON.stringify(data, null, 4);
-        this.temporaryFile.write(renumberedRawData);
+        this.fileBuffer.write(renumberedRawData);
     }
 }

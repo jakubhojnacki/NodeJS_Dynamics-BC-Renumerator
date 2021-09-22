@@ -76,7 +76,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
         const readLineInterface = ReadLine.createInterface({ input: fileStream, crlfDelay: Infinity });        
         for await (const line of readLineInterface) {
             const newLine = this.processLine(line);
-            this.temporaryFile.write(newLine + endOfLine);
+            this.fileBuffer.write(newLine + endOfLine);
         }
         fileStream.close();
     }

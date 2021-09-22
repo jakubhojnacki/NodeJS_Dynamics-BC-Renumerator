@@ -5,40 +5,33 @@
  */
 
 import "../general/javaScript.js";
+import FileBuffer from "../general/FileBuffer.js";
 import FileSystem from "fs";
 
 export default class Renumberator {
     get engine() { return this.mEngine; }
     get filePath() { return this.mFilePath; }
     set filePath(pValue) { this.mFilePath = pValue; }
-    get temporaryFilePath() { return this.mTemporaryFilePath; }
-    set temporaryFilePath(pValue) { this.mTemporaryFilePath = pValue; }
-    get temporaryFile() { return this.mTemporaryFile; }
-    set temporaryFile(pValue) { this.mTemporaryFile = pValue; }
+    get fileBuffer() { return this.mFileBuffer; }
+    set fileBuffer(pValue) { this.mFileBuffer = pValue; }
 
     constructor(pEngine) {
         this.mEngine = pEngine;
         this.mFilePath = "";
-        this.mTemporaryFilePath = "";
-        this.mTemporaryFile = null;
+        this.mFileBuffer = null;
     }
 
-    initialise(pFilePath, pCreateTemporaryFile) {
+    initialise(pFilePath, pUseFileBuffer) {
         this.filePath = pFilePath;
-        this.temporaryFilePath = `${this.filePath}.tmp`;
-        if (FileSystem.existsSync(this.temporaryFilePath))
-            FileSystem.unlinkSync(this.temporaryFilePath);
-        if (Boolean.validate(pCreateTemporaryFile))
-            this.temporaryFile = FileSystem.createWriteStream(this.temporaryFilePath, { flags: "a" });
+        if (Boolean.validate(pUseFileBuffer, false))
+            this.fileBuffer = new FileBuffer();
     }
 
     finalise() {
-        if (this.temporaryFile)
-            this.temporaryFile.close();
-        FileSystem.unlinkSync(this.filePath);
-        FileSystem.renameSync(this.newFilePath, this.filePath);
-        this.filePath = this.newFilePath;
-        this.temporaryFilePath = "";
-        this.temporaryFile = null;
+        if (this.fileBuffer) {
+            FileSystem.writeFileSync(this.filePath, this.fileBuffer.toString());
+            this.fileBuffer = null;
+        }
+        this.filePath = "";
     }
 }

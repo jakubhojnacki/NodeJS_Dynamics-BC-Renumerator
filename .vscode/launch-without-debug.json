@@ -7,7 +7,10 @@
             "name": "Test node.js Application",
             "program": "${workspaceFolder}/main.js",
             "args": [
-                "C:\\Temp\\Product_nHanced-Search"
+                "C:\\Temp\\Product_nHanced-Search",
+                "-d",
+                "-dd",
+                "C:\\Temp"
             ],
             "console": "integratedTerminal",
             "skipFiles": [

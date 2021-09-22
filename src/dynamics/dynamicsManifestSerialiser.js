@@ -75,7 +75,8 @@ export default class DynamicsManifestSerialiser {
     static applyDynamicsDependencies(pDynamicsDependencies, pData) {
         if (pDynamicsDependencies)
             for (const dataItem of pData) {
-                const dynamicsDependency = pDynamicsDependencies.find((lDynamicsDependency) => { return lDynamicsDependency.id === dataItem.id});
+                const dataItemId = dataItem.id ? dataItem.id : dataItem.appId;
+                const dynamicsDependency = pDynamicsDependencies.find((lDynamicsDependency) => { return lDynamicsDependency.id === dataItemId});
                 if (dynamicsDependency)
                     DynamicsManifestSerialiser.applyDynamicsDependency(dynamicsDependency, dataItem);
             }
