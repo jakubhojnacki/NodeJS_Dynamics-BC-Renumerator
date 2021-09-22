@@ -8,7 +8,7 @@
             "program": "${workspaceFolder}/main.js",
             "args": [
                 "C:\\Temp\\Product_nHanced-Search",
-                "-d",
+                "-dx",
                 "-dd",
                 "C:\\Temp"
             ],

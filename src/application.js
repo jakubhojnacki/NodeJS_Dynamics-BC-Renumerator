@@ -77,7 +77,7 @@ export default class Application {
 
     engine_onFile(pFileEventInfo) {
         if (pFileEventInfo.renumbered)
-            this.terminal.writeLine(`${pFileEventInfo.name} ==> ${pFileEventInfo.renumberator.code}`, pFileEventInfo.indentation);
+            this.terminal.writeLine(`${pFileEventInfo.name} ==> ${pFileEventInfo.renumberator.name}`, pFileEventInfo.indentation);
     }
 
     initialise() {

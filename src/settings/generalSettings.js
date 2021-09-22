@@ -5,24 +5,20 @@
  */
 
 import "../general/javaScript.js";
-import BackupMode from "../engine/backupMode.js";
 import EndOfLineType from "../general/endOfLineType.js";
 
 export default class GeneralSettings {
     get renumberationCode() { return this.mRenumberationCode; }
-    get backupMode() { return this.mBackupMode; }
     get endOfLineType() { return this.mEndOfLineType; }
 
-    constructor(pRangeCode, pBackupMode, pEndOfLineType) {
+    constructor(pRangeCode, pEndOfLineType) {
         this.mRenumberationCode = String.validate(pRangeCode);
-        this.mBackupMode = BackupMode.parse(pBackupMode);
         this.mEndOfLineType = EndOfLineType.parse(pEndOfLineType);
     }
 
     serialise() {
         let data = { 
             "renumberationCode": this.renumberationCode, 
-            "backupMode": this.backupMode, 
             "endOfLineType": this.endOfLineType 
         };
         return data;
@@ -31,7 +27,7 @@ export default class GeneralSettings {
     static deserialise(pData) {
         let object = new GeneralSettings();
         if (pData != null)
-            object = new GeneralSettings(pData.renumberationCode, pData.backupMode, pData.endOfLineType);
+            object = new GeneralSettings(pData.renumberationCode, pData.endOfLineType);
         return object;
     }    
 }

@@ -19,16 +19,14 @@ import RegExpTemplate from "../regExp/regExpTemplate.js";
 import Renumberator from "../engine/renumberator.js";
 
 export default class DynamicsAlRenumberator extends Renumberator {
-    get code() { return "AL"; }
-    get name() { return "Dynamics AL Renumberator"; }
-    
+    get name() { return "AL Renumberator"; }    
     get dynamicsManager() { return this.engine.dynamicsManager; }
     get regExpSchema() { return this.mRegExpSchema; }
     get dynamicsObject() { return this.mDynamicsObject; }
     set dynamicsObject(pValue) { this.mDynamicsObject = pValue; }
 
-    constructor(pRenumberation) {
-        super(pRenumberation);
+    constructor(pEngine) {
+        super(pEngine);
         this.mRegExpSchema = new RegExpSchema([
             new RegExpTemplate(
                 DynamicsAlRegExpTemplateName.object, 
@@ -67,29 +65,23 @@ export default class DynamicsAlRenumberator extends Renumberator {
     }
 
     async renumber(pFilePath) {
-        this.initialise(pFilePath);
-        this.createNewFile();
-        await this.renumberFile();
-        this.overwriteFileWithNewFile();
+        this.initialise(pFilePath, true);
+        await this.process();
+        this.finalise();
     }
 
-    initialise(pFilePath) {
-        this.filePath = pFilePath;
-        this.dynamicsObject = null;
-    }
-
-    async renumberFile() {
+    async process() {
         const endOfLine = EndOfLineType.toString(this.engine.settings.general.endOfLineType);
         const fileStream = FileSystem.createReadStream(this.filePath);
         const readLineInterface = ReadLine.createInterface({ input: fileStream, crlfDelay: Infinity });        
         for await (const line of readLineInterface) {
-            const newLine = this.renumberLine(line);
-            this.newFile.write(newLine + endOfLine);
+            const newLine = this.processLine(line);
+            this.temporaryFile.write(newLine + endOfLine);
         }
         fileStream.close();
     }
 
-    renumberLine(pLine) {
+    processLine(pLine) {
         let newLine = "";
         const match = this.regExpSchema.tryToMatch(pLine);
         if (match.success) {

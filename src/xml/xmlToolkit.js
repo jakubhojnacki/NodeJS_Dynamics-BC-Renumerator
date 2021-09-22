@@ -9,10 +9,10 @@ import FileSystem from "fs";
 import XML2JS from "xml2js";
 
 export default class XmlToolkit {
-    static async read(pContent) {
+    static async parse(pData) {
         return new Promise((lResolve, lReject) => {
             const parser = XML2JS.Parser();
-            parser.parseString(pContent, (lError, lResult) => {
+            parser.parseString(pData, (lError, lResult) => {
                 if (lError)
                     lReject(lError);
                 else
@@ -21,8 +21,18 @@ export default class XmlToolkit {
         });
     }
 
-    static async readFile(pFilePath) {
+    static async toString(pData) {
+        const builder = new XML2JS.Builder();
+        return await builder.buildObject(pData);
+    }
+
+    static async readFromFile(pFilePath) {
         const content = FileSystem.readFileSync(pFilePath);
-        return XmlToolkit.read(content);
+        return XmlToolkit.parse(content);
+    }
+
+    static async writeToFile(pData, pFilePath) {
+        const xml = await XmlToolkit.toString(pData);
+        FileSystem.writeFileSync(pFilePath, xml);
     }
 }

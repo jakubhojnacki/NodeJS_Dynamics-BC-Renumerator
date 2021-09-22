@@ -1,7 +1,6 @@
 {
     "general" : {
         "renumberationCode": "SAAS",
-        "backupMode": "line",
         "endOfLineType": "windows"
     },
     "ignore": {

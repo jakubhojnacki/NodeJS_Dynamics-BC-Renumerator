@@ -11,12 +11,8 @@ import Renumberator from "../engine/renumberator.js";
 import DynamicsManifestSerialiser from "./dynamicsManifestSerialiser.js";
 
 export default class DynamicsManifestRenumberator extends Renumberator {
-    get code() { return "Manifest"; }
-    get name() { return "Dynamics AL Manifest Renumberator"; }
-
+    get name() { return "Manifest Renumberator"; }
     get dynamicsApplication() { return this.engine.dynamicsApplication; }
-    get data() { return this.mData; }
-    set data(pValue) { this.mData = pValue; }
 
     constructor(pEngine) {
         super(pEngine);
@@ -27,30 +23,17 @@ export default class DynamicsManifestRenumberator extends Renumberator {
         return Path.basename(pFilePath).trim().toLowerCase() === "app.json";
     }
 
-    renumber(pFilePath) {
-        this.initialise(pFilePath);
-        this.readData();
-        this.renumberData();
-        this.writeData();
+    async renumber(pFilePath) {
+        this.initialise(pFilePath, true);
+        await this.process();
+        this.finalise();
     }
 
-    initialise(pFilePath) {
-        this.filePath = pFilePath;
+    async process() {
+        const rawData = FileSystem.readFileSync(this.filePath);
+        const data = JSON.parse(rawData);
+        DynamicsManifestSerialiser.serialiseDynamicsApplication(this.dynamicsApplication, data);
+        const renumberedRawData = JSON.stringify(data, null, 4);
+        this.temporaryFile.write(renumberedRawData);
     }
-    
-    readData() {
-        let rawData = FileSystem.readFileSync(this.filePath);
-        this.data = JSON.parse(rawData);
-    }
-
-    renumberData() {
-        DynamicsManifestSerialiser.serialiseDynamicsApplication(this.dynamicsApplication, this.data);
-    }
-
-    async writeData() {
-        this.createNewFile();
-        const rawData = JSON.stringify(this.data, null, 4);
-        this.newFile.write(rawData);
-        this.overwriteFileWithNewFile();
-    }    
 }

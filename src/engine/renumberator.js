@@ -11,33 +11,36 @@ export default class Renumberator {
     get engine() { return this.mEngine; }
     get filePath() { return this.mFilePath; }
     set filePath(pValue) { this.mFilePath = pValue; }
-    get newFilePath() { return this.mNewFilePath; }
-    set newFilePath(pValue) { this.mNewFilePath = pValue; }
-    get newFile() { return this.mNewFile; }
-    set newFile(pValue) { this.mNewFile = pValue; }
+    get temporaryFilePath() { return this.mTemporaryFilePath; }
+    set temporaryFilePath(pValue) { this.mTemporaryFilePath = pValue; }
+    get temporaryFile() { return this.mTemporaryFile; }
+    set temporaryFile(pValue) { this.mTemporaryFile = pValue; }
 
     constructor(pEngine) {
         this.mEngine = pEngine;
         this.mFilePath = "";
-        this.mNewFilePath = "";
-        this.mNewFile = null;
+        this.mTemporaryFilePath = "";
+        this.mTemporaryFile = null;
     }
 
-    createNewFile() {
-        this.newFilePath = `${this.filePath}.tmp`;
-        if (FileSystem.existsSync(this.newFilePath))
-            FileSystem.unlinkSync(this.newFilePath);
-        this.newFile = FileSystem.createWriteStream(this.newFilePath, { flags: "a" });
+    initialise(pFilePath, pCreateTemporaryFile) {
+        this.filePath = pFilePath;
+        this.temporaryFilePath = `${this.filePath}.tmp`;
+        if (FileSystem.existsSync(this.temporaryFilePath))
+            FileSystem.unlinkSync(this.temporaryFilePath);
+        if (Boolean.validate(pCreateTemporaryFile))
+            this.temporaryFile = FileSystem.createWriteStream(this.temporaryFilePath, { flags: "a" });
     }
 
-    overwriteFileWithNewFile() {
-        this.newFile.close();
+    finalise() {
+        if (this.temporaryFile)
+            this.temporaryFile.close();
         /*TODO - Uncomment when ready
         FileSystem.unlinkSync(this.filePath);
         FileSystem.renameSync(this.newFilePath, this.filePath);
         this.filePath = this.newFilePath;
         */
-        this.newFilePath = "";
-        this.newFile = null;
+        this.temporaryFilePath = "";
+        this.temporaryFile = null;
     }
 }
