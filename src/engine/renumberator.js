@@ -35,11 +35,9 @@ export default class Renumberator {
     finalise() {
         if (this.temporaryFile)
             this.temporaryFile.close();
-        /*TODO - Uncomment when ready
         FileSystem.unlinkSync(this.filePath);
         FileSystem.renameSync(this.newFilePath, this.filePath);
         this.filePath = this.newFilePath;
-        */
         this.temporaryFilePath = "";
         this.temporaryFile = null;
     }

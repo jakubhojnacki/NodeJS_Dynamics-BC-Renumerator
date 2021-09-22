@@ -1,8 +1,0 @@
-{
-    "webService": {
-        "url": "http://localhost/dynamicsrenumberator",
-        "user": "dynamics.renumberator.user",
-        "password": "dynamics.renumberator.password",
-        "type": "SOAP"
-    }
-}
