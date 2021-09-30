@@ -1,7 +1,9 @@
 @echo off
 
-set FolderPath=c:\Temp\Product_nHanced-Search
+set ApplicationDirectoryPath=c:\Temp\Product_nHanced-Base
+set RenumberatorDirectoryPath=c:\Development\Work\Tools\Tool_Dynamics-Renumberator
 
-node "./main.js" "%FolderPath%"
+cd "%RenumberatorDirectoryPath%"
+node "./src/main.js" "%ApplicationDirectoryPath%"
 
 pause

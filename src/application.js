@@ -26,7 +26,7 @@ export default class Application {
         this.mArgs = Args.parse(pArgValues, ArgTemplateFactory.argTemplates);
         this.mSettings = Settings.read(ArgName.settingsFilePath);
         this.mTerminal = new Terminal();
-        this.mDebug = new Debug(this.args.get(ArgName.debug, false), this.args.get(ArgName.debugDirectoryPath, ''));
+        this.mDebug = new Debug(this.args.get(ArgName.debug, false), this.args.get(ArgName.debugDirectoryPath, ""));
     }
 
     async run() {
@@ -47,13 +47,13 @@ export default class Application {
         const __this = this;
         const directoryPath = this.args.get(ArgName.directoryPath);
         const engine = new Engine(directoryPath, this.settings);
-        engine.onDynamicsApplication = (lDynamicsApplicationEventInfo) => { __this.engine_onDynamicsApplication(lDynamicsApplicationEventInfo); };
         if (this.debug.enabled) {
+            engine.onDynamicsApplication = (lDynamicsApplicationEventInfo) => { __this.engine_onDynamicsApplication(lDynamicsApplicationEventInfo); };
             engine.onDirectory = (lDirectoryEventInfo) => { __this.engine_onDirectory(lDirectoryEventInfo); };
             engine.onFile = (lFileEventInfo) => { __this.engine_onFile(lFileEventInfo); };
         } else
             engine.onProgress = (lProgress) => { __this.engine_onProgress(lProgress); }
-        await engine.run(directoryPath, this.setings);
+        await engine.run(directoryPath);
         if (!this.debug.enabled)
             this.terminal.newLine();
     }
@@ -61,14 +61,11 @@ export default class Application {
     engine_onProgress(pProgress) {
         this.terminal.moveLeft(1000);
         this.terminal.clearLine();
-        this.terminal.write(pProgress.toString('[', '#', ']', 20));
+        this.terminal.write(pProgress.toString("[", "#", "]", 20, this.terminal.width));
     }
 
     engine_onDynamicsApplication(pDynamicsApplicationEventInfo) {
-        if (this.debug.enabled)
-            pDynamicsApplicationEventInfo.dynamicsApplication.log(pDynamicsApplicationEventInfo.indentation);
-        else
-            this.terminal.writeLine(pDynamicsApplicationEventInfo.dynamicsApplication.toString(), pDynamicsApplicationEventInfo.indentation);
+        pDynamicsApplicationEventInfo.dynamicsApplication.log(pDynamicsApplicationEventInfo.indentation);
     }
 
     engine_onDirectory(pDirectoryEventInfo) {

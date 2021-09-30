@@ -10,7 +10,7 @@ export default class Authentication  {
 	constructor() {
 	}
 
-	async getHeaderValue() {
+	async toString() {
 		return "";
 	}
 

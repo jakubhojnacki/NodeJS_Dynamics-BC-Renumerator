@@ -9,6 +9,7 @@ import DynamicsObjectBase from "./dynamicsObjectBase.js";
 
 export default class DynamicsObjectField extends DynamicsObjectBase {
     get dataType() { return this.mDataType; }
+    set dataType(pValue) { this.mDataType = pValue; }
 
     constructor(pNo, pName, pDataType, pRenumberedNo) {
         super(pNo, pName, pRenumberedNo);

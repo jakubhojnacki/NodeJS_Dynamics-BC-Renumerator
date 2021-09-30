@@ -31,6 +31,13 @@ export default class ContentType {
         return string;
     }
 
+    serialise() {
+        return {
+            "mediaType": this.mediaType,
+            "charset": this.charset
+        };
+    }
+
     static parse(pString) {
         let contentType = new ContentType();
         if (pString) {

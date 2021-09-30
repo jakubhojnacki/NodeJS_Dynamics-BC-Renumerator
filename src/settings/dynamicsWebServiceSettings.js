@@ -21,8 +21,10 @@ export default class DynamicsWebServiceSettings {
     get apiVersion() { return this.mApiVersion; }
     get companyName() { return this.mCompanyName; }
     get companyId() { return this.mCompanyId; }
+    get timeout() { return this.mTimeout; }
+    set timeout(pValue) { this.mTimeout = pValue; }
 
-    constructor(pProtocol, pServer, pPort, pInstance, pUser, pPassword, pApiPublisher, pApiGroup, pApiVersion, pCompanyName, pCompanyId) {
+    constructor(pProtocol, pServer, pPort, pInstance, pUser, pPassword, pApiPublisher, pApiGroup, pApiVersion, pCompanyName, pCompanyId, pTimeout) {
         this.mProtocol = Protocol.parse(pProtocol);
         this.mServer = String.validate(pServer);
         this.mPort = Number.validateAsInteger(pPort);
@@ -34,6 +36,7 @@ export default class DynamicsWebServiceSettings {
         this.mApiVersion = String.validate(pApiVersion);
         this.mCompanyName = String.validate(pCompanyName);
         this.mCompanyId = String.validate(pCompanyId);
+        this.mTimeout = Number.validateAsInteger(pTimeout);
     }
 
     serialise() {
@@ -48,7 +51,8 @@ export default class DynamicsWebServiceSettings {
             "apiGroup": this.apiGroup,
             "apiVersion": this.apiVersion,
             "companyName": this.companyName,
-            "companyId": this.companyId
+            "companyId": this.companyId,
+            "timeout": this.timeout
         };
         return data;
     }
@@ -57,7 +61,7 @@ export default class DynamicsWebServiceSettings {
         let object = new DynamicsWebServiceSettings();
         if (pData != null)
             object = new DynamicsWebServiceSettings(pData.protocol, pData.server, pData.port, pData.instance, pData.user, pData.password,
-                pData.apiPublisher, pData.apiGroup, pData.apiVersion, pData.companyName, pData.companyId);
+                pData.apiPublisher, pData.apiGroup, pData.apiVersion, pData.companyName, pData.companyId, pData.timeout);
         return object;
     }    
 

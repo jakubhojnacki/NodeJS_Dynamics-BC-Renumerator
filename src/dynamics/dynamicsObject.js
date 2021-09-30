@@ -13,11 +13,14 @@ export default class DynamicsObject extends DynamicsObjectBase {
     get type() { return this.mType; }
     get fields() { return this.mFields; }
     set fields(pValue) { this.mFields = pValue; }
+    get extendsName() { return this.mExtendsName; }
+    set extendsName(pValue) { this.mExtendsName = pValue; }
 
-    constructor(pType, pNo, pName, pRenumberedId, pFields) {
-        super(pNo, pName, pRenumberedId);
+    constructor(pType, pNo, pName, pRenumberedId, pFields, pExtendsName) {
+        super(pNo, pName, pRenumberedId, pExtendsName);
         this.mType = DynamicsObjectType.parse(pType);
         this.mFields = pFields ? pFields : new DynamicsObjectFields();
+        this.mExtendsName = String.validate(pExtendsName);
     }
     
     getField(pNo) {

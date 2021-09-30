@@ -22,7 +22,7 @@ export default class FileSystemMatcher {
 			pattern = pattern.replace(specialCharacter, "\\" + specialCharacter);
         pattern = pattern.replace("*", ".*");
         pattern = pattern.replace("?", ".");
-        return '^' + pattern + '$';
+        return "^" + pattern + "$";
 	}
 
 	matches(pName) {

@@ -27,10 +27,12 @@ export default class WebService {
 	set contentType(pValue) { this.mContentType = pValue; }
 	get accept() { return this.mAccept; }
 	set accept(pValue) { this.mAccept = pValue; }
+    get timeout() { return this.mTimeout; }
+    set timeout(pValue) { this.mTimeout = pValue; }
     get response() { return this.mResponse; }
     set response(pValue) { this.mResponse = pValue; }
 
-	constructor(pUrl, pMethod, pHeaders, pBody, pAuthentication, pContentType, pAccept) {
+	constructor(pUrl, pMethod, pHeaders, pBody, pAuthentication, pContentType, pAccept, pTimeout) {
 		this.mUrl = Object.validate(pUrl, new Url());
 		this.mMethod = Method.parse(pMethod);
 		this.mHeaders = Object.validate(pHeaders);
@@ -38,6 +40,19 @@ export default class WebService {
 		this.mAuthentication = pAuthentication;
 		this.mContentType = Object.validate(pContentType, new ContentType(MediaType.json, Charset.utf8));
 		this.mAccept = Object.validate(pAccept, new ContentType(MediaType.json, Charset.utf8));
+        this.mTimeout = Number.validateAsInteger(pTimeout);
         this.mResponse = new WebServiceResponse();
 	}
+
+    serialise() {
+        return {
+            "url": this.url ? this.url.toString(): null,
+            "method": this.method,
+            "headers": this.headers,
+            "body": this.body,
+            "authentication": this.authentication ? this.authentication.toString() : null,
+            "contentType": this.contentType ? this.contentType.toString() : null,
+            "accept": this.accept ? this.accept.toString() : null
+        };
+    }
 }

@@ -6,16 +6,9 @@
 
 import "../general/javaScript.js";
 import Protocol from "./protocol.js";
+import UrlToolkit from "./urlToolkit.js";
 
 export default class Url {
-    static get protocolSeparator() { return "://"; }
-    static get credentialsSeparator() { return "@"; }
-    static get passwordSeparator() { return ":"; }
-    static get portSeparator() { return ":"; }
-    static get pathSeparator() { return "/"; }
-    static get parametersSeparator() { return "?"; }
-    static get parameterSeparator() { return "&"; }
-	
     get protocol() { return this.mProtocol; }
     set protocol(pValue) { this.mProtocol = Protocol.parse(pValue); }
     get host() { return this.mHost; }
@@ -42,62 +35,18 @@ export default class Url {
     }
 
     toString() {
-        const protocolString = this.toProtocolString();
-        const credentialsString = this.toCredentialsString();
-        const hostPortString = this.toHostPortString();
-        const pathString = this.toPathString();
-        const parametersString = this.toParametersString();
-        return `${protocolString}${credentialsString}${hostPortString}${pathString}${parametersString}`;
+        const hostPart = this.toHost();
+        const pathPart = this.toPath();
+        const url = UrlToolkit.join(hostPart, pathPart);
+        return url;
     }
 
-    toProtocolString() {
-        return this.protocol ? `${Protocol.toString(this.protocol)}${Url.protocolSeparator}` : "";
+    toHost() {
+        return UrlToolkit.toHost(this.protocol, this.user, this.password, this.host, this.port);
     }
 
-    toCredentialsString() {
-        return this.user ? ((this.password ? `${this.user}${Url.passwordSeparator}${this.password}` : this.user) + Url.credentialsSeparator) : "";
-    }
-
-    toHostPortString() {
-        return this.port > 0 ? `${this.host}:${this.port}` : this.host;
-    }
-
-    toPathParametersString() {
-        const pathString = this.toPathString();
-        const parametersString = this.toParametersString();
-        return `${pathString}${parametersString}`;
-    }
-
-    toPathString() {
-        let string = "";
-        if (this.path != null) {
-            let first = true;
-            for (let pathPart of this.path) {
-                if (pathPart) {
-                    pathPart = pathPart.removeIfStartsWith(Url.pathSeparator);
-                    pathPart = pathPart.removeIfEndsWith(Url.pathSeparator);
-                    if (pathPart.length > 0) {
-                        string += first ? "" : Url.pathSeparator;
-                        string += pathPart;
-                        first = false;
-                    }
-                }
-            }
-        }
-        return string;
-    }
-
-    toParametersString() {
-        let string = "";
-        if (this.parameters != null) {
-			let first = true;
-			for (const parameter of this.parameters) {
-				string += first ? Url.parametersSeparator : Url.parameterSeparator;
-				string += `${parameter.name}=${parameter.value}`;
-				first = false;
-			}
-		}
-        return string;
+    toPath() {
+        return UrlToolkit.toPath(this.path, this.parameters);
     }
 
 	static parse(pString) {

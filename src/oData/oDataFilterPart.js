@@ -11,14 +11,17 @@ export default class ODataFilterPart {
     get name() { return this.mName; }
     get operator() { return this.mOperator; }
     get value() { return this.mValue; }
+    get isString() { return this.misString; }
 
-    constructor(pName, pOperator, pValue) {
+    constructor(pName, pOperator, pValue, pIsString) {
         this.mName = String.validate(pName);
         this.mOperator = ODataOperator.parse(pOperator);
         this.mValue = pValue;
+        this.misString = Boolean.validate(pIsString, false);
     }
 
     toString() {
-        return `${this.name} ${ODataOperator.toString(this.operator)} ${Object.toString(this.value)}`;
+        const valueText = this.isString ? `'${Object.toString(this.value)}'` : Object.toString(this.value);
+        return `${this.name} ${ODataOperator.toString(this.operator)} ${valueText}`;
     }
 }

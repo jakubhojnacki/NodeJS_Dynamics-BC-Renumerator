@@ -35,8 +35,8 @@ export default class DynamicsWebServiceAdapter {
         this.mDynamicsObjects = null;
     }
 
-    async renumber(pApp, pRenumberationCode) {
-        this.initialise(pApp, pRenumberationCode);
+    async renumber(pDynamicsApplication, pRenumberationCode) {
+        this.initialise(pDynamicsApplication, pRenumberationCode);
         await this.runWebService("renumber");
         this.finalise();
     }
@@ -72,7 +72,8 @@ export default class DynamicsWebServiceAdapter {
         const authentication = this.createAuthentication();
         const contentType = new ContentType(MediaType.json, Charset.utf8);
         const accept = new ContentType(MediaType.json, Charset.utf8);
-        return new RestWebService(url, Method.get, null, "", authentication, contentType, accept);
+        const timeout = this.settings.dynamicsWebService.timeout;
+        return new RestWebService(url, Method.get, null, "", authentication, contentType, accept, timeout);
     }
 
     createAuthentication() {
@@ -84,8 +85,8 @@ export default class DynamicsWebServiceAdapter {
     createUrl(pWebService) {
         const url = this.settings.dynamicsWebService.createUrl(pWebService);
         const oDataFilter = new ODataFilter([ 
-            new ODataFilterPart("extensionId", ODataOperator.equals, "d4688c1b-70bd-47f3-8087-f462a8a88f0b"),
-            new ODataFilterPart("renumberationCode", ODataOperator.equals, "'SAAS'")
+            new ODataFilterPart("extensionId", ODataOperator.equals, this.dynamicsApplication.id),
+            new ODataFilterPart("renumberationCode", ODataOperator.equals, this.renumberationCode, true)
         ], ODataOperator.and);
         url.parameters = [ 
             new UrlParameter("$filter", oDataFilter.toString()),
@@ -95,7 +96,6 @@ export default class DynamicsWebServiceAdapter {
     }
 
     processResponse(pResponse) {
-        this.debug.dumpJson("Web Service Response", pResponse);
         const data = this.extractResponseData(pResponse);
         this.processResponseDynamicsApplication(data.applications);
         this.processResponseDynamicsDependencies(data.applicationDependencies);

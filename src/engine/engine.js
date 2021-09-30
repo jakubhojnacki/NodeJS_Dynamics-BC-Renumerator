@@ -19,9 +19,10 @@ import Validator from "../general/validator.js";
 import DynamicsRanges from "../dynamics/dynamicsRanges.js";
 
 export default class Engine {
-    get directoryPath() { return this.mDirectoryPath; }
-    get settings() { return this.mSettings; }
+    get settings() { return global.theApplication.settings; }
+    get debug() { return global.theApplication.debug; }
 
+    get directoryPath() { return this.mDirectoryPath; }
     get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
@@ -35,6 +36,7 @@ export default class Engine {
     get fileMatchers() { return this.mFileMatchers; }
     set fileMatchers(pValue) { this.mFileMatchers = pValue; }
     get progress() { return this.mProgress; }
+    set progress(pValue) { this.mProgress = pValue; }
 
     get onProgress() { return this.mOnProgress; }
     set onProgress(pValue) { this.mOnProgress = pValue; }
@@ -47,14 +49,13 @@ export default class Engine {
 
     constructor(pDirectoryPath, pSettings) {
         this.mDirectoryPath = String.validate(pDirectoryPath);
-        this.mSettings = pSettings;
         this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter();
         this.mDynamicsApplication = null;
         this.mDynamicsObjects = [];
         this.mRenumberators = [];
         this.mDirectoryMatchers = [];
         this.mFileMatchers = [];
-        this.mProgress = new Progress();
+        this.mProgress = null;
         this.mOnProgress = null;
         this.mOnDynamicsApplication = null;
         this.mOnDirectory = null;
@@ -79,18 +80,23 @@ export default class Engine {
         if (this.settings.ignore.files)
             for (const ignoreFile of this.settings.ignore.files)
                 this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
+
+        const __this = this;
+        this.progress = new Progress(null, null, (lProgress) => {
+            if (__this.onProgress)
+                __this.onProgress(lProgress);
+        })
     }
 
     async process() {
         this.readDynamicsApplication();
         await this.callRenumberWebService();
         this.processRenumberWebServiceResponse();
-        this.count();
         await this.renumber();
-        this.triggerOnProgress(null, "Completed");
     }
 
     readDynamicsApplication() {        
+        this.progress.reset(1, "Reading Dynamics Application...");
         const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
@@ -100,6 +106,7 @@ export default class Engine {
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
         this.validateDynamicsApplication();
+        this.progress.complete("Done");
     }
 
     validateDynamicsApplication() {
@@ -110,14 +117,17 @@ export default class Engine {
     }
 
     async callRenumberWebService() {
+        this.progress.reset(1, "Calling Web Service...");
         const renumberationCode = this.settings.general.renumberationCode;
         this.dynamicsWebServiceAdapter.initialise(this.dynamicsApplication, renumberationCode);
         this.dynamicsWebServiceAdapter.validate(null, true);
-        await this.dynamicsWebServiceAdapter.renumber();
+        await this.dynamicsWebServiceAdapter.renumber(this.dynamicsApplication, this.settings.general.renumberationCode);
         this.dynamicsWebServiceAdapter.finalise();
+        this.progress.complete("Done");
     }
 
     processRenumberWebServiceResponse() {
+        this.progress.reset(1, "Processing Web Service Response...");
         const webServiceDynamicsApplication = this.dynamicsWebServiceAdapter.dynamicsApplication;
         this.dynamicsApplication.renumberedId = webServiceDynamicsApplication.renumberedId;
         if (webServiceDynamicsApplication.dependencies)
@@ -131,11 +141,16 @@ export default class Engine {
             for (const range of webServiceDynamicsApplication.ranges)
                 this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
+        this.debug.dumpJson("Objects", this.dynamicsObjects.serialise());
+        this.progress.complete("Done");
     }
 
-    count() {
+    async renumber() {
         const count = this.countDirectory(this.directoryPath, 0, 0);
-        this.progress.count = count;
+        this.progress.reset(count, "Renumbering...");
+        this.renumberators = RenumberatorFactory.create(this);
+        await this.renumberDirectory(this.directoryPath, 0);
+        this.progress.complete("Completed");
     }
 
     countDirectory(pDirectoryPath, pIndentation, pCountSoFar) {
@@ -154,17 +169,12 @@ export default class Engine {
             };
         return count;
     }
-
-    async renumber() {
-        this.renumberators = RenumberatorFactory.create(this);
-        await this.renumberDirectory(this.directoryPath, 0);
-    }
-
+    
     async renumberDirectory(pDirectoryPath, pIndentation) {
         const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
         const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
         if (shouldBeRenumbered) {
-            this.triggerOnProgress(0, pDirectoryPath);
+            this.progress.move(0, pDirectoryPath);
             this.triggerOnDirectory(pDirectoryPath, directoryName, pIndentation);
             const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
             for (const directoryEntry of directoryEntries) {
@@ -192,7 +202,7 @@ export default class Engine {
         if (Path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
             const fileName = Path.basename(pFilePath);
             if (this.shouldFileBeRenumbered(fileName)) {
-                this.triggerOnProgress(1, pFilePath);
+                this.progress.move(1, fileName);
                 let renumbered = false;
                 const renumberator = await this.findRenumberator(pFilePath);
                 if (renumberator) {
@@ -222,15 +232,6 @@ export default class Engine {
                 break;
             }
         return result;
-    }
-
-    triggerOnProgress(pDelta, pMessage) {
-        if (pDelta == null)
-            this.progress.complete(pMessage);
-        else
-            this.progress.move(pDelta, pMessage);
-        if (this.onProgress)
-            this.onProgress(this.progress);
     }
 
     triggerOnDynamicsApplication() {

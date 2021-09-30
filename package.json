@@ -1,24 +1,21 @@
 {
     "name": "dynamics-renumberator",
-    "version": "2.0.0",
+    "version": "2.1.1",
     "displayName": "Dynamics Renumberator",
     "description": "Renumbers Dynamics application into another ID range",
     "date": "September 2021",
-    "type": "module",
-    "main": "main.js",
-    "scripts": {
-        "test": "node test.js"
-    },
+    "author": "The NAV People - Jakub Hojnacki <jakub.hojnacki@thenavpeople.com>",
     "keywords": [
         "dynamics",
         "business central",
         "renumber"
     ],
-    "author": "Jakub Hojnacki <jakubhojnacki@gmail.com>",
+    "type": "module",
+    "main": "main.js",
     "license": "ISC",
+    "icon": "/res/img/logo240x240.png",
     "dependencies": {
         "uuid": "^8.3.2",
-        "xml2js": "^0.4.23",
-        "xmldoc": "^1.1.2"
+        "xml2js": "^0.4.23"
     }
 }

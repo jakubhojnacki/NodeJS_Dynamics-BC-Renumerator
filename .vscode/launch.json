@@ -5,9 +5,11 @@
             "type": "node",
             "request": "launch",
             "name": "Test node.js Application",
-            "program": "${workspaceFolder}/main.js",
+            "program": "${workspaceFolder}/src/main.js",
             "args": [
-                "C:\\Temp\\Product_nHanced-Search"
+                "C:\\Temp\\Application",
+                "-d",
+                "-dd", "C:\\Temp\\Log"
             ],
             "console": "integratedTerminal",
             "skipFiles": [

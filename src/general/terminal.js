@@ -12,7 +12,7 @@ export default class Terminal {
     get tab() { return this.mTab; }
     
     constructor(pWidth, pTab) {
-        this.mWidth = Number.validateAsInteger(pWidth, 120);
+        this.mWidth = Number.validateAsInteger(pWidth, 79);
         this.mTab = Number.validateAsInteger(pTab, 2);
     }
 
@@ -36,7 +36,7 @@ export default class Terminal {
 
     writeSeparator(pIndentation) {
         const indentation = Number.validate(pIndentation);
-        this.writeLine('-'.repeat(this.width - 1 - indentation), indentation);
+        this.writeLine("-".repeat(this.width - 1 - indentation), indentation);
     }
 
     writeError(pText, pIndentation) {

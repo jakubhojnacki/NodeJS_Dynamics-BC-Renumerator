@@ -294,25 +294,25 @@ String.prototype.append = function(pPart, pPrefix, pSuffix) {
 String.prototype.removeIfStartsWith = function(pPart) {
 	let newString = this.valueOf();
 	if ((this) && (pPart))
-		if (this.substr(0, pPart.length) === pPart)
+		if (this.startsWith(pPart))
 			newString = this.substr(pPart.length);
 	return newString;
 }
 
 String.prototype.removeIfEndsWith = function(pPart) {
 	let newString = this.valueOf();
-	if ((newString) && (pPart))
-		if (this.substr(this.length - pPart.length) === pPart)
+	if ((this) && (pPart))
+		if (this.endsWith(pPart))
 			newString = this.substr(0, this.length - pPart.length);
 	return newString;
 }
 
 String.prototype.replaceAll = function(pFind, pReplace) {
-	return this.replace(new RegExp(pFind, 'g'), pReplace);
+	return this.replace(new RegExp(pFind, "g"), pReplace);
 }
 
 String.prototype.replaceEndsOfLine = function(pReplace) {
-    return this.replace(new RegExp("\n", 'g'), pReplace).replace(new RegExp("\n\r", 'g'), pReplace);
+    return this.replace(new RegExp("\n", "g"), pReplace).replace(new RegExp("\n\r", "g"), pReplace);
 }
 
 String.prototype.format = function(pReplacements) {

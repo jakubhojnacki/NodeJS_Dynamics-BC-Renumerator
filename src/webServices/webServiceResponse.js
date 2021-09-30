@@ -20,4 +20,11 @@ export default class WebServiceResponse {
     appendToBody(pText) {
         this.body += pText;
     }
+
+    serialise() {
+        return {
+            "headers": this.headers,
+            "body": this.body
+        };
+    }
 }

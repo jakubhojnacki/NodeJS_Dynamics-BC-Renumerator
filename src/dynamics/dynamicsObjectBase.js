@@ -9,6 +9,7 @@ import "../general/javaScript.js";
 export default class DynamicsObjectBase {
     get no() { return this.mNo; }
     get name() { return this.mName; }
+    set name(pValue) { this.mName = pValue; }
     get renumberedNo() { return this.mRenumberedNo; }
     set renumberedNo(pValue) { this.mRenumberedNo = pValue; }
 

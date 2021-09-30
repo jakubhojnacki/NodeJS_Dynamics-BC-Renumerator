@@ -19,7 +19,7 @@ export default class BasicAuthentication extends Authentication {
 		this.mPassword = String.validate(pPassword);
 	}
 
-	async getHeaderValue() {
+	async toString() {
 		let userPassword = `${this.user}:${this.password}`;
 		userPassword = Buffer.from(userPassword, "ascii").toString("base64");
 		return `Basic ${userPassword}`;

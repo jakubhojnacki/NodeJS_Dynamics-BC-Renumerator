@@ -21,16 +21,16 @@ export default class DynamicsObjectType {
     static get enumExtension() { return "enumExtension"; }
 
     static get items() { return [
-        new EnumItem(DynamicsObjectType.table),
-        new EnumItem(DynamicsObjectType.tableExtension),
-        new EnumItem(DynamicsObjectType.page),
-        new EnumItem(DynamicsObjectType.pageExtension),
-        new EnumItem(DynamicsObjectType.codeunit),
-        new EnumItem(DynamicsObjectType.report),
-        new EnumItem(DynamicsObjectType.xmlPort),
-        new EnumItem(DynamicsObjectType.query),
-        new EnumItem(DynamicsObjectType.enum),
-        new EnumItem(DynamicsObjectType.enumExtension)
+        new EnumItem(DynamicsObjectType.table, "table"),
+        new EnumItem(DynamicsObjectType.tableExtension, "tableextension"),
+        new EnumItem(DynamicsObjectType.page, "page"),
+        new EnumItem(DynamicsObjectType.pageExtension, "pageextension"),
+        new EnumItem(DynamicsObjectType.codeunit, "codeunit"),
+        new EnumItem(DynamicsObjectType.report, "report"),
+        new EnumItem(DynamicsObjectType.xmlPort, "xmlport"),
+        new EnumItem(DynamicsObjectType.query, "query"),
+        new EnumItem(DynamicsObjectType.enum, "enum"),
+        new EnumItem(DynamicsObjectType.enumExtension, "enumextension")
     ]; }
 
     static parse(pString) {

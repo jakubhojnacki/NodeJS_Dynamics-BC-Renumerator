@@ -12,15 +12,16 @@
         ]
     },
     "dynamicsWebService": {
-        "protocol": "http",
-        "server": "localhost",
-        "port": 7068,
-        "instance": "nHancedBC18WS",
-        "user": "john.smith",
-        "password": "P455w0rd",
+        "protocol": "https",
+        "server": "tnp_product_management.navondemand.co.uk",
+        "port": 7648,
+        "instance": "TNP_Product_Management",
+        "user": "api.user",
+        "password": "?9DTHCr9GvHC@b$0q.Jk",
         "apiPublisher": "the365People",
         "apiGroup": "nHancedIdManager",
         "apiVersion": "1.0",
-        "companyId": "5fdfd42d-0fda-eb11-bb70-000d3a4728c8"
+        "companyId": "358af32a-d372-ea11-bb34-001dd8b76609",
+        "timeout": 30000
     }
 }
