@@ -1,29 +1,32 @@
 /**
- * @module "Engine" class
- * @description Represents application engine
- * @version 0.0.1 (2021-08-10)
+ * @module "Logic" class
+ * @description Represents application logic
  */
 
-import "../general/javaScript.js";
-import DirectoryEventInfo from "./directoryEventInfo.js";
-import DynamicsApplicationEventInfo from "./dynamicsApplicationEventInfo.js";
-import DynamicsManifestSerialiser from "../dynamics/dynamicsManifestSerialiser.js";
-import DynamicsWebServiceAdapter from "../dynamics/dynamicsWebServiceAdapter.js";
-import FileEventInfo from "./fileEventInfo.js";
 import FileSystem from "fs";
-import FileSystemMatcher from "../general/fileSystemMatcher.js";
 import Path from "path";
-import Progress from "../general/progress.js";
-import RenumberatorFactory from "./renumberatorFactory.js";
-import Validator from "../general/validator.js";
-import DynamicsRanges from "../dynamics/dynamicsRanges.js";
 
-export default class Engine {
+import { ConsoleProgress } from "console-library";
+import { DynamicsManifestAdapter } from "../dynamicsTools/dynamicsManifestAdapter.mjs";
+import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
+import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.mjs";
+import { FileSystemItem } from "file-system-library";
+import { FileSystemItemInfo } from "../logic/fileSystemItemInfo.mjs";
+import { FileSystemMatcher } from "file-system-library";
+import { RenumberatorFactory } from "../logic/renumberatorFactory.mjs";
+import { Validator } from "core-library";
+
+export class Logic {
     get settings() { return global.theApplication.settings; }
     get debug() { return global.theApplication.debug; }
 
+    get application() { return this.mApplication; }
+    set application(pValue) { this.mApplication = pValue; }
     get directoryPath() { return this.mDirectoryPath; }
+    set directoryPath(pValue) { this.mDirectoryPath = pValue; }
+
     get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
+    set dynamicsWebServiceAdapter(pValue) { this.mDynamicsWebServiceAdapter = pValue; }
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get dynamicsObjects() { return this.mDynamicsObjects; }
@@ -47,19 +50,20 @@ export default class Engine {
     get onFile() { return this.mOnFile; }
     set onFile(pValue) { this.mOnFile = pValue; }
 
-    constructor(pDirectoryPath, pSettings) {
-        this.mDirectoryPath = String.validate(pDirectoryPath);
-        this.mDynamicsWebServiceAdapter = new DynamicsWebServiceAdapter();
-        this.mDynamicsApplication = null;
-        this.mDynamicsObjects = [];
-        this.mRenumberators = [];
-        this.mDirectoryMatchers = [];
-        this.mFileMatchers = [];
-        this.mProgress = null;
-        this.mOnProgress = null;
-        this.mOnDynamicsApplication = null;
-        this.mOnDirectory = null;
-        this.mOnFile = null;
+    constructor(pApplication, pDirectoryPath) {
+        this.application = pApplication;
+        this.directoryPath = pDirectoryPath;
+        this.dynamicsWebServiceAdapter = new DynamicsWebServiceAdapter();
+        this.dynamicsApplication = null;
+        this.dynamicsObjects = [];
+        this.renumberators = [];
+        this.directoryMatchers = [];
+        this.fileMatchers = [];
+        this.progress = null;
+        this.onProgress = null;
+        this.onDynamicsApplication = null;
+        this.onDirectory = null;
+        this.onFile = null;
     }
 
     async run() {      
@@ -82,7 +86,7 @@ export default class Engine {
                 this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
 
         const __this = this;
-        this.progress = new Progress(null, null, (lProgress) => {
+        this.progress = new ConsoleProgress(null, null, (lProgress) => {
             if (__this.onProgress)
                 __this.onProgress(lProgress);
         })
@@ -101,7 +105,7 @@ export default class Engine {
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApplication = DynamicsManifestSerialiser.deserialiseDynamicsApplication(data);
+            this.dynamicsApplication = DynamicsManifestAdapter.deserialiseDynamicsApplication(data);
             this.triggerOnDynamicsApplication();
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
@@ -111,7 +115,7 @@ export default class Engine {
 
     validateDynamicsApplication() {
         const validator = new Validator();
-        validator.testNotEmpty(Engine.name, "Dynamics Application", this.dynamicsApplication);
+        validator.testNotEmpty(Logic.name, "Dynamics Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
             this.dynamicsApplication.validate(validator, true);
     }
@@ -236,17 +240,17 @@ export default class Engine {
 
     triggerOnDynamicsApplication() {
         if (this.onDynamicsApplication)
-            this.onDynamicsApplication(new DynamicsApplicationEventInfo(this.dynamicsApplication, 0));
+            this.onDynamicsApplication(this.dynamicsApplication);
     }
 
     triggerOnDirectory(pDirectoryPath, pDirectoryName, pIndentation) {
         if (this.onDirectory)
-            this.onDirectory(new DirectoryEventInfo(pDirectoryPath, pDirectoryName, pIndentation));
+            this.onDirectory(FileSystemItem.newDirectory(pDirectoryPath, pDirectoryName, pIndentation));
     }
 
     triggerOnFile(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation) {
         if (this.onFile)
-            this.onFile(new FileEventInfo(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation));
+            this.onFile(new FileSystemItemInfo(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation));
     }
 
     finalise() {        

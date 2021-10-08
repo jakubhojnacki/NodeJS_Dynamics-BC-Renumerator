@@ -1,19 +1,19 @@
 /**
  * @module "DynamicsRange" class
  * @description Represents one Dynamics range (of numbers / IDs)
- * @version 0.0.1 (2021-02-19)
  */
 
-import "../general/javaScript.js";
-import StringBuilder from "../general/stringBuilder.js";
+import { StringBuilder } from "core-library";
 
-export default class DynamicsRange {
+export class DynamicsRange {
     get from() { return this.mFrom; }
+    set from(pValue) { this.mFrom = Number.validateAsInteger(pValue); }
     get to() { return this.mTo; }
+    set to(pValue) { this.mTo = Number.validateAsInteger(pValue); }
 
     constructor(pFrom, pTo) {
-        this.mFrom = Number.validate(pFrom);
-        this.mTo = Number.validate(pTo);
+        this.from = pFrom;
+        this.to = pTo;
     }
     
     toString() {
@@ -23,6 +23,7 @@ export default class DynamicsRange {
         return stringBuilder.toString();        
     }
 
+    //TODO - Review
     validate(pValidator, pRaiseError) {
         const validator = pValidator ? pValidator : new Validator();
         const raiseError = Boolean.validate(pRaiseError);
@@ -33,6 +34,7 @@ export default class DynamicsRange {
         return validator;
     }   
 
+    //TODO - Review
     serialise() {
         return {
             "from": this.from,

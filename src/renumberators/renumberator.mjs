@@ -1,30 +1,30 @@
 /**
  * @module "Renumberator" class (abstract)
  * @description Represents a (file) renumberator
- * @version 0.0.1 (2021-02-21)
  */
 
-import "../general/javaScript.js";
-import FileBuffer from "../general/FileBuffer.js";
 import FileSystem from "fs";
 
-export default class Renumberator {
-    get engine() { return this.mEngine; }
+import { TextFileBuffer } from "file-system-library";
+
+export class Renumberator {
+    get logic() { return this.mLogic; }
+    set logic(pValue) { this.mLogic = pValue; }
     get filePath() { return this.mFilePath; }
-    set filePath(pValue) { this.mFilePath = pValue; }
+    set filePath(pValue) { this.mFilePath = String.validate(pValue); }
     get fileBuffer() { return this.mFileBuffer; }
     set fileBuffer(pValue) { this.mFileBuffer = pValue; }
 
-    constructor(pEngine) {
-        this.mEngine = pEngine;
-        this.mFilePath = "";
-        this.mFileBuffer = null;
+    constructor(pLogic) {
+        this.logic = pLogic;
+        this.filePath = "";
+        this.fileBuffer = null;
     }
 
     initialise(pFilePath, pUseFileBuffer) {
         this.filePath = pFilePath;
         if (Boolean.validate(pUseFileBuffer, false))
-            this.fileBuffer = new FileBuffer();
+            this.fileBuffer = new TextFileBuffer();
     }
 
     finalise() {

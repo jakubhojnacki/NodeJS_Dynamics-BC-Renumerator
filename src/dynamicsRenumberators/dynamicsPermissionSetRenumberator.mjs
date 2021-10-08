@@ -1,18 +1,17 @@
 /**
  * @module "DynamicsPermissionSetRenumberator" class
  * @description Handles renumberation of Dynamics permission set
- * @version 0.0.1 (2021-02-21)
  */
 
-import "../general/javaScript.js";
 import Path from "path";
-import Renumberator from "../engine/renumberator.js";
-import XmlToolkit from "../xml/xmlToolkit.js";
-import DynamicsObjectType from "./dynamicsObjectType.js";
 
-export default class DynamicsPermissionSetRenumberator extends Renumberator {
+import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.js";
+import { Renumberator } from "../logic/renumberator.js";
+import { XmlToolkit } from "xml-library";
+
+export class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Permission Set Renumberator"; }
-    get debug() { return global.theApplication.debug; }
+    get debug() { return global.theApplication.debug; } //TODO - Review
 
     constructor(pRenumberation) {
         super(pRenumberation);

@@ -1,22 +1,23 @@
 /**
  * @module "DynamicsVersion" class
  * @description Represents Dynamics (application) version
- * @version 0.0.1 (2021-02-20)
  */
 
-import "../general/javaScript.js";
-
-export default class DynamicsVersion {
+export class DynamicsVersion {
     get major() { return this.mMajor; }
+    set major(pValue) { this.mMajor = Number.validateAsInteger(pValue); }
     get minor() { return this.mMinor; }
+    set minor(pValue) { this.mMinor = Number.validateAsInteger(pValue); }
     get build() { return this.mBuild; }
+    set build(pValue) { this.mBuild = Number.validateAsInteger(pValue); }
     get revision() { return this.mRevision; }
+    set revision(pValue) { this.mRevision = Number.validateAsInteger(pValue); }
 
     constructor(pMajor, pMinor, pBuild, pRevision) {
-        this.mMajor = Number.validate(pMajor);
-        this.mMinor = Number.validate(pMinor);
-        this.mBuild = Number.validate(pBuild);
-        this.mRevision = Number.validate(pRevision);
+        this.major = pMajor;
+        this.minor = pMinor;
+        this.build = pBuild;
+        this.revision = pRevision;
     }
 
     static parse(pString) {

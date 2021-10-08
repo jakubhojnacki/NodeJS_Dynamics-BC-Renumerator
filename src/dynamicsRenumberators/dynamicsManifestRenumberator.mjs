@@ -4,19 +4,18 @@
  * @version 0.0.1 (2021-02-21)
  */
 
-import "../general/javaScript.js";
 import FileSystem from "fs";
 import Path from "path";
-import Renumberator from "../engine/renumberator.js";
-import DynamicsManifestSerialiser from "./dynamicsManifestSerialiser.js";
 
-export default class DynamicsManifestRenumberator extends Renumberator {
+import DynamicsManifestSerialiser from "../dynamics/dynamicsManifestSerialiser.mjs";
+import Renumberator from "../logic/renumberator.mjs";
+
+export class DynamicsManifestRenumberator extends Renumberator {
     get name() { return "Manifest Renumberator"; }
-    get dynamicsApplication() { return this.engine.dynamicsApplication; }
+    get dynamicsApplication() { return this.logic.dynamicsApplication; }
 
-    constructor(pEngine) {
-        super(pEngine);
-        this.mData = null;
+    constructor(pLogic) {
+        super(pLogic);
     }
 
     async canRenumber(pFilePath) {

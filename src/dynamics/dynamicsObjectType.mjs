@@ -1,14 +1,12 @@
 /**
  * @module "DynamicsObjectType" class (static)
  * @description Enumeration of Dynamics object types
- * @version 0.0.1 (2021-02-22)
  */
 
-import "../general/javaScript.js";
-import Enum from "../general/enum.js";
-import EnumItem from "../general/enumItem.js";
+import { Enum } from "core-library";
+import { EnumItem } from "core-library";
 
-export default class DynamicsObjectType {
+export class DynamicsObjectType {
     static get table() { return "table"; }
     static get tableExtension() { return "tableExtension"; }
     static get page() { return "page"; }

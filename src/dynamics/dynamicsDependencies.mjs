@@ -1,19 +1,16 @@
 /**
  * @module "DynamicsDependencies" class
  * @description Represents an array of dependencies
- * @version 0.0.2 (2021-09-03)
  */
 
-import "../general/javaScript.js";
-import Guid from "../general/guid.js";
-
-export default class DynamicsDependencies extends Array {
+export class DynamicsDependencies extends Array {
     get terminal() { return global.theApplication.terminal; }
 
     constructor() {        
         super();
     }
 
+    //TODO - Review
     log(pIndentation) {
         const indentation = Number.validate(pIndentation);
         this.terminal.writeLine("Dependencies:", indentation);
@@ -21,6 +18,7 @@ export default class DynamicsDependencies extends Array {
             this.terminal.writeLine(dynamicsDependency.toString(), indentation + 1);
     }
 
+    //TODO - Review
     validate(pValidator, pRaiseError, pWithRenumbered) {
         const validator = pValidator ? pValidator : new Validator();
         const raiseError = Boolean.validate(pRaiseError);
@@ -35,6 +33,7 @@ export default class DynamicsDependencies extends Array {
         return this.find((lDynamicsDependency) => { return (lDynamicsDependency.id === pId); });
     }      
 
+    //TODO - Review
     serialise() {
         let data = [];
         for (const dependency of this)

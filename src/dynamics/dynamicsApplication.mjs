@@ -1,15 +1,13 @@
 /**
  * @module "DynamicsApplication" class
  * @description Represents Dynamics application (extension)
- * @version 0.0.1 (2021-02-19)
  */
 
-import "../general/javaScript.js";
-import DynamicsApplicationBase from "./dynamicsApplicationBase.js";
-import StringBuilder from "../general/stringBuilder.js";
-import Validator from "../general/validator.js";
+import { DynamicsApplicationBase } from "../dynamics/dynamicsApplicationBase.mjs";
+import { StringBuilder } from "core-library";
+import { Validator } from "core-library";
 
-export default class DynamicsApplication extends DynamicsApplicationBase {
+export class DynamicsApplication extends DynamicsApplicationBase {
     get terminal() { return global.theApplication.terminal; }
     get debug() { return global.theApplication.debug; }
 
@@ -28,6 +26,7 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
         return `${this.name} ${this.version} (ID: ${this.id}; Publisher: ${this.publisher})`;
     }
 
+    //TODO - Review the whole function
     log(pIndentation) {
         const indentation = Number.validate(pIndentation);
         if (this.debug.enabled) {
@@ -43,6 +42,7 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
         }
     }        
 
+    //TODO - Review the whole function
     validate(pValidator, pRaiseError, pWithRenumbered) {
         const validator = pValidator ? pValidator : new Validator();
         const raiseError = Boolean.validate(pRaiseError);
@@ -57,6 +57,7 @@ export default class DynamicsApplication extends DynamicsApplicationBase {
         return validator;
     }    
 
+    //TODO - Change name
     serialise() {
         let data = super.serialise();
         data.dependencies = this.dependencies.serialise();

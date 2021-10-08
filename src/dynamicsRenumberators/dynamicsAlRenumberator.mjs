@@ -1,33 +1,33 @@
 /**
  * @module "DynamicsAlRenumberator" class
  * @description Handles Dynamics AL renumberation
- * @version 0.0.1 (2021-02-21)
  */
 
-import "../general/javaScript.js";
-import DynamicsAlRegExpTemplateName from "./dynamicsAlRegExpTemplateName.js";
-import DynamicsObject from "../dynamics/dynamicsObject.js";
-import DynamicsObjectField from "../dynamics/dynamicsObjectField.js";
-import DynamicsObjectType from "../dynamics/dynamicsObjectType.js";
-import EndOfLineType from "../general/endOfLineType.js";
 import FileSystem from "fs";
 import Path from "path";
 import ReadLine from "readline";
-import RegExpFlag from "../regExp/regExpFlag.js";
-import RegExpSchema from "../regExp/regExpSchema.js";
-import RegExpTemplate from "../regExp/regExpTemplate.js";
-import Renumberator from "../engine/renumberator.js";
+ 
+import { DynamicsAlRegExpTemplateName } from "../dynamicsRenumberators/dynamicsAlRegExpTemplateName.mjs";
+import { DynamicsObject } from "../dynamics/dynamicsObject.mjs";
+import { DynamicsObjectField } from "../dynamics/dynamicsObjectField.mjs";
+import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { EndOfLineType } from "file-system-library";
+import { RegExpFlag } from "reg-exp-library";
+import { RegExpSchema } from "reg-exp-library";
+import { RegExpTemplate } from "reg-exp-library";
+import { Renumberator } from "../logic/renumberator.mjs";
 
-export default class DynamicsAlRenumberator extends Renumberator {
+export class DynamicsAlRenumberator extends Renumberator {
     get name() { return "AL Renumberator"; }    
     get dynamicsManager() { return this.engine.dynamicsManager; }
     get regExpSchema() { return this.mRegExpSchema; }
+    set regExpSchema(pValue) { this.mRegExpSchema = pValue; }
     get dynamicsObject() { return this.mDynamicsObject; }
     set dynamicsObject(pValue) { this.mDynamicsObject = pValue; }
 
-    constructor(pEngine) {
-        super(pEngine);
-        this.mRegExpSchema = new RegExpSchema([
+    constructor(pLogic) {
+        super(pLogic);
+        this.regExpSchema = new RegExpSchema([
             new RegExpTemplate(
                 DynamicsAlRegExpTemplateName.object, 
                 "Object",
@@ -57,7 +57,7 @@ export default class DynamicsAlRenumberator extends Renumberator {
                 "${prefix}value(${renumberedNo}; \"${name}\")"
             )
         ]);
-        this.mDynamicsObject = null;
+        this.dynamicsObject = null;
     }
 
     async canRenumber(pFilePath) {

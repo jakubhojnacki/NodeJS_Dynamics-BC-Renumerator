@@ -1,38 +1,36 @@
 /**
- * @module "DynamicsAdapter" class
- * @description Class for getting Dynamics information from Dynamics system
- * @version 0.0.1 (2021-02-22)
+ * @module "DynamicsWebService" class
+ * @description Class for getting Dynamics information from Dynamics system (via web service)
  */
 
-import "../general/javaScript.js";
-import BasicAuthentication from "../webServices/basicAuthentication.js";
-import Charset from "../network/charset.js";
-import ContentType from "../network/contentType.js";
-import DynamicsWebServiceSerialiser from "./dynamicsWebServiceSerialiser.js";
-import MediaType from "../network/mediaType.js";
-import Method from "../network/method.js";
-import ODataFilter from "../oData/oDataFilter.js";
-import ODataOperator from "../oData/oDataOperator.js";
-import ODataFilterPart from "../oData/oDataFilterPart.js";
-import RestWebService from "../webServices/restWebService.js";
-import UrlParameter from "../network/urlParameter.js";
-import Validator from "../general/validator.js";
+import { BasicAuthentication } from "network-library";
+import { Charset } from "network-library";
+import { ContentType } from "network-library";
+import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.js";
+import { MediaType } from "network-library";
+import { Method } from "network-library";
+import { ODataFilter } from "network-library";
+import { ODataOperator } from "network-library";
+import { ODataFilterPart } from "network-library";
+import { RestWebService } from "network-library";
+import { UrlParameter } from "network-library";
+import { Validator } from "core-library";
 
-export default class DynamicsWebServiceAdapter {
+export class DynamicsWebService {
     get settings() { return global.theApplication.settings; }
     get debug() { return global.theApplication.debug; }
 
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get renumberationCode() { return this.mRenumberationCode; }
-    set renumberationCode(pValue) { this.mRenumberationCode = pValue; }
+    set renumberationCode(pValue) { this.mRenumberationCode = String.validate(pValue); }
     get dynamicsObjects() { return this.mDynamicsObjects; }
     set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
 
     constructor() {
-        this.mDynamicsApplication = null;
-        this.mRenumberationCode = "";
-        this.mDynamicsObjects = null;
+        this.dynamicsApplication = null;
+        this.renumberationCode = "";
+        this.dynamicsObjects = null;
     }
 
     async renumber(pDynamicsApplication, pRenumberationCode) {
@@ -52,10 +50,10 @@ export default class DynamicsWebServiceAdapter {
         const raiseError = Boolean.validate(pRaiseError);
         if (this.settings.dynamicsWebService)
             this.settings.dynamicsWebService.validate(validator);
-        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Application", this.dynamicsApplication);
+        validator.testNotEmpty(DynamicsWebService.name, "Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
             this.dynamicsApplication.validate(validator);
-        validator.testNotEmpty(DynamicsWebServiceAdapter.name, "Renumberation Code", this.renumberationCode);
+        validator.testNotEmpty(DynamicsWebService.name, "Renumberation Code", this.renumberationCode);
         if (raiseError)
             validator.raiseErrorIfNotSuccess();
         return validator;
@@ -115,25 +113,25 @@ export default class DynamicsWebServiceAdapter {
     }
 
     processResponseDynamicsApplication(pData) {
-        this.dynamicsApplication = DynamicsWebServiceSerialiser.deserialiseDynamicsApplication(pData[0]);
+        this.dynamicsApplication = DynamicsWebServiceAdapter.deserialiseDynamicsApplication(pData[0]);
         if (this.dynamicsApplication == null)
             throw new Error("Application data are incorrect.");
     }
 
     processResponseDynamicsDependencies(pData) {
-        DynamicsWebServiceSerialiser.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
+        DynamicsWebServiceAdapter.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
     }
 
     processResponseRanges(pData) {
-        DynamicsWebServiceSerialiser.deserialiseDynamicsRanges(pData, this.dynamicsApplication);
+        DynamicsWebServiceAdapter.deserialiseDynamicsRanges(pData, this.dynamicsApplication);
     }
 
     processResponseDynamicsObjects(pData) {
-        this.dynamicsObjects = DynamicsWebServiceSerialiser.deserialiseDynamicsObjects(pData);
+        this.dynamicsObjects = DynamicsWebServiceAdapter.deserialiseDynamicsObjects(pData);
     }
 
     processResponseDynamicsObjectFields(pData) {
-        DynamicsWebServiceSerialiser.deserialiseDynamicsObjectFields(pData, this.dynamicsObjects);
+        DynamicsWebServiceAdapter.deserialiseDynamicsObjectFields(pData, this.dynamicsObjects);
     }
 
     finalise() {        

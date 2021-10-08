@@ -6,7 +6,7 @@
 import { EndOfLineType } from "file-system-library";
 import { Validator } from "core-library";
 
-export default class GeneralSettings {
+export class GeneralSettings {
     get renumberationCode() { return this.mRenumberationCode; }
     set renumberationCode(pValue) { this.mRenumberationCode = String.validate(pValue); }
     get endOfLineType() { return this.mEndOfLineType; }

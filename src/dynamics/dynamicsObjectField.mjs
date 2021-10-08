@@ -1,19 +1,17 @@
 /**
  * @module "DynamicsObjectField" class
  * @description Represents Dynamics object field (table field or enum value)
- * @version 0.0.1 (2021-02-22)
  */
 
-import "../general/javaScript.js";
-import DynamicsObjectBase from "./dynamicsObjectBase.js";
+import { DynamicsObjectBase } from "../dynamics/dynamicsObjectBase.js";
 
-export default class DynamicsObjectField extends DynamicsObjectBase {
+export class DynamicsObjectField extends DynamicsObjectBase {
     get dataType() { return this.mDataType; }
-    set dataType(pValue) { this.mDataType = pValue; }
+    set dataType(pValue) { this.mDataType = String.validate(pValue); }
 
     constructor(pNo, pName, pDataType, pRenumberedNo) {
         super(pNo, pName, pRenumberedNo);
-        this.mDataType = String.validate(pDataType);
+        this.dataType = pDataType;
     }
 
     static deserialise(pData) {

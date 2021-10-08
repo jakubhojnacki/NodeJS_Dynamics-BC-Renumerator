@@ -1,13 +1,12 @@
 /**
  * @module "ArgName" class
  * @description Class representing argument names
- * @version 0.0.3 (2021-08-10)
  */
 
-import Enum from "../general/enum.js";
-import EnumItem from "../general/enumItem.js";
+import { Enum } from "core-library";
+import { EnumItem } from "core-library";
 
-export default class ArgName {
+export class ArgName {
     static get directoryPath() { return "DirectoryPath"; }
     static get settings() { return "Settings"; }
     static get debug() { return "Debug"; }

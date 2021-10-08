@@ -1,47 +1,45 @@
 /**
- * @module "DynamicsManifestSerialiser" class
- * @description Serialising and deserialising to / from Dynamics manifest
- * @version 0.0.1 (2021-09-03)
+ * @module "DynamicsManifestAdapter" class
+ * @description Converting between Dynamics manifest and corresponding class
  */
 
-import "../general/javaScript.js";
-import DynamicsApplication from "./dynamicsApplication.js";
-import DynamicsApplications from "./dynamicsApplications.js";
-import DynamicsDependency from "./dynamicsDependency.js";
-import DynamicsDependencies from "./dynamicsDependencies.js";
-import DynamicsRange from "./dynamicsRange.js";
-import DynamicsRanges from "./dynamicsRanges.js";
-import DynamicsVersion from "./dynamicsVersion.js";
+import { DynamicsApplication } from "../dynamics/dynamicsApplication.js";
+import { DynamicsApplications } from "../dynamics/dynamicsApplications.js";
+import { DynamicsDependency } from "../dynamics/dynamicsDependency.js";
+import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.js";
+import { DynamicsRange } from "../dynamics/dynamicsRange.js";
+import { DynamicsRanges } from "../dynamics/dynamicsRanges.js";
+import { DynamicsVersion } from "../dynamics/dynamicsVersion.js";
 
-export default class DynamicsManifestSerialiser {
-    static deserialiseDynamicsApplications(pData) {
+export class DynamicsManifestAdapter {
+    static dynamicsApplicationsFromData(pData) {
         let object = new DynamicsApplications();
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData)
-                object.push(DynamicsManifestSerialiser.deserialiseDynamicsApplication(dataItem));
+                object.push(DynamicsManifestAdapter.dynamicsApplicationFromData(dataItem));
         return object;
     }     
 
-    static deserialiseDynamicsApplication(pData) {
+    static dynamicsApplicationFromData(pData) {
         let object = null;
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.version);
-            const dependencies = DynamicsManifestSerialiser.deserialiseDynamicsDependencies(pData.dependencies);
-            const ranges = DynamicsManifestSerialiser.deserialiseDynamicsRanges(pData.idRanges);
+            const dependencies = DynamicsManifestAdapter.dynamicsDependenciesFromData(pData.dependencies);
+            const ranges = DynamicsManifestAdapter.dynamicsRangesFromData(pData.idRanges);
             object = new DynamicsApplication(pData.id, pData.name, pData.publisher, version, dependencies, ranges);
         }
         return object;
     }
         
-    static deserialiseDynamicsDependencies(pData) {
+    static dynamicsDependenciesFromData(pData) {
         let object = new DynamicsDependencies();
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData)
-                object.push(DynamicsManifestSerialiser.deserialiseDynamicsDependency(dataItem));
+                object.push(DynamicsManifestAdapter.dynamicsDependencyFromData(dataItem));
         return object;
     }    
 
-    static deserialiseDynamicsDependency(pData) {
+    static dynamicsDependencyFromData(pData) {
         let object = null;
         if (pData != null) {
             const id = (pData.id ? pData.id : pData.appId);
@@ -51,54 +49,54 @@ export default class DynamicsManifestSerialiser {
         return object;
     }
 
-    static deserialiseDynamicsRanges(pData) {
+    static dynamicsRangesFromData(pData) {
         let object = new DynamicsRanges();
         if ((pData != null) && (Array.isArray(pData)))
             for (const data of pData)
-                object.push(DynamicsManifestSerialiser.deserialiseDynamicsRange(data));
+                object.push(DynamicsManifestAdapter.dynamicsRangeFromData(data));
         return object;
     }    
 
-    static deserialiseDynamicsRange(pData) {
+    static dynamicsRangeFromData(pData) {
         let object = null;
         if (pData != null)
             object = new DynamicsRange(pData.from, pData.to);
         return object;
     }    
 
-    static applyDynamicsApplication(pDynamicsApplication, pData) {
+    static applyDynamicsApplicationToData(pDynamicsApplication, pData) {
         pData.id = pDynamicsApplication.renumberedId;
-        DynamicsManifestSerialiser.applyDynamicsDependencies(pDynamicsApplication.dependencies, pData.dependencies);
-        DynamicsManifestSerialiser.applyDynamicsRanges(pDynamicsApplication.ranges, pData.idRanges);
+        DynamicsManifestAdapter.applyDynamicsDependenciesToData(pDynamicsApplication.dependencies, pData.dependencies);
+        DynamicsManifestAdapter.applyDynamicsRangesToData(pDynamicsApplication.ranges, pData.idRanges);
     }    
 
-    static applyDynamicsDependencies(pDynamicsDependencies, pData) {
+    static applyDynamicsDependenciesToData(pDynamicsDependencies, pData) {
         if (pDynamicsDependencies)
             for (const dataItem of pData) {
                 const dataItemId = dataItem.id ? dataItem.id : dataItem.appId;
                 const dynamicsDependency = pDynamicsDependencies.find((lDynamicsDependency) => { return lDynamicsDependency.id === dataItemId});
                 if (dynamicsDependency)
-                    DynamicsManifestSerialiser.applyDynamicsDependency(dynamicsDependency, dataItem);
+                    DynamicsManifestAdapter.applyDynamicsDependencyToData(dynamicsDependency, dataItem);
             }
     }
 
-    static applyDynamicsDependency(pDynamicsDependency, pData) {
+    static applyDynamicsDependencyToData(pDynamicsDependency, pData) {
         if ("id" in pData)
             pData.id = pDynamicsDependency.renumberedId;
         else
             pData.appId = pDynamicsDependency.renumberedId;
     }
 
-    static applyDynamicsRanges(pDynamicsRanges, pData) {
+    static applyDynamicsRangesToData(pDynamicsRanges, pData) {
         pData.clear();
         if (pDynamicsRanges)
             for (const dynamicsRange of pDynamicsRanges) {
-                let dataItem = DynamicsManifestSerialiser.serialiseDynamicsRange(dynamicsRange);
+                let dataItem = DynamicsManifestAdapter.dynamicsRangeToData(dynamicsRange);
                 pData.push(dataItem);
             }
     }
 
-    static serialiseDynamicsRange(pDynamicsRange) {
+    static dynamicsRangeToData(pDynamicsRange) {
         return {
             "from": pDynamicsRange.from,
             "to": pDynamicsRange.to

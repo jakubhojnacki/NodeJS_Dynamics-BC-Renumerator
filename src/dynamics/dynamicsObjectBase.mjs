@@ -1,24 +1,23 @@
 /**
  * @module "DynamicsObjectBase" class (abstract)
  * @description Abstract class - base for objects and object fields
- * @version 0.0.2 (2021-09-03)
  */
 
-import "../general/javaScript.js";
-
-export default class DynamicsObjectBase {
+export class DynamicsObjectBase {
     get no() { return this.mNo; }
+    set no(pValue) { this.mNo = Number.validateAsInteger(pValue); }
     get name() { return this.mName; }
-    set name(pValue) { this.mName = pValue; }
+    set name(pValue) { this.mName = String.validate(pValue).removeIfStartsWith("\"").removeIfEndsWith("\""); }
     get renumberedNo() { return this.mRenumberedNo; }
-    set renumberedNo(pValue) { this.mRenumberedNo = pValue; }
+    set renumberedNo(pValue) { this.mRenumberedNo = Number.validateAsInteger(pValue); }
 
     constructor(pNo, pName, pRenumberedNo) {
-        this.mNo = Number.validateAsInteger(pNo);
-        this.mName = String.validate(pName).removeIfStartsWith("\"").removeIfEndsWith("\"");
-        this.mRenumberedNo = Number.validate(pRenumberedNo);
+        this.no = pNo;
+        this.name = pName;
+        this.renumberedNo = pRenumberedNo;
     }
 
+    //TODO - Review
     serialise() {
         return {
             "no": this.no,

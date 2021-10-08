@@ -1,13 +1,11 @@
 /**
  * @module "DynamicsDependency" class
  * @description Represents a dependency of Dynamics application
- * @version 0.0.1 (2021-02-20)
  */
 
-import "../general/javaScript.js";
-import DynamicsApplicationBase from "./dynamicsApplicationBase.js";
+import { DynamicsApplicationBase } from "../dynamics/dynamicsApplicationBase.mjs";
 
-export default class DynamicsDependency extends DynamicsApplicationBase {
+export class DynamicsDependency extends DynamicsApplicationBase {
     constructor(pId, pName, pPublisher, pVersion, pRenumberedId) {
         super(pId, pName, pPublisher, pVersion, pRenumberedId);
     }
@@ -16,6 +14,7 @@ export default class DynamicsDependency extends DynamicsApplicationBase {
         return super.toStringBuilder().toString();
     }
 
+    //TODO - Review
     validate(pValidator, pRaiseError, pWithRenumbered) {
         const validator = pValidator ? pValidator : new Validator();
         const raiseError = Boolean.validate(pRaiseError);
@@ -25,6 +24,7 @@ export default class DynamicsDependency extends DynamicsApplicationBase {
         return validator;
     }   
 
+    //TODO - Review
     serialise() {
         return super.serialise();
     }

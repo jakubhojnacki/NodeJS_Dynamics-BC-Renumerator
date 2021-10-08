@@ -1,27 +1,29 @@
 /**
  * @module "DynamicsApplicationBase" class
  * @description Abstract class - base for Dynamics application and dependency
- * @version 0.0.1 (2021-09-03)
  */
 
-import "../general/javaScript.js";
-import Guid from "../general/guid.js";
-import StringBuilder from "../general/stringBuilder.js";
+import { Guid } from "core-library";
+import { StringBuilder } from "core-library";
 
-export default class DynamicsApplicationBase {
+export class DynamicsApplicationBase {
     get id() { return this.mId; }
+    set id(pValue) { this.mId = Guid.validate(pValue); }
     get name() { return this.mName; }
+    set name(pValue) { this.mName = String.validate(pValue); }
     get publisher() { return this.mPublisher; }
+    set publisher(pValue) { this.mPublisher = String.validate(pValue); }
     get version() { return this.mVersion; }
+    set version(pValue) { this.mVersion = Object.validate(pValue, new DynamicsVersion()); }
     get renumberedId() { return this.mRenumberedId; }
-    set renumberedId(pValue) { this.mRenumberedId = pValue; }
+    set renumberedId(pValue) { this.mRenumberedId = Guid.validate(pValue); }
 
     constructor(pId, pName, pPublisher, pVersion, pRenumberedId) {
-        this.mId = Guid.validate(pId);
-        this.mName = String.validate(pName);
-        this.mPublisher = String.validate(pPublisher);
-        this.mVersion = pVersion;
-        this.mRenumberedId = Guid.validate(pRenumberedId);
+        this.id = pId;
+        this.name = pName;
+        this.publisher = pPublisher;
+        this.version = pVersion;
+        this.renumberedId = pRenumberedId;
     }
 
     toStringBuilder() {
