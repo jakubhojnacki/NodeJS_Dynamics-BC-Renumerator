@@ -7,8 +7,8 @@
 import FileSystem from "fs";
 import Path from "path";
 
-import DynamicsManifestSerialiser from "../dynamics/dynamicsManifestSerialiser.mjs";
-import Renumberator from "../logic/renumberator.mjs";
+import { DynamicsManifestAdapter } from "../dynamicsTools/dynamicsManifestAdapter.mjs";
+import { Renumberator } from "../logic/renumberator.mjs";
 
 export class DynamicsManifestRenumberator extends Renumberator {
     get name() { return "Manifest Renumberator"; }
@@ -31,7 +31,7 @@ export class DynamicsManifestRenumberator extends Renumberator {
     async process() {
         const rawData = FileSystem.readFileSync(this.filePath);
         const data = JSON.parse(rawData);
-        DynamicsManifestSerialiser.applyDynamicsApplication(this.dynamicsApplication, data);
+        DynamicsManifestAdapter.applyDynamicsApplication(this.dynamicsApplication, data);
         const renumberedRawData = JSON.stringify(data, null, 4);
         this.fileBuffer.write(renumberedRawData);
     }

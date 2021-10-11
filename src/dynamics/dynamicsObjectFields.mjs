@@ -8,11 +8,10 @@ export class DynamicsObjectFields extends Array {
         super();
     }
 
-    //TODO - Review
-    serialise() {
+    toData() {
         let data = [];
         for (const field of this)
-            data.push(field.serialise());
+            data.push(field.toData());
         return data;
     }   
 

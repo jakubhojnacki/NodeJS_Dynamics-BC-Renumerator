@@ -17,8 +17,7 @@ export class DynamicsObjectBase {
         this.renumberedNo = pRenumberedNo;
     }
 
-    //TODO - Review
-    serialise() {
+    toData() {
         return {
             "no": this.no,
             "name": this.name,

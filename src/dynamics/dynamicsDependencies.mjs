@@ -10,34 +10,26 @@ export class DynamicsDependencies extends Array {
         super();
     }
 
-    //TODO - Review
-    log(pIndentation) {
+    log(pFull, pMessages, pIndentation) {
         const indentation = Number.validate(pIndentation);
-        this.terminal.writeLine("Dependencies:", indentation);
+        pMessages.addInformation("Dependencies:", indentation);
         for (const dynamicsDependency of this)
-            this.terminal.writeLine(dynamicsDependency.toString(), indentation + 1);
+            pMessages.addInformation(dynamicsDependency.toString(), indentation + 1);
     }
 
-    //TODO - Review
-    validate(pValidator, pRaiseError, pWithRenumbered) {
-        const validator = pValidator ? pValidator : new Validator();
-        const raiseError = Boolean.validate(pRaiseError);
+    validate(pValidator, pTestRenumbered) {
         for (const dependency of this)
-            dependency.validate(pValidator, false, pWithRenumbered);
-        if (raiseError)
-            validator.raiseErrorIfNotSuccess();
-        return validator;
+            dependency.validate(pValidator, pTestRenumbered);
     }   
 
     get(pId) {
         return this.find((lDynamicsDependency) => { return (lDynamicsDependency.id === pId); });
     }      
 
-    //TODO - Review
-    serialise() {
+    toData() {
         let data = [];
         for (const dependency of this)
-            data.push(dependency.serialise());
+            data.push(dependency.toData());
         return data;
     }       
 }

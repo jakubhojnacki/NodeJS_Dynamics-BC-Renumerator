@@ -3,10 +3,10 @@
  * @description Class representing settings
  */
 
-import DynamicsWebServiceSettings from "./dynamicsWebServiceSettings.mjs";
-import IgnoreSettings from "./ignoreSettings.mjs";
-import GeneralSettings from "./generalSettings.mjs";
-import SettingsBase from "core-library";
+import { DynamicsWebServiceSettings } from "../settings/dynamicsWebServiceSettings.mjs";
+import { IgnoreSettings } from "../settings/ignoreSettings.mjs";
+import { GeneralSettings } from "../settings/generalSettings.mjs";
+import { SettingsBase } from "core-library";
 
 export class Settings extends SettingsBase {
     get general() { return this.mGeneral; }
@@ -17,6 +17,7 @@ export class Settings extends SettingsBase {
     set dynamicsWebService(pValue) { this.mDynamicsWebService = Object.validate(pValue, new DynamicsWebServiceSettings()); }
 
     constructor(pGeneral, pIgnore, pDynamicsWebService) {
+        super();
         this.general = pGeneral;
         this.ignore = pIgnore;
         this.dynamicsWebService = pDynamicsWebService;

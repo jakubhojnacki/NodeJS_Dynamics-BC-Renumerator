@@ -3,13 +3,13 @@
  * @description Converting between Dynamics manifest and corresponding class
  */
 
-import { DynamicsApplication } from "../dynamics/dynamicsApplication.js";
-import { DynamicsApplications } from "../dynamics/dynamicsApplications.js";
-import { DynamicsDependency } from "../dynamics/dynamicsDependency.js";
-import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.js";
-import { DynamicsRange } from "../dynamics/dynamicsRange.js";
-import { DynamicsRanges } from "../dynamics/dynamicsRanges.js";
-import { DynamicsVersion } from "../dynamics/dynamicsVersion.js";
+import { DynamicsApplication } from "../dynamics/dynamicsApplication.mjs";
+import { DynamicsApplications } from "../dynamics/dynamicsApplications.mjs";
+import { DynamicsDependency } from "../dynamics/dynamicsDependency.mjs";
+import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.mjs";
+import { DynamicsRange } from "../dynamics/dynamicsRange.mjs";
+import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
+import { DynamicsVersion } from "../dynamics/dynamicsVersion.mjs";
 
 export class DynamicsManifestAdapter {
     static dynamicsApplicationsFromData(pData) {

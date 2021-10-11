@@ -3,9 +3,9 @@
  * @description Represents Dynamics object with renumberation details
  */
 
-import { DynamicsObjectBase } from "../dynamics/dynamicsObjectBase.js";
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.js";
-import { DynamicsObjectFields } from "../dynamics/dynamicsObjectFields.js";
+import { DynamicsObjectBase } from "../dynamics/dynamicsObjectBase.mjs";
+import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { DynamicsObjectFields } from "../dynamics/dynamicsObjectFields.mjs";
 
 export class DynamicsObject extends DynamicsObjectBase {
     get type() { return this.mType; }
@@ -25,10 +25,10 @@ export class DynamicsObject extends DynamicsObjectBase {
         return this.fields != null ? this.fields.get(pNo) : null;
     }
 
-    serialise() {
-        let data = super.serialise();
-        data.type = this.type;
-        data.fields = this.fields.serialise();
-        return data;
+    toData() {
+        return {
+            "type": this.type,
+            "fields": this.fields.toData()
+        };
     }            
 }

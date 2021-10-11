@@ -5,8 +5,8 @@
 
 import Path from "path";
 
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.js";
-import { Renumberator } from "../logic/renumberator.js";
+import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { Renumberator } from "../logic/renumberator.mjs";
 import { XmlToolkit } from "xml-library";
 
 export class DynamicsPermissionSetRenumberator extends Renumberator {

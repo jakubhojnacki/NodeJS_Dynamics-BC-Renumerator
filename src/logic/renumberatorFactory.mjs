@@ -3,9 +3,9 @@
  * @description Creates renumberators
  */
 
-import { DynamicsAlRenumberator } from "../dynamics/dynamicsAlRenumberator.js";
-import { DynamicsManifestRenumberator } from "../dynamics/dynamicsManifestRenumberator.js";
-import { DynamicsPermissionSetRenumberator } from "../dynamics/dynamicsPermissionSetRenumberator.js";
+import { DynamicsAlRenumberator } from "../dynamicsRenumberators/dynamicsAlRenumberator.mjs";
+import { DynamicsManifestRenumberator } from "../dynamicsRenumberators/dynamicsManifestRenumberator.mjs";
+import { DynamicsPermissionSetRenumberator } from "../dynamicsRenumberators/dynamicsPermissionSetRenumberator.mjs";
 
 export class RenumberatorFactory {
     static create(pEngine) {

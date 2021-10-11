@@ -5,6 +5,7 @@
 
 import { Guid } from "core-library";
 import { StringBuilder } from "core-library";
+import { Validator } from "core-library";
 
 export class DynamicsApplicationBase {
     get id() { return this.mId; }
@@ -35,17 +36,17 @@ export class DynamicsApplicationBase {
         return stringBuilder;
     }
 
-    validate(pClass, pValidator, pWithRenumbered) {
-        const withRenumbered = Boolean.validate(pWithRenumbered);
-        pValidator.testNotEmpty(pClass, "ID", this.id);
-        pValidator.testNotEmpty(pClass, "Name", this.name);
-        pValidator.testNotEmpty(pClass, "Publisher", this.publisher);
-        pValidator.testNotEmpty(pClass, "Version", this.version);
-        if (withRenumbered)
-            pValidator.testNotEmpty(pClass, "Renumbered ID", this.renumberedId);
+    validate(pValidator, pTestRenumbered) {
+        const testRenumbered = Boolean.validate(pTestRenumbered);
+        pValidator.testNotEmpty("ID", this.id);
+        pValidator.testNotEmpty("Name", this.name);
+        pValidator.testNotEmpty("Publisher", this.publisher);
+        pValidator.testNotEmpty("Version", this.version);
+        if (testRenumbered)
+            pValidator.testNotEmpty("Renumbered ID", this.renumberedId);
     }        
 
-    serialise() {
+    toData() {
         return {
             "id": this.id,
             "name": this.name,

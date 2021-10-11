@@ -67,57 +67,77 @@ export class Logic {
     }
 
     async run() {      
-        this.initialise();
-        await this.process();
-        this.finalise();
+        if (this.initialise()) {
+            await this.process();
+            this.finalise();
+        }
     }
 
     initialise() {
-        if (!this.directoryPath)
-            throw new Error("Directory can't be empty.");
-        if (!FileSystem.existsSync(this.directoryPath))
-            throw new Error(`Directory ${this.directoryPath} doesn't exist.`);
+        let result = false;
 
-        if (this.settings.ignore.directories)
-            for (const ignoreDirectory of this.settings.ignore.directories)
-                this.directoryMatchers.push(new FileSystemMatcher(ignoreDirectory));
-        if (this.settings.ignore.files)
-            for (const ignoreFile of this.settings.ignore.files)
-                this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
+        const validator = new Validator(Logic.name);
+        validator.testNotEmpty("Directory path", this.directoryPath);
+        validator.testNotEmpty("Directory exists", FileSystem.existsSync(this.directoryPath));
+        result = !validator.errorMessagesExist;
+        if (!result)
+            this.application.console.writeMessages(validator.messages);
 
-        const __this = this;
-        this.progress = new ConsoleProgress(null, null, (lProgress) => {
-            if (__this.onProgress)
-                __this.onProgress(lProgress);
-        })
+        if (result) {
+            if (this.settings.ignore.directories)
+                for (const ignoreDirectory of this.settings.ignore.directories)
+                    this.directoryMatchers.push(new FileSystemMatcher(ignoreDirectory));
+            if (this.settings.ignore.files)
+                for (const ignoreFile of this.settings.ignore.files)
+                    this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
+
+            const __this = this;
+            this.progress = new ConsoleProgress(null, null, (lProgress) => {
+                if (__this.onProgress)
+                    __this.onProgress(lProgress);
+            })
+        }
+
+        return result;
     }
 
     async process() {
-        this.readDynamicsApplication();
-        await this.callRenumberWebService();
-        this.processRenumberWebServiceResponse();
-        await this.renumber();
+        let result = this.readDynamicsApplication();
+        /*TODO - Uncomment
+        if (result)
+            result = await this.callRenumberWebService();
+        if (result)
+            result = this.processRenumberWebServiceResponse();
+        if (result)
+            result = await this.renumber();
+        */
+        return result;
     }
 
     readDynamicsApplication() {        
+        let result = false;
         this.progress.reset(1, "Reading Dynamics Application...");
         const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApplication = DynamicsManifestAdapter.deserialiseDynamicsApplication(data);
+            this.dynamicsApplication = DynamicsManifestAdapter.dynamicsApplicationFromData(data);
             this.triggerOnDynamicsApplication();
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
-        this.validateDynamicsApplication();
+        result = this.validateDynamicsApplication();
         this.progress.complete("Done");
+        if (!result)
+            this.application.console.writeMessages(validator.messages);
+        return result;
     }
 
     validateDynamicsApplication() {
-        const validator = new Validator();
-        validator.testNotEmpty(Logic.name, "Dynamics Application", this.dynamicsApplication);
+        const validator = new Validator(Logic.name);
+        validator.testNotEmpty("Dynamics Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
-            this.dynamicsApplication.validate(validator, true);
+            this.dynamicsApplication.validate(validator, false);
+        return !validator.errorMessagesExist;
     }
 
     async callRenumberWebService() {
@@ -128,6 +148,7 @@ export class Logic {
         await this.dynamicsWebServiceAdapter.renumber(this.dynamicsApplication, this.settings.general.renumberationCode);
         this.dynamicsWebServiceAdapter.finalise();
         this.progress.complete("Done");
+        return true;
     }
 
     processRenumberWebServiceResponse() {
@@ -145,8 +166,9 @@ export class Logic {
             for (const range of webServiceDynamicsApplication.ranges)
                 this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
-        this.debug.dumpJson("Objects", this.dynamicsObjects.serialise());
+        this.debug.dumpJson("Objects", this.dynamicsObjects.toData());
         this.progress.complete("Done");
+        return true;
     }
 
     async renumber() {
@@ -155,6 +177,7 @@ export class Logic {
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumberDirectory(this.directoryPath, 0);
         this.progress.complete("Completed");
+        return true;
     }
 
     countDirectory(pDirectoryPath, pIndentation, pCountSoFar) {

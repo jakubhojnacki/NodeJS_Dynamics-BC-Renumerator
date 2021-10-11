@@ -12,30 +12,22 @@ export class DynamicsRanges extends Array {
         super()          
     }
 
-    //TODO - Review
-    log(pIndentation) {
+    log(pFull, pMessages, pIndentation) {
         const indentation = Number.validate(pIndentation);
-        this.terminal.writeLine("ID Ranges:", indentation);
+        pMessages.addInformation("ID Ranges:", indentation);
         for (const dynamicsRange of this)
-            this.terminal.writeLine(dynamicsRange.toString(), indentation + 1);
+            pMessages.addInformation(dynamicsRange.toString(), indentation + 1);
     }
 
-    //TODO - Review
-    validate(pValidator, pRaiseError, pWithRenumbered) {
-        const validator = pValidator ? pValidator : new Validator();
-        const raiseError = Boolean.validate(pRaiseError);
+    validate(pValidator, pTestRenumbered) {
         for (const range of this)
-            range.validate(pValidator, false, pWithRenumbered);
-        if (raiseError)
-            validator.raiseErrorIfNotSuccess();
-        return validator;
+            range.validate(pValidator, pTestRenumbered);
     }     
 
-    //TODO - Review
-    serialise() {
+    toData() {
         let data = [];
         for (const dynamicsRange of this)
-            data.push(dynamicsRange.serialise());
+            data.push(dynamicsRange.toData());
         return data;
     }    
 }

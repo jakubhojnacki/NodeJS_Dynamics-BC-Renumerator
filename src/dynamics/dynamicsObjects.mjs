@@ -12,11 +12,10 @@ export class DynamicsObjects extends Array {
         return this.find((lObject) => { return ((lObject.type === pType) && (lObject.no === pNo)); });
     }    
 
-    //TODO - Review
-    serialise() {
+    toData() {
         let data = [];
         for (const object of this)
-            data.push(object.serialise());
+            data.push(object.toData());
         return data;
     }           
 }

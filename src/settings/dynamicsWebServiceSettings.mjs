@@ -3,10 +3,10 @@
  * @description Represents settings regarding Dynamics web service
  */
 
-import Guid from "core-library";
-import Protocol from "network-library";
-import Url from "network-library";
-import Validator from "core-library";
+import { Guid } from "core-library";
+import { Protocol } from "network-library";
+import { Url } from "network-library";
+import { Validator } from "core-library";
 
 export class DynamicsWebServiceSettings {
     get protocol() { return this.mProtocol; }

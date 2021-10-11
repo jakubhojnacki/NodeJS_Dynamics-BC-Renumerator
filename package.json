@@ -1,9 +1,9 @@
 {
     "name": "dynamics-renumberator",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "displayName": "Dynamics Renumberator",
     "description": "Renumbers Dynamics application into another ID range",
-    "date": "September 2021",
+    "date": "October 2021",
     "author": "The NAV People - Jakub Hojnacki <jakub.hojnacki@thenavpeople.com>",
     "keywords": [
         "dynamics",

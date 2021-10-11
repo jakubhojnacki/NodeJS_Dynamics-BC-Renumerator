@@ -14,18 +14,13 @@ export class DynamicsDependency extends DynamicsApplicationBase {
         return super.toStringBuilder().toString();
     }
 
-    //TODO - Review
-    validate(pValidator, pRaiseError, pWithRenumbered) {
-        const validator = pValidator ? pValidator : new Validator();
-        const raiseError = Boolean.validate(pRaiseError);
-        super.validate(DynamicsDependency.name, validator, pWithRenumbered);
-        if (raiseError)
-            validator.raiseErrorIfNotSuccess();
-        return validator;
+    validate(pValidator, pTestRenumbered) {
+        pValidator.setComponent(DynamicsDependency.name);
+        super.validate(pValidator, pTestRenumbered);
+        pValidator.restoreComponent();
     }   
 
-    //TODO - Review
-    serialise() {
-        return super.serialise();
+    toData() {
+        return super.toData();
     }
 }

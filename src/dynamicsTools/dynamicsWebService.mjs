@@ -6,7 +6,7 @@
 import { BasicAuthentication } from "network-library";
 import { Charset } from "network-library";
 import { ContentType } from "network-library";
-import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.js";
+import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.mjs";
 import { MediaType } from "network-library";
 import { Method } from "network-library";
 import { ODataFilter } from "network-library";
@@ -45,18 +45,15 @@ export class DynamicsWebService {
         this.validate();
     }
 
-    validate(pValidator, pRaiseError) {
-        const validator = pValidator ? pValidator : new Validator();
-        const raiseError = Boolean.validate(pRaiseError);
+    validate(pValidator) {
+        pValidator.setComponent(DynamicsWebService.name);
         if (this.settings.dynamicsWebService)
-            this.settings.dynamicsWebService.validate(validator);
-        validator.testNotEmpty(DynamicsWebService.name, "Application", this.dynamicsApplication);
+            this.settings.dynamicsWebService.validate(pValidator);
+        pValidator.testNotEmpty("Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
-            this.dynamicsApplication.validate(validator);
-        validator.testNotEmpty(DynamicsWebService.name, "Renumberation Code", this.renumberationCode);
-        if (raiseError)
-            validator.raiseErrorIfNotSuccess();
-        return validator;
+            this.dynamicsApplication.validate(pValidator);
+        pValidator.testNotEmpty("Renumberation Code", this.renumberationCode);
+        pValidator.restoreComponent();
     }
 
     async runWebService(pWebService) {
@@ -113,25 +110,25 @@ export class DynamicsWebService {
     }
 
     processResponseDynamicsApplication(pData) {
-        this.dynamicsApplication = DynamicsWebServiceAdapter.deserialiseDynamicsApplication(pData[0]);
+        this.dynamicsApplication = DynamicsWebServiceAdapter.dynamicsApplicationFromData(pData[0]);
         if (this.dynamicsApplication == null)
             throw new Error("Application data are incorrect.");
     }
 
     processResponseDynamicsDependencies(pData) {
-        DynamicsWebServiceAdapter.deserialiseDynamicsDependencies(pData, this.dynamicsApplication);
+        DynamicsWebServiceAdapter.dynamicsDependenciesFromData(pData, this.dynamicsApplication);
     }
 
     processResponseRanges(pData) {
-        DynamicsWebServiceAdapter.deserialiseDynamicsRanges(pData, this.dynamicsApplication);
+        DynamicsWebServiceAdapter.dynamicsRangesFromData(pData, this.dynamicsApplication);
     }
 
     processResponseDynamicsObjects(pData) {
-        this.dynamicsObjects = DynamicsWebServiceAdapter.deserialiseDynamicsObjects(pData);
+        this.dynamicsObjects = DynamicsWebServiceAdapter.dynamicsObjectsFromData(pData);
     }
 
     processResponseDynamicsObjectFields(pData) {
-        DynamicsWebServiceAdapter.deserialiseDynamicsObjectFields(pData, this.dynamicsObjects);
+        DynamicsWebServiceAdapter.dynamicsObjectFieldsFromData(pData, this.dynamicsObjects);
     }
 
     finalise() {        

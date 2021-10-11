@@ -3,7 +3,7 @@
  * @description Represents Dynamics object field (table field or enum value)
  */
 
-import { DynamicsObjectBase } from "../dynamics/dynamicsObjectBase.js";
+import { DynamicsObjectBase } from "../dynamics/dynamicsObjectBase.mjs";
 
 export class DynamicsObjectField extends DynamicsObjectBase {
     get dataType() { return this.mDataType; }
@@ -14,16 +14,16 @@ export class DynamicsObjectField extends DynamicsObjectBase {
         this.dataType = pDataType;
     }
 
-    static deserialise(pData) {
-        let dynamicsObjectField = null;
-        if (pData != null)
-            dynamicsObjectField = new DynamicsObjectField(pData.extensionId, pData.name, pData.renumberedNo);
-        return dynamicsObjectField;
-    }
-
-    serialise() {
-        let data = super.serialise();
+    toData() {        
+        let data = super.toData();
         data.dataType = this.dataType;
         return data;
     }      
+
+    fromData(pData) {
+        super.fromData(pData);
+        if (pData != null)
+            this.dataType = pData.dataType;
+        return this;
+    }
 }

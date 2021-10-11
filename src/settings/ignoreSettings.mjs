@@ -3,7 +3,7 @@
  * @description Class with settings what (directories / files) to ignore
  */
 
-import { IgnoreNamesSettings } from "./ignoreNamesSettings.mjs";
+import { IgnoreNamesSettings } from "../settings/ignoreNamesSettings.mjs";
 
 export class IgnoreSettings {
     get directories() { return this.mDirectories; }

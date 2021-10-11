@@ -23,19 +23,14 @@ export class DynamicsRange {
         return stringBuilder.toString();        
     }
 
-    //TODO - Review
-    validate(pValidator, pRaiseError) {
-        const validator = pValidator ? pValidator : new Validator();
-        const raiseError = Boolean.validate(pRaiseError);
-        validator.testNotEmpty(DynamicsRange.name, "From", this.from);
-        validator.testNotEmpty(DynamicsRange.name, "To", this.to);
-        if (raiseError)
-            validator.raiseErrorIfNotSuccess();
-        return validator;
+    validate(pValidator) {
+        pValidator.setComponent(DynamicsRange.name);
+        pValidator.testNotEmpty("From", this.from);
+        pValidator.testNotEmpty("To", this.to);
+        pValidator.restoreComponent();
     }   
 
-    //TODO - Review
-    serialise() {
+    toData() {
         return {
             "from": this.from,
             "to": this.to

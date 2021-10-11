@@ -3,75 +3,77 @@
  * @description Converting between Dynamics web service data and Dynamics objects
  */
 
-import { DynamicsApplication } from "../dynamics/dynamicsApplication.js";
-import { DynamicsDependency } from "../dynamics/dynamicsDependency.js";
-import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.js";
-import { DynamicsObject } from "../dynamics/dynamicsObject.js";
-import { DynamicsObjects } from "../dynamics/dynamicsObjects.js";
-import { DynamicsObjectField } from "../dynamics/dynamicsObjectField.js";
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.js";
-import { DynamicsRange } from "../dynamics/dynamicsRange.js";
-import { DynamicsRanges } from "../dynamics/dynamicsRanges.js";
-import { DynamicsVersion } from "../dynamics/dynamicsVersion.js";
+import { DynamicsApplication } from "../dynamics/dynamicsApplication.mjs";
+import { DynamicsDependency } from "../dynamics/dynamicsDependency.mjs";
+import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.mjs";
+import { DynamicsObject } from "../dynamics/dynamicsObject.mjs";
+import { DynamicsObjects } from "../dynamics/dynamicsObjects.mjs";
+import { DynamicsObjectField } from "../dynamics/dynamicsObjectField.mjs";
+import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { DynamicsRange } from "../dynamics/dynamicsRange.mjs";
+import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
+import { DynamicsVersion } from "../dynamics/dynamicsVersion.mjs";
 
 export class DynamicsWebServiceAdapter {
-    static deserialiseDynamicsApplication(pData) {
-        let object = null;
+    static dynamicsApplicationFromData(pData) {
+        let dynamicsApplication = null;
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.originalExtensionVersion);
-            object = new DynamicsApplication(pData.originalExtensionId, pData.name, pData.extensionPublisher, version, null, null, pData.extensionId);
+            dynamicsApplication = new DynamicsApplication(pData.originalExtensionId, pData.name, pData.extensionPublisher, version, null, null, 
+                pData.extensionId);
         }
-        return object;
+        return dynamicsApplication;
     }
         
-    static deserialiseDynamicsDependencies(pData, pDynamicsApplication) {
+    static dynamicsDependenciesFromData(pData, pDynamicsApplication) {
         pDynamicsApplication.dependencies = new DynamicsDependencies();
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData)
-                pDynamicsApplication.dependencies.push(DynamicsWebServiceAdapter.deserialiseDynamicsDependency(dataItem));
+                pDynamicsApplication.dependencies.push(DynamicsWebServiceAdapter.dynamicsDependencyFromData(dataItem));
     }    
 
-    static deserialiseDynamicsDependency(pData) {
-        let object = null;
+    static dynamicsDependencyFromData(pData) {
+        let dynamicsDependency = null;
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.originalDepExtensionVersion);
-            object = new DynamicsDependency(pData.originalDepExtensionId, pData.depApplicationName, pData.depExtensionPublisher, version, pData.depExtensionId);
+            dynamicsDependency = new DynamicsDependency(pData.originalDepExtensionId, pData.depApplicationName, pData.depExtensionPublisher, version, 
+                pData.depExtensionId);
         }
-        return object;
+        return dynamicsDependency;
     }    
         
-    static deserialiseDynamicsRanges(pData, pDynamicsApplication) {
+    static dynamicsRangesFromData(pData, pDynamicsApplication) {
         pDynamicsApplication.ranges = new DynamicsRanges();
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData)
-                pDynamicsApplication.ranges.push(DynamicsWebServiceAdapter.deserialiseDynamicsRange(dataItem));
+                pDynamicsApplication.ranges.push(DynamicsWebServiceAdapter.dynamicsRangeFromData(dataItem));
     }
 
-    static deserialiseDynamicsRange(pData) {
-        let object = null;
+    static dynamicsRangeFromData(pData) {
+        let dynamicsRange = null;
         if (pData != null)
-            object = new DynamicsRange(pData.noFrom, pData.noTo);
-        return object;
+            dynamicsRange = new DynamicsRange(pData.noFrom, pData.noTo);
+        return dynamicsRange;
     }    
 
-    static deserialiseDynamicsObjects(pData) {
-        let object = new DynamicsObjects();
+    static dynamicsObjectsFromData(pData) {
+        let dynamicsObjects = new DynamicsObjects();
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData)
-                object.push(DynamicsWebServiceAdapter.deserialiseDynamicsObject(dataItem));
-        return object;
+                dynamicsObjects.push(DynamicsWebServiceAdapter.dynamicsObjectFromData(dataItem));
+        return dynamicsObjects;
     }    
 
-    static deserialiseDynamicsObject(pData) {
-        let object = null;
+    static dynamicsObjectFromData(pData) {
+        let dynamicsObject = null;
         if (pData != null) {
             const type = DynamicsWebServiceAdapter.parseObjectType(pData.type);
-            object = new DynamicsObject(type, pData.originalNo, pData.name, pData.no);
+            dynamicsObject = new DynamicsObject(type, pData.originalNo, pData.name, pData.no);
         }
-        return object;
+        return dynamicsObject;
     } 
             
-    static deserialiseDynamicsObjectFields(pData, pObjects) {
+    static dynamicsObjectFieldsFromData(pData, pObjects) {
         if ((pData != null) && (Array.isArray(pData)))
             for (const dataItem of pData) {
                 let objectType = DynamicsWebServiceAdapter.parseObjectType(dataItem.originalObjectType);
@@ -83,15 +85,15 @@ export class DynamicsWebServiceAdapter {
                 }
                 const object = pObjects.get(objectType, objectNo);
                 if (object != null)
-                    object.fields.push(DynamicsWebServiceAdapter.deserialiseDynamicsObjectField(dataItem, pObjects));
+                    object.fields.push(DynamicsWebServiceAdapter.dynamicsObjectFieldFromData(dataItem, pObjects));
             }
     }    
 
-    static deserialiseDynamicsObjectField(pData) {
-        let object = null;
+    static dynamicsObjectFieldFromData(pData) {
+        let dynamicsObjectField = null;
         if (pData != null)
-            object = new DynamicsObjectField(pData.originalNo, pData.name, null, pData.no);
-        return object;
+            dynamicsObjectField = new DynamicsObjectField(pData.originalNo, pData.name, null, pData.no);
+        return dynamicsObjectField;
     }     
 
     static parseObjectType(pString) {
