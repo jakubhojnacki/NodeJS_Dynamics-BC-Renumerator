@@ -84,11 +84,11 @@ export class Logic {
             this.application.console.writeMessages(validator.messages);
 
         if (result) {
-            if (this.settings.ignore.directories)
-                for (const ignoreDirectory of this.settings.ignore.directories)
+            if (this.application.settings.ignore.directories)
+                for (const ignoreDirectory of this.application.settings.ignore.directories)
                     this.directoryMatchers.push(new FileSystemMatcher(ignoreDirectory));
-            if (this.settings.ignore.files)
-                for (const ignoreFile of this.settings.ignore.files)
+            if (this.application.settings.ignore.files)
+                for (const ignoreFile of this.application.settings.ignore.files)
                     this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
 
             const __this = this;
@@ -142,10 +142,10 @@ export class Logic {
 
     async callRenumberWebService() {
         this.progress.reset(1, "Calling Web Service...");
-        const renumberationCode = this.settings.general.renumberationCode;
+        const renumberationCode = this.application.settings.general.renumberationCode;
         this.dynamicsWebServiceAdapter.initialise(this.dynamicsApplication, renumberationCode);
         this.dynamicsWebServiceAdapter.validate(null, true);
-        await this.dynamicsWebServiceAdapter.renumber(this.dynamicsApplication, this.settings.general.renumberationCode);
+        await this.dynamicsWebServiceAdapter.renumber(this.dynamicsApplication, this.application.settings.general.renumberationCode);
         this.dynamicsWebServiceAdapter.finalise();
         this.progress.complete("Done");
         return true;

@@ -29,7 +29,7 @@ export class DynamicsApplication extends DynamicsApplicationBase {
     toData() {
         let data = super.toData();
         data.dependencies = this.dependencies.toData();
-        data.ranges = this.ranges.seriallise();
+        data.ranges = this.ranges.toData();
         return data;
     }  
 

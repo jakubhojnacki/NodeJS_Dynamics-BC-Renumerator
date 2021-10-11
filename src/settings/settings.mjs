@@ -23,10 +23,12 @@ export class Settings extends SettingsBase {
         this.dynamicsWebService = pDynamicsWebService;
     }
 
-    validate(pValidationMessages, pIndentation) {
-        this.general.validate(pValidationMessages, pIndentation);
-        this.ignore.validate(pValidationMessages, pIndentation);
-        this.dynamicsWebService.validate(pValidationMessages, pIndentation);
+    validate(pValidator) {
+        pValidator.setComponent(Settings.name);
+        this.general.validate(pValidator);
+        this.ignore.validate(pValidator);
+        this.dynamicsWebService.validate(pValidator);
+        pValidator.restoreComponent();
     }
 
     toData() {
@@ -44,5 +46,6 @@ export class Settings extends SettingsBase {
             this.ignore = ( new IgnoreSettings()).fromData(pData.ignore);
             this.dynamicsWebService = ( new DynamicsWebServiceSettings()).fromData(pData.dynamicsWebService);
         }
+        return this;
     }
 }

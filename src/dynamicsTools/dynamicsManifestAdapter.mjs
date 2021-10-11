@@ -25,7 +25,11 @@ export class DynamicsManifestAdapter {
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.version);
             const dependencies = DynamicsManifestAdapter.dynamicsDependenciesFromData(pData.dependencies);
-            const ranges = DynamicsManifestAdapter.dynamicsRangesFromData(pData.idRanges);
+            let ranges = new DynamicsRanges();
+            if (pData.idRanges)
+                ranges = DynamicsManifestAdapter.dynamicsRangesFromData(pData.idRanges);
+            else
+                ranges = new DynamicsRanges(DynamicsManifestAdapter.dynamicsRangeFromData(pData.idRange));
             object = new DynamicsApplication(pData.id, pData.name, pData.publisher, version, dependencies, ranges);
         }
         return object;

@@ -14,7 +14,7 @@ export class Application extends ConsoleApplication {
     constructor(pRootDirectoryPath) {
         super(pRootDirectoryPath);
         this.argTemplates = (new ArgTemplateFactory()).create();
-        this.settings = (new Settings()).read();
+        this.settings = new Settings();
     }
 
     async runLogic() {
@@ -32,9 +32,9 @@ export class Application extends ConsoleApplication {
             this.console.newLine();
     }
 
-    logic_onDynamicsApplication(pDynamicsApplicationEventInfo) {
+    logic_onDynamicsApplication(pDynamicsApplication) {
         const messages = new Messages();
-        pDynamicsApplicationEventInfo.dynamicsApplication.log(this.diagnostics.enabled, messages, pDynamicsApplicationEventInfo.indentation);
+        pDynamicsApplication.log(this.diagnostics.enabled, messages);
         this.console.writeMessages(messages);
     }
 

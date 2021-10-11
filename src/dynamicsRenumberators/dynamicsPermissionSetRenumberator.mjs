@@ -11,7 +11,6 @@ import { XmlToolkit } from "xml-library";
 
 export class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Permission Set Renumberator"; }
-    get debug() { return global.theApplication.debug; } //TODO - Review
 
     constructor(pRenumberation) {
         super(pRenumberation);

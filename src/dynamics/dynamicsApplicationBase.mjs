@@ -3,9 +3,9 @@
  * @description Abstract class - base for Dynamics application and dependency
  */
 
+import { DynamicsVersion } from "../dynamics/dynamicsVersion.mjs";
 import { Guid } from "core-library";
 import { StringBuilder } from "core-library";
-import { Validator } from "core-library";
 
 export class DynamicsApplicationBase {
     get id() { return this.mId; }
@@ -27,12 +27,16 @@ export class DynamicsApplicationBase {
         this.renumberedId = pRenumberedId;
     }
 
+    toString() {
+        return this.toStringBuilder().toString();
+    }
+
     toStringBuilder() {
         const stringBuilder = new StringBuilder();
+        stringBuilder.addText(this.name);
+        stringBuilder.addText(this.version.toString());
         stringBuilder.addNameValue("Id", this.id);
-        stringBuilder.addNameValue("Name", this.name);
         stringBuilder.addNameValue("Publisher", this.publisher);
-        stringBuilder.addNameValue("Version", this.version.toString());
         return stringBuilder;
     }
 

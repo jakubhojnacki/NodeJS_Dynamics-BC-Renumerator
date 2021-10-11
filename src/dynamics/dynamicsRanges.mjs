@@ -8,8 +8,14 @@ import { Validator } from "core-library";
 export class DynamicsRanges extends Array {
     get terminal() { return global.theApplication.terminal; }
 
-    constructor() {      
-        super()          
+    constructor(pItems) {      
+        super();
+        if (pItems)
+            if (Array.isArray(pItems)) {
+                for (const item of pItems)
+                    this.push(item);
+            } else
+                this.push(pItems);
     }
 
     log(pFull, pMessages, pIndentation) {

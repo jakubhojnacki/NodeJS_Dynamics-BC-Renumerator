@@ -17,9 +17,10 @@ export class GeneralSettings {
         this.endOfLineType = pEndOfLineType;
     }
 
-    validate(pValidationMessages, pIndentation) {
-        const validator = new Validator(GeneralSettings.name, pValidationMessages, pIndentation);
-        validator.testNotEmpty("renumberationCode", this.renumberationCode);
+    validate(pValidator) {
+        pValidator.setComponent(GeneralSettings);
+        pValidator.testNotEmpty("renumberationCode", this.renumberationCode);
+        pValidator.restoreComponent();
     }
 
     toData() {
@@ -34,5 +35,6 @@ export class GeneralSettings {
             this.renumberationCode = pData.renumberationCode;
             this.endOfLineType = pData.endOfLineType;
         }
+        return this;        
     }    
 }

@@ -30,8 +30,9 @@ export class IgnoreSettings {
 
     fromData(pData) {
         if (pData != null) {
-            this.directories = pData.directories;
-            this.files = pData.files;
+            this.directories = new IgnoreNamesSettings(pData.directories);
+            this.files = new IgnoreNamesSettings(pData.files);
         }
+        return this;        
     }    
 }

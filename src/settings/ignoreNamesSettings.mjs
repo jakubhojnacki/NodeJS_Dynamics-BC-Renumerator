@@ -4,8 +4,14 @@
  */
 
 export class IgnoreNamesSettings extends Array {
-    constructor() {
+    constructor(pItems) {
         super();
+        if (pItems)
+        if (Array.isArray(pItems)) {
+            for (const item of pItems)
+                this.push(item);
+        } else
+            this.push(pItems);
     }
 
     validate() {        
@@ -23,5 +29,6 @@ export class IgnoreNamesSettings extends Array {
             if (Array.isArray(pData))
                 for (const dataItem of pData)
                     this.push(dataItem);
+        return this;        
     }       
 }

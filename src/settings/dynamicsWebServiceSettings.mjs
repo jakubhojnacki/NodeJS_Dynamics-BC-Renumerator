@@ -49,18 +49,19 @@ export class DynamicsWebServiceSettings {
         this.timeout = pTimeout;
     }
 
-    validate(pValidationMessages, pIndentation) {
-        const validator = new Validator(DynamicsWebServiceSettings.name, pValidationMessages, pIndentation);
-        validator.testNotEmpty("Protocol", this.protocol);
-        validator.testNotEmpty("Server", this.server);
-        validator.testNotEmpty("Port", this.port);
-        validator.testNotEmpty("Instance", this.instance);
-        validator.testNotEmpty("User", this.user);
-        validator.testNotEmpty("Password", this.password);
-        validator.testNotEmpty("API Publisher", this.apiPublisher);
-        validator.testNotEmpty("API Group", this.apiGroup);
-        validator.testNotEmpty("API Version", this.apiVersion);
-        validator.testNotEmpty("Company ID", this.companyId);
+    validate(pValidator) {
+        pValidator.setComponent(DynamicsWebServiceSettings.name);
+        pValidator.testNotEmpty("Protocol", this.protocol);
+        pValidator.testNotEmpty("Server", this.server);
+        pValidator.testNotEmpty("Port", this.port);
+        pValidator.testNotEmpty("Instance", this.instance);
+        pValidator.testNotEmpty("User", this.user);
+        pValidator.testNotEmpty("Password", this.password);
+        pValidator.testNotEmpty("API Publisher", this.apiPublisher);
+        pValidator.testNotEmpty("API Group", this.apiGroup);
+        pValidator.testNotEmpty("API Version", this.apiVersion);
+        pValidator.testNotEmpty("Company ID", this.companyId);
+        pValidator.restoreComponent();
     }
 
     toData() {
@@ -95,6 +96,7 @@ export class DynamicsWebServiceSettings {
             this.companyId = pData.companyId;
             this.timeout = pData.timeout;
         }
+        return this;        
     }    
 
     createUrl(pWebService) {
