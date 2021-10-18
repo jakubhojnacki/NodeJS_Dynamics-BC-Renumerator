@@ -99,8 +99,8 @@ export class DynamicsWebServiceSettings {
         return this;        
     }    
 
-    createUrl(pWebService) {
-        const path = [ this.instance, "api", this.apiPublisher, this.apiGroup, `v${this.apiVersion}`, `companies(${this.companyId})`, pWebService ];
+    createUrl(pWebServiceName) {
+        const path = [ this.instance, "api", this.apiPublisher, this.apiGroup, `v${this.apiVersion}`, `companies(${this.companyId})`, pWebServiceName ];
         return new Url(this.protocol, this.server, this.port, path);
     }
 }

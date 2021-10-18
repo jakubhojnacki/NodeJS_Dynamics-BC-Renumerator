@@ -17,68 +17,89 @@ import { UrlParameter } from "network-library";
 import { Validator } from "core-library";
 
 export class DynamicsWebService {
-    get settings() { return global.theApplication.settings; }
-    get debug() { return global.theApplication.debug; }
-
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
+    get webService() { return this.mWebService; }
+    set webService(pValue) { this.mWebService = pValue; }
     get renumberationCode() { return this.mRenumberationCode; }
     set renumberationCode(pValue) { this.mRenumberationCode = String.validate(pValue); }
     get dynamicsObjects() { return this.mDynamicsObjects; }
     set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
 
-    constructor() {
+    constructor(pApplication) {
+        this.application = pApplication;
+        this.webService = null;
         this.dynamicsApplication = null;
         this.renumberationCode = "";
         this.dynamicsObjects = null;
     }
 
-    async renumber(pDynamicsApplication, pRenumberationCode) {
-        this.initialise(pDynamicsApplication, pRenumberationCode);
-        await this.runWebService("renumber");
-        this.finalise();
+    async renumber(pDynamicsApplication, pRenumberationCode, pValidator) {
+        let result = false;
+        if (this.initialise(pDynamicsApplication, pRenumberationCode, pValidator)) {
+            await this.runWebService("renumber");
+            this.finalise();
+            result = true;
+        }
+        return result;
     }
 
-    initialise(pDynamicsApplication, pRenumberationCode) {
+    initialise(pDynamicsApplication, pRenumberationCode, pValidator) {
         this.dynamicsApplication = pDynamicsApplication;
         this.renumberationCode = pRenumberationCode;
-        this.validate();
+        return this.validate(pValidator);
     }
 
     validate(pValidator) {
         pValidator.setComponent(DynamicsWebService.name);
-        if (this.settings.dynamicsWebService)
-            this.settings.dynamicsWebService.validate(pValidator);
+        if (this.application.settings.dynamicsWebService)
+            this.application.settings.dynamicsWebService.validate(pValidator);
         pValidator.testNotEmpty("Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
             this.dynamicsApplication.validate(pValidator);
         pValidator.testNotEmpty("Renumberation Code", this.renumberationCode);
         pValidator.restoreComponent();
+        return !pValidator.errorMessagesExist;
     }
 
-    async runWebService(pWebService) {
-        const webService = this.createWebService(pWebService);
-        const response = await webService.execute();
+    async runWebService(pWebServiceName) {
+        this.createWebService(pWebServiceName);
+        const response = await this.webService.execute();
         this.processResponse(response);
     }
 
-    createWebService(pWebService) {
-        const url = this.createUrl(pWebService);
+    createWebService(pWebServiceName) {
+        const url = this.createUrl(pWebServiceName);
         const authentication = this.createAuthentication();
         const contentType = new ContentType(MediaType.json, Charset.utf8);
         const accept = new ContentType(MediaType.json, Charset.utf8);
-        const timeout = this.settings.dynamicsWebService.timeout;
-        return new RestWebService(url, Method.get, null, "", authentication, contentType, accept, timeout);
+        const timeout = this.application.settings.dynamicsWebService.timeout;
+        this.webService = new RestWebService(url, Method.get, null, "", authentication, contentType, accept, timeout);
+        if (this.application.diagnostics.enabled) {
+            const __this = this;
+            this.webService.onRequest = (lRequest) => { __this.webService_onRequest(lRequest); }
+            this.webService.onResponse = (lResponse) => { __this.webService_onResponse(lResponse); }
+        }        
+    }
+
+    webService_onRequest(pRequest) {
+        this.application.console.writeLine(`Calling "${this.webService.url.toHost()}" web service...`);
+        this.application.diagnostics.dumpJson("Request", pRequest.toData());
+    }
+
+    webService_onResponse(pResponse) {
+        this.application.console.writeLine(`Web service call completed."`);
+        this.application.diagnostics.dumpJson("Response", pResponse.toData());
     }
 
     createAuthentication() {
-        const user = this.settings.dynamicsWebService.user;
-        const password = this.settings.dynamicsWebService.password;
+        const user = this.application.settings.dynamicsWebService.user;
+        const password = this.application.settings.dynamicsWebService.password;
         return new BasicAuthentication(user, password);
     }
 
-    createUrl(pWebService) {
-        const url = this.settings.dynamicsWebService.createUrl(pWebService);
+    createUrl(pWebServiceName) {
+        const url = this.application.settings.dynamicsWebService.createUrl(pWebServiceName);
         const oDataFilter = new ODataFilter([ 
             new ODataFilterPart("extensionId", ODataOperator.equals, this.dynamicsApplication.id),
             new ODataFilterPart("renumberationCode", ODataOperator.equals, this.renumberationCode, true)

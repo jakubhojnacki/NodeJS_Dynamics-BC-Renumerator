@@ -9,7 +9,7 @@ import Path from "path";
 import { ConsoleProgress } from "console-library";
 import { DynamicsManifestAdapter } from "../dynamicsTools/dynamicsManifestAdapter.mjs";
 import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
-import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.mjs";
+import { DynamicsWebService } from "../dynamicsTools/dynamicsWebService.mjs";
 import { FileSystemItem } from "file-system-library";
 import { FileSystemItemInfo } from "../logic/fileSystemItemInfo.mjs";
 import { FileSystemMatcher } from "file-system-library";
@@ -25,8 +25,8 @@ export class Logic {
     get directoryPath() { return this.mDirectoryPath; }
     set directoryPath(pValue) { this.mDirectoryPath = pValue; }
 
-    get dynamicsWebServiceAdapter() { return this.mDynamicsWebServiceAdapter; }
-    set dynamicsWebServiceAdapter(pValue) { this.mDynamicsWebServiceAdapter = pValue; }
+    get dynamicsWebService() { return this.mDynamicsWebService; }
+    set dynamicsWebService(pValue) { this.mDynamicsWebService = pValue; }
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get dynamicsObjects() { return this.mDynamicsObjects; }
@@ -53,7 +53,7 @@ export class Logic {
     constructor(pApplication, pDirectoryPath) {
         this.application = pApplication;
         this.directoryPath = pDirectoryPath;
-        this.dynamicsWebServiceAdapter = new DynamicsWebServiceAdapter();
+        this.dynamicsWebService = new DynamicsWebService(this.application);
         this.dynamicsApplication = null;
         this.dynamicsObjects = [];
         this.renumberators = [];
@@ -103,9 +103,9 @@ export class Logic {
 
     async process() {
         let result = this.readDynamicsApplication();
-        /*TODO - Uncomment
         if (result)
             result = await this.callRenumberWebService();
+        /*TODO - Uncomment
         if (result)
             result = this.processRenumberWebServiceResponse();
         if (result)
@@ -141,19 +141,22 @@ export class Logic {
     }
 
     async callRenumberWebService() {
+        let result = false;
         this.progress.reset(1, "Calling Web Service...");
         const renumberationCode = this.application.settings.general.renumberationCode;
-        this.dynamicsWebServiceAdapter.initialise(this.dynamicsApplication, renumberationCode);
-        this.dynamicsWebServiceAdapter.validate(null, true);
-        await this.dynamicsWebServiceAdapter.renumber(this.dynamicsApplication, this.application.settings.general.renumberationCode);
-        this.dynamicsWebServiceAdapter.finalise();
-        this.progress.complete("Done");
-        return true;
+        const validator = new Validator();        
+        if (await this.dynamicsWebService.renumber(this.dynamicsApplication, renumberationCode, validator)) {
+            this.dynamicsWebService.finalise();
+            this.progress.complete("Done");
+            result = true;
+        } else
+            this.application.console.writeMessages(validator.messages);
+        return result;
     }
 
     processRenumberWebServiceResponse() {
         this.progress.reset(1, "Processing Web Service Response...");
-        const webServiceDynamicsApplication = this.dynamicsWebServiceAdapter.dynamicsApplication;
+        const webServiceDynamicsApplication = this.dynamicsWebService.dynamicsApplication;
         this.dynamicsApplication.renumberedId = webServiceDynamicsApplication.renumberedId;
         if (webServiceDynamicsApplication.dependencies)
             for (const dynamicsDependency of this.dynamicsApplication.dependencies) {
@@ -165,7 +168,7 @@ export class Logic {
         if (webServiceDynamicsApplication.ranges) 
             for (const range of webServiceDynamicsApplication.ranges)
                 this.dynamicsApplication.ranges.push(range);
-        this.dynamicsObjects = this.dynamicsWebServiceAdapter.dynamicsObjects;
+        this.dynamicsObjects = this.dynamicsWebService.dynamicsObjects;
         this.debug.dumpJson("Objects", this.dynamicsObjects.toData());
         this.progress.complete("Done");
         return true;
