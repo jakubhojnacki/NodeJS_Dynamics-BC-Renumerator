@@ -3,23 +3,24 @@
  * @description Converting between Dynamics web service data and Dynamics objects
  */
 
-import { DynamicsApplication } from "../dynamics/dynamicsApplication.mjs";
-import { DynamicsDependency } from "../dynamics/dynamicsDependency.mjs";
-import { DynamicsDependencies } from "../dynamics/dynamicsDependencies.mjs";
-import { DynamicsObject } from "../dynamics/dynamicsObject.mjs";
-import { DynamicsObjects } from "../dynamics/dynamicsObjects.mjs";
-import { DynamicsObjectField } from "../dynamics/dynamicsObjectField.mjs";
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
-import { DynamicsRange } from "../dynamics/dynamicsRange.mjs";
-import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
-import { DynamicsVersion } from "../dynamics/dynamicsVersion.mjs";
+import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
+import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
+import { DynamicsDependencies } from "dynamics-library";
+import { DynamicsObjectEx } from "../dynamics/dynamicsObjectEx.mjs";
+import { DynamicsObjects } from "dynamics-library";
+import { DynamicsFieldEx } from "../dynamics/dynamicsFieldEx.mjs";
+import { DynamicsFields } from "dynamics-library";
+import { DynamicsObjectType } from "dynamics-library";
+import { DynamicsRangeEx } from "../dynamics/dynamicsRangeEx.mjs";
+import { DynamicsRanges } from "dynamics-library";
+import { DynamicsVersion } from "dynamics-library";
 
 export class DynamicsWebServiceAdapter {
     static dynamicsApplicationFromData(pData) {
         let dynamicsApplication = null;
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.originalExtensionVersion);
-            dynamicsApplication = new DynamicsApplication(pData.originalExtensionId, pData.name, pData.extensionPublisher, version, null, null, 
+            dynamicsApplication = new DynamicsApplicationEx(pData.originalExtensionId, pData.name, pData.extensionPublisher, version, null, null, 
                 pData.extensionId);
         }
         return dynamicsApplication;
@@ -36,7 +37,7 @@ export class DynamicsWebServiceAdapter {
         let dynamicsDependency = null;
         if (pData != null) {
             const version = DynamicsVersion.parse(pData.originalDepExtensionVersion);
-            dynamicsDependency = new DynamicsDependency(pData.originalDepExtensionId, pData.depApplicationName, pData.depExtensionPublisher, version, 
+            dynamicsDependency = new DynamicsDependencyEx(pData.originalDepExtensionId, pData.depApplicationName, pData.depExtensionPublisher, version, 
                 pData.depExtensionId);
         }
         return dynamicsDependency;
@@ -52,7 +53,7 @@ export class DynamicsWebServiceAdapter {
     static dynamicsRangeFromData(pData) {
         let dynamicsRange = null;
         if (pData != null)
-            dynamicsRange = new DynamicsRange(pData.noFrom, pData.noTo);
+            dynamicsRange = new DynamicsRangeEx(pData.noFrom, pData.noTo);
         return dynamicsRange;
     }    
 
@@ -68,7 +69,7 @@ export class DynamicsWebServiceAdapter {
         let dynamicsObject = null;
         if (pData != null) {
             const type = DynamicsWebServiceAdapter.parseObjectType(pData.type);
-            dynamicsObject = new DynamicsObject(type, pData.originalNo, pData.name, pData.no);
+            dynamicsObject = new DynamicsObjectEx(type, pData.originalNo, pData.name, null, null, pData.no);
         }
         return dynamicsObject;
     } 
@@ -84,15 +85,18 @@ export class DynamicsWebServiceAdapter {
                     objectNo = dataItem.originalExtensionObjectNo;
                 }
                 const object = pObjects.get(objectType, objectNo);
-                if (object != null)
+                if (object != null) {
+                    if (!object.fields)   
+                        object.fields = new DynamicsFields();
                     object.fields.push(DynamicsWebServiceAdapter.dynamicsObjectFieldFromData(dataItem, pObjects));
+                }
             }
     }    
 
     static dynamicsObjectFieldFromData(pData) {
         let dynamicsObjectField = null;
         if (pData != null)
-            dynamicsObjectField = new DynamicsObjectField(pData.originalNo, pData.name, null, pData.no);
+            dynamicsObjectField = new DynamicsFieldEx(pData.originalNo, pData.name, null, pData.no);
         return dynamicsObjectField;
     }     
 

@@ -8,9 +8,9 @@ import Path from "path";
 import ReadLine from "readline";
  
 import { DynamicsAlRegExpTemplateName } from "../dynamicsRenumberators/dynamicsAlRegExpTemplateName.mjs";
-import { DynamicsObject } from "../dynamics/dynamicsObject.mjs";
-import { DynamicsObjectField } from "../dynamics/dynamicsObjectField.mjs";
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { DynamicsObjectEx } from "../dynamics/dynamicsObjectEx.mjs";
+import { DynamicsFieldEx } from "../dynamics/dynamicsFieldEx.mjs";
+import { DynamicsObjectType } from "dynamics-library";
 import { EndOfLineType } from "file-system-library";
 import { RegExpFlag } from "reg-exp-library";
 import { RegExpSchema } from "reg-exp-library";
@@ -19,7 +19,7 @@ import { Renumberator } from "../logic/renumberator.mjs";
 
 export class DynamicsAlRenumberator extends Renumberator {
     get name() { return "AL Renumberator"; }    
-    get dynamicsManager() { return this.engine.dynamicsManager; }
+    get dynamicsManager() { return this.logic.dynamicsManager; }
     get regExpSchema() { return this.mRegExpSchema; }
     set regExpSchema(pValue) { this.mRegExpSchema = pValue; }
     get dynamicsObject() { return this.mDynamicsObject; }
@@ -71,7 +71,7 @@ export class DynamicsAlRenumberator extends Renumberator {
     }
 
     async process() {
-        const endOfLine = EndOfLineType.toString(this.engine.settings.general.endOfLineType);
+        const endOfLine = EndOfLineType.toString(this.logic.application.settings.general.endOfLineType);
         const fileStream = FileSystem.createReadStream(this.filePath);
         const readLineInterface = ReadLine.createInterface({ input: fileStream, crlfDelay: Infinity });        
         for await (const line of readLineInterface) {
@@ -106,7 +106,7 @@ export class DynamicsAlRenumberator extends Renumberator {
 
     findRenumberedDynamicsObject(pMatch) {
         const dynamicsObjectMatched = this.parseDynamicsObjectMatched(pMatch);
-        this.dynamicsObject = this.engine.dynamicsObjects.get(dynamicsObjectMatched.type, dynamicsObjectMatched.no);
+        this.dynamicsObject = this.logic.dynamicsObjects.get(dynamicsObjectMatched.type, dynamicsObjectMatched.no);
         if (this.dynamicsObject) {
             this.dynamicsObject.name = dynamicsObjectMatched.name;
             this.dynamicsObject.extendsName = dynamicsObjectMatched.extendsName;
@@ -119,7 +119,7 @@ export class DynamicsAlRenumberator extends Renumberator {
         const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = DynamicsAlRenumberator.parseName(pMatch.namedGroups.name);
         const extendsName = DynamicsAlRenumberator.parseName(pMatch.namedGroups.extendsName);
-        return new DynamicsObject(type, no, name, null, null, extendsName);
+        return new DynamicsObjectEx(type, no, name, null, null, extendsName);
     }
 
     findRenumberedDynamicsObjectField(pMatch) {
@@ -137,7 +137,7 @@ export class DynamicsAlRenumberator extends Renumberator {
         const no = Number.validateAsInteger(pMatch.namedGroups.no);
         const name = DynamicsAlRenumberator.parseName(pMatch.namedGroups.name);
         const dataType = pMatch.namedGroups.dataType;
-        return new DynamicsObjectField(no, name, dataType);
+        return new DynamicsFieldEx(no, name, dataType);
     }
 
     static parseName(pName) {

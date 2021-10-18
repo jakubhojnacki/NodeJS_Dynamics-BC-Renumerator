@@ -7,9 +7,12 @@ import FileSystem from "fs";
 import Path from "path";
 
 import { ConsoleProgress } from "console-library";
-import { DynamicsManifestAdapter } from "../dynamicsTools/dynamicsManifestAdapter.mjs";
-import { DynamicsRanges } from "../dynamics/dynamicsRanges.mjs";
-import { DynamicsWebService } from "../dynamicsTools/dynamicsWebService.mjs";
+import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
+import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
+import { DynamicsManifestAdapter } from "dynamics-library";
+import { DynamicsRanges } from "dynamics-library";
+import { DynamicsRangeEx } from "../dynamics/dynamicsRangeEx.mjs";
+import { DynamicsWebService } from "../dynamicsWebService/dynamicsWebService.mjs";
 import { FileSystemItem } from "file-system-library";
 import { FileSystemItemInfo } from "../logic/fileSystemItemInfo.mjs";
 import { FileSystemMatcher } from "file-system-library";
@@ -17,9 +20,6 @@ import { RenumberatorFactory } from "../logic/renumberatorFactory.mjs";
 import { Validator } from "core-library";
 
 export class Logic {
-    get settings() { return global.theApplication.settings; }
-    get debug() { return global.theApplication.debug; }
-
     get application() { return this.mApplication; }
     set application(pValue) { this.mApplication = pValue; }
     get directoryPath() { return this.mDirectoryPath; }
@@ -45,6 +45,8 @@ export class Logic {
     set onProgress(pValue) { this.mOnProgress = pValue; }
     get onDynamicsApplication() { return this.mOnDynamicsApplication; }
     set onDynamicsApplication(pValue) { this.mOnDynamicsApplication = pValue; }
+    get onDynamicsWebService() { return this.mOnDynamicsWebService; }
+    set onDynamicsWebService(pValue) { this.mOnDynamicsWebService = pValue; }
     get onDirectory() { return this.mOnDirectory; }
     set onDirectory(pValue) { this.mOnDirectory = pValue; }
     get onFile() { return this.mOnFile; }
@@ -62,6 +64,7 @@ export class Logic {
         this.progress = null;
         this.onProgress = null;
         this.onDynamicsApplication = null;
+        this.onDynamicsWebService = null;
         this.onDirectory = null;
         this.onFile = null;
     }
@@ -105,12 +108,10 @@ export class Logic {
         let result = this.readDynamicsApplication();
         if (result)
             result = await this.callRenumberWebService();
-        /*TODO - Uncomment
         if (result)
             result = this.processRenumberWebServiceResponse();
         if (result)
             result = await this.renumber();
-        */
         return result;
     }
 
@@ -121,8 +122,15 @@ export class Logic {
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
             const data = JSON.parse(rawData);
-            this.dynamicsApplication = DynamicsManifestAdapter.dynamicsApplicationFromData(data);
-            this.triggerOnDynamicsApplication();
+            const dynamicsManifestAdapter = new DynamicsManifestAdapter();
+            dynamicsManifestAdapter.onNewDynamicsApplication = (lId, lName, lPublisher, lVersion, lDependencies, lRanges) => { 
+                return new DynamicsApplicationEx(lId, lName, lPublisher, lVersion, lDependencies, lRanges); };
+            dynamicsManifestAdapter.onNewDynamicsDependency = (lId, lName, lPubnlisher, lVersion) => { 
+                return new DynamicsDependencyEx(lId, lName, lPubnlisher, lVersion); };
+            dynamicsManifestAdapter.onNewDynamicsRange = (lFrom, lTo) => { return new DynamicsRangeEx(lFrom, lTo); }
+            this.dynamicsApplication = dynamicsManifestAdapter.dynamicsApplicationFromData(data);
+            if (this.onDynamicsApplication)
+                this.onDynamicsApplication(this.dynamicsApplication);
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
         result = this.validateDynamicsApplication();
@@ -147,6 +155,8 @@ export class Logic {
         const validator = new Validator();        
         if (await this.dynamicsWebService.renumber(this.dynamicsApplication, renumberationCode, validator)) {
             this.dynamicsWebService.finalise();
+            if (this.onDynamicsWebService)
+                this.onDynamicsWebService(this.dynamicsWebService);
             this.progress.complete("Done");
             result = true;
         } else
@@ -169,7 +179,7 @@ export class Logic {
             for (const range of webServiceDynamicsApplication.ranges)
                 this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebService.dynamicsObjects;
-        this.debug.dumpJson("Objects", this.dynamicsObjects.toData());
+        this.application.diagnostics.dumpJson("Objects", this.dynamicsObjects.toData());
         this.progress.complete("Done");
         return true;
     }
@@ -205,7 +215,8 @@ export class Logic {
         const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
         if (shouldBeRenumbered) {
             this.progress.move(0, pDirectoryPath);
-            this.triggerOnDirectory(pDirectoryPath, directoryName, pIndentation);
+            if (this.onDirectory)
+                this.onDirectory(FileSystemItem.newDirectory(pDirectoryPath, directoryName, pIndentation));
             const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
             for (const directoryEntry of directoryEntries) {
                 const directoryEntryPath = Path.join(pDirectoryPath, directoryEntry.name);
@@ -239,7 +250,8 @@ export class Logic {
                     await renumberator.renumber(pFilePath);
                     renumbered = true;
                 }
-                this.triggerOnFile(pFilePath, fileName, renumbered, renumberator, pIndentation);
+                if (this.onFile)
+                    this.onFile(new FileSystemItemInfo(pFilePath, fileName, renumbered, renumberator, pIndentation));
             }
         }
     }
@@ -262,21 +274,6 @@ export class Logic {
                 break;
             }
         return result;
-    }
-
-    triggerOnDynamicsApplication() {
-        if (this.onDynamicsApplication)
-            this.onDynamicsApplication(this.dynamicsApplication);
-    }
-
-    triggerOnDirectory(pDirectoryPath, pDirectoryName, pIndentation) {
-        if (this.onDirectory)
-            this.onDirectory(FileSystemItem.newDirectory(pDirectoryPath, pDirectoryName, pIndentation));
-    }
-
-    triggerOnFile(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation) {
-        if (this.onFile)
-            this.onFile(new FileSystemItemInfo(pFilePath, pFileName, pRenumbered, pRenumberator, pIndentation));
     }
 
     finalise() {        

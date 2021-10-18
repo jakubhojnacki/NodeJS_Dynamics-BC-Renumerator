@@ -6,7 +6,7 @@
 import { BasicAuthentication } from "network-library";
 import { Charset } from "network-library";
 import { ContentType } from "network-library";
-import { DynamicsWebServiceAdapter } from "../dynamicsTools/dynamicsWebServiceAdapter.mjs";
+import { DynamicsWebServiceAdapter } from "../dynamicsWebService/dynamicsWebServiceAdapter.mjs";
 import { MediaType } from "network-library";
 import { Method } from "network-library";
 import { ODataFilter } from "network-library";
@@ -14,7 +14,6 @@ import { ODataOperator } from "network-library";
 import { ODataFilterPart } from "network-library";
 import { RestWebService } from "network-library";
 import { UrlParameter } from "network-library";
-import { Validator } from "core-library";
 
 export class DynamicsWebService {
     get dynamicsApplication() { return this.mDynamicsApplication; }

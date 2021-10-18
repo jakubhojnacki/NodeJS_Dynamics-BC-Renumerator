@@ -22,7 +22,8 @@ export class Application extends ConsoleApplication {
         const directoryPath = this.args.get(ArgName.directoryPath);
         const logic = new Logic(this, directoryPath);
         if (this.diagnostics.enabled) {
-            logic.onDynamicsApplication = (lDynamicsApplicationEventInfo) => { __this.logic_onDynamicsApplication(lDynamicsApplicationEventInfo); };
+            logic.onDynamicsApplication = (lDynamicsApplication) => { __this.logic_onDynamicsApplication(lDynamicsApplication); };
+            logic.onDynamicsWebService = (lDynamicsWebService) => { __this.logic_onDynamicsWebService(lDynamicsWebService); };
             logic.onDirectory = (lDirectoryEventInfo) => { __this.logic_onDirectory(lDirectoryEventInfo); };
             logic.onFile = (lFileEventInfo) => { __this.logic_onFile(lFileEventInfo); };
         } else
@@ -36,6 +37,14 @@ export class Application extends ConsoleApplication {
         const messages = new Messages();
         pDynamicsApplication.log(this.diagnostics.enabled, messages);
         this.console.writeMessages(messages);
+    }
+
+    logic_onDynamicsWebService(pDynamicsWebService) {
+        if (Array.isArray(pDynamicsWebService.dynamicsObjects)) {
+            this.console.writeLine("Objects received from the web service:");
+            for (const dynamicsObject of pDynamicsWebService.dynamicsObjects)
+                this.console.writeLine(dynamicsObject.toString(), 1);
+        }
     }
 
     logic_onDirectory(pDirectoryEventInfo) {

@@ -12,6 +12,19 @@
         ]
     },
     "dynamicsWebService": {
+        "protocol": "http",
+        "server": "localhost",
+        "port": 7068,
+        "instance": "nHancedBC18WS",
+        "user": "api.user",
+        "password": "?9DTHCr9GvHC@b$0q.Jk",
+        "apiPublisher": "the365People",
+        "apiGroup": "nHancedIdManager",
+        "apiVersion": "1.0",
+        "companyId": "5fdfd42d-0fda-eb11-bb70-000d3a4728c8",
+        "timeout": 30000
+    },
+    "dynamicsWebService2": {
         "protocol": "https",
         "server": "tnp_product_management.navondemand.co.uk",
         "port": 7648,

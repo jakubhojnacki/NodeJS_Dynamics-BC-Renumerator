@@ -5,7 +5,7 @@
 
 import Path from "path";
 
-import { DynamicsObjectType } from "../dynamics/dynamicsObjectType.mjs";
+import { DynamicsObjectType } from "dynamics-library";
 import { Renumberator } from "../logic/renumberator.mjs";
 import { XmlToolkit } from "xml-library";
 
@@ -38,7 +38,7 @@ export class DynamicsPermissionSetRenumberator extends Renumberator {
                 const objectType = DynamicsPermissionSetRenumberator.parseObjectType(permission.ObjectType[0]);
                 const objectNo = DynamicsPermissionSetRenumberator.parseObjectNo(permission.ObjectID[0]);
                 if ((objectType.length > 0) && (objectNo > 0)) {
-                    const dynamicsObject = this.engine.dynamicsObjects.get(objectType, objectNo);
+                    const dynamicsObject = this.logic.dynamicsObjects.get(objectType, objectNo);
                     if (dynamicsObject)
                         permission.ObjectID[0] = dynamicsObject.renumberedNo;
                 }
