@@ -32,6 +32,7 @@ export class DynamicsApplicationEx extends DynamicsApplication {
                 const renumberedRange = range.renumber();
                 renumberedRanges.push(renumberedRange);
             }
-        return new DynamicsApplication(this.renumberedId, this.name, this.pPublisher, this.version, renumberedDependencies, renumberedRanges);
+        const newId = Guid.isEmpty(this.renumberedId) ? this.id : this.renumberedId;
+        return new DynamicsApplication(newId, this.name, this.publisher, this.version, renumberedDependencies, renumberedRanges);
     }
 }

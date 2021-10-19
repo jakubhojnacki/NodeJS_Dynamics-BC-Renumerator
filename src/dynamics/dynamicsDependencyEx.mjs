@@ -18,6 +18,7 @@ export class DynamicsDependencyEx extends DynamicsDependency {
     }
 
     renumber() {
-        return new DynamicsDependency(this.renumberedId, this.name, this.pPublisher, this.version);
+        const newId = Guid.isEmpty(this.renumberedId) ? this.id : this.renumberedId;
+        return new DynamicsDependency(newId, this.name, this.publisher, this.version);
     }    
 }

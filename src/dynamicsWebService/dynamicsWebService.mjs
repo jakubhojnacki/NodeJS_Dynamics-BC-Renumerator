@@ -85,12 +85,12 @@ export class DynamicsWebService {
 
     webService_onRequest(pRequest) {
         this.application.console.writeLine(`Calling "${this.webService.url.toHost()}" web service...`);
-        this.application.diagnostics.dumpJson("Request", pRequest.toData());
+        this.application.diagnostics.dumpJson("Request", pRequest.toData(), true);
     }
 
     webService_onResponse(pResponse) {
         this.application.console.writeLine(`Web service call completed."`);
-        this.application.diagnostics.dumpJson("Response", pResponse.toData());
+        this.application.diagnostics.dumpJson("Response", pResponse.toData(), true);
     }
 
     createAuthentication() {

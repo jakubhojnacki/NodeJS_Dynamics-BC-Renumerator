@@ -17,7 +17,9 @@ import { DynamicsRangeEx } from "../dynamics/dynamicsRangeEx.mjs";
 import { DynamicsWebService } from "../dynamicsWebService/dynamicsWebService.mjs";
 import { FileSystemItem } from "file-system-library";
 import { FileSystemItemInfo } from "../logic/fileSystemItemInfo.mjs";
+import { FileSystemItemType } from "file-system-library";
 import { FileSystemMatcher } from "file-system-library";
+import { FileSystemToolkit } from "file-system-library";
 import { RenumberatorFactory } from "../logic/renumberatorFactory.mjs";
 import { Validator } from "core-library";
 
@@ -53,6 +55,8 @@ export class Logic {
     set onDirectory(pValue) { this.mOnDirectory = pValue; }
     get onFile() { return this.mOnFile; }
     set onFile(pValue) { this.mOnFile = pValue; }
+    get onOther() { return this.mOnOther; }
+    set onOther(pValue) { this.mOnOther = pValue; }
 
     constructor(pApplication, pDirectoryPath) {
         this.application = pApplication;
@@ -69,6 +73,7 @@ export class Logic {
         this.onDynamicsWebService = null;
         this.onDirectory = null;
         this.onFile = null;
+        this.onOther = null;
     }
 
     async run() {      
@@ -135,19 +140,19 @@ export class Logic {
                 this.onDynamicsApplication(this.dynamicsApplication);
         } else
             throw new Error("Dynamics application manifest (app.json) is missing.");
-        result = this.validateDynamicsApplication();
+        const validator = new Validator(Logic.name);
+        result = this.validateDynamicsApplication(validator);
         this.progress.complete("Done");
         if (!result)
             this.application.console.writeMessages(validator.messages);
         return result;
     }
 
-    validateDynamicsApplication() {
-        const validator = new Validator(Logic.name);
-        validator.testNotEmpty("Dynamics Application", this.dynamicsApplication);
+    validateDynamicsApplication(pValidator) {
+        pValidator.testNotEmpty("Dynamics Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
-            this.dynamicsApplication.validate(validator, false);
-        return !validator.errorMessagesExist;
+            this.dynamicsApplication.validate(pValidator, false);
+        return pValidator.success;
     }
 
     async callRenumberWebService() {
@@ -181,7 +186,7 @@ export class Logic {
             for (const range of webServiceDynamicsApplication.ranges)
                 this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebService.dynamicsObjects;
-        this.application.diagnostics.dumpJson("Objects", this.dynamicsObjects.toData());
+        this.application.diagnostics.dumpJson("Objects", this.dynamicsObjects.toData(), true);
         this.progress.complete("Done");
         return true;
     }
@@ -219,15 +224,19 @@ export class Logic {
             this.progress.move(0, pDirectoryPath);
             if (this.onDirectory)
                 this.onDirectory(FileSystemItem.newDirectory(pDirectoryPath, directoryName, pIndentation));
-            const directoryEntries = FileSystem.readdirSync(pDirectoryPath, { withFileTypes: true });
-            for (const directoryEntry of directoryEntries) {
-                const directoryEntryPath = Path.join(pDirectoryPath, directoryEntry.name);
-                if (directoryEntry.isDirectory())
-                    await this.renumberDirectory(directoryEntryPath, pIndentation + 1);
-                else 
-                    if (directoryEntry.isFile())
-                        await this.renumberFile(directoryEntryPath, pIndentation + 1); 
-            };
+            const directoryItems = FileSystemToolkit.readDirectory(pDirectoryPath);
+            for (const directoryItem of directoryItems)
+                switch (directoryItem.type) {
+                    case FileSystemItemType.directory:
+                        await this.renumberDirectory(directoryItem.path, pIndentation + 1);
+                        break;
+                    case FileSystemItemType.file:
+                        await this.renumberFile(directoryItem.path, pIndentation + 1); 
+                        break;
+                    default:
+                        this.showInformationAboutOther(directoryItem, pIndentation + 1);
+                        break;
+                }
         }
     }	   
 
@@ -244,17 +253,18 @@ export class Logic {
     async renumberFile(pFilePath, pIndentation) {
         if (Path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
             const fileName = Path.basename(pFilePath);
+            let renumbered = false;
+            let renumberator = null;
             if (this.shouldFileBeRenumbered(fileName)) {
                 this.progress.move(1, fileName);
-                let renumbered = false;
-                const renumberator = await this.findRenumberator(pFilePath);
+                renumberator = await this.findRenumberator(pFilePath);
                 if (renumberator) {
                     await renumberator.renumber(pFilePath);
                     renumbered = true;
                 }
-                if (this.onFile)
-                    this.onFile(new FileSystemItemInfo(pFilePath, fileName, renumbered, renumberator, pIndentation));
             }
+            if (this.onFile)
+                this.onFile(new FileSystemItemInfo(pFilePath, fileName, renumbered, renumberator, pIndentation));
         }
     }
 
@@ -276,6 +286,13 @@ export class Logic {
                 break;
             }
         return result;
+    }
+
+    showInformationAboutOther(pFileSystemItem, pIndentation) {
+        if (this.onOther) {
+            pFileSystemItem.indentation = pIndentation;
+            this.onOther(pFileSystemItem);
+        }
     }
 
     finalise() {        

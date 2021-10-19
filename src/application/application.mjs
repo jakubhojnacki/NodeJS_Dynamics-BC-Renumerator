@@ -27,7 +27,8 @@ export class Application extends ConsoleApplication {
             logic.onDynamicsApplication = (lDynamicsApplication) => { __this.logic_onDynamicsApplication(lDynamicsApplication); };
             logic.onDynamicsWebService = (lDynamicsWebService) => { __this.logic_onDynamicsWebService(lDynamicsWebService); };
             logic.onDirectory = (lDirectoryEventInfo) => { __this.logic_onDirectory(lDirectoryEventInfo); };
-            logic.onFile = (lFileEventInfo) => { __this.logic_onFile(lFileEventInfo); };
+            logic.onFile = (lFileSystemItemInfo) => { __this.logic_onFile(lFileSystemItemInfo); };
+            logic.onOther = (lFileSystemItem) => { __this.logic_onOther(lFileSystemItem); }
         } else
             logic.onProgress = (lProgress) => { __this.logic_onProgress(lProgress); }
         await logic.run(directoryPath);
@@ -53,9 +54,15 @@ export class Application extends ConsoleApplication {
         this.console.writeLine(`[${pDirectoryEventInfo.name}]`, pDirectoryEventInfo.indentation); 
     }
 
-    logic_onFile(pFileEventInfo) {
-        if (pFileEventInfo.renumbered)
-            this.console.writeLine(`${pFileEventInfo.name} ==> ${pFileEventInfo.renumberator.name}`, pFileEventInfo.indentation);
+    logic_onFile(pFileSystemItemInfo) {
+        if (pFileSystemItemInfo.renumbered)
+            this.console.writeLine(`${pFileSystemItemInfo.name} ==> ${pFileSystemItemInfo.renumberator.name}`, pFileSystemItemInfo.indentation);
+        else
+            this.console.writeLine(`${pFileSystemItemInfo.name} --> ignored`, pFileSystemItemInfo.indentation);
+    }
+
+    logic_onOther(pFileSystemItem) {
+        this.console.writeLine(`<${pFileSystemItem.type}>::<${pFileSystemItem.name}> --> ignored`, pFileSystemItem.indentation);
     }
 
     logic_onProgress(pProgress) {
