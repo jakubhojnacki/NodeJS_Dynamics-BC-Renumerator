@@ -3,6 +3,8 @@
  * @description Handles Dynamics AL renumberation
  */
 
+"use strict";
+
 import FileSystem from "fs";
 import Path from "path";
 import ReadLine from "readline";

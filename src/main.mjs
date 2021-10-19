@@ -1,3 +1,10 @@
+/**
+ * @module "Main"
+ * @description Main entry point of the application
+ */
+
+"use strict";
+
 import { Application } from "./application/application.mjs";
 import { Node } from "core-library";
 

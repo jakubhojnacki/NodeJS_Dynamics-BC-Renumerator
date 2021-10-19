@@ -3,11 +3,14 @@
  * @description Handles renumberation of Dynamics permission set
  */
 
+"use strict";
+
 import Path from "path";
 
 import { DynamicsObjectType } from "dynamics-library";
 import { Renumberator } from "../logic/renumberator.mjs";
 import { XmlToolkit } from "xml-library";
+import { userInfo } from "os";
 
 export class DynamicsPermissionSetRenumberator extends Renumberator {
     get name() { return "Permission Set Renumberator"; }

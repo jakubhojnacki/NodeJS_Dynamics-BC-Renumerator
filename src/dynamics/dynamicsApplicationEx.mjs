@@ -3,6 +3,8 @@
  * @description Represents Dynamics application (extension) extended for renumberator
  */
 
+"use strict";
+
 import { DynamicsApplication } from "dynamics-library";
 import { DynamicsDependencies } from "dynamics-library";
 import { DynamicsRanges } from "dynamics-library";
@@ -20,13 +22,13 @@ export class DynamicsApplicationEx extends DynamicsApplication {
     renumber() {
         const renumberedDependencies = new DynamicsDependencies();
         if (this.dependencies)
-            for (const dependency in this.dependencies) {
+            for (const dependency of this.dependencies) {
                 const renumberedDependency = dependency.renumber();
                 renumberedDependencies.push(renumberedDependency);
             }
         const renumberedRanges = new DynamicsRanges();
         if (this.ranges)
-            for (const range in this.ranges) {
+            for (const range of this.ranges) {
                 const renumberedRange = range.renumber();
                 renumberedRanges.push(renumberedRange);
             }

@@ -3,6 +3,8 @@
  * @description Designed to hold an array of names to ignore
  */
 
+"use strict";
+
 export class IgnoreNamesSettings extends Array {
     constructor(pItems) {
         super();

@@ -3,6 +3,8 @@
  * @description Enumerates regular expression template names for Dynamics AL processing
  */
 
+"use strict";
+
 import { Enum } from "core-library";
 import { EnumItem } from "core-library";
 

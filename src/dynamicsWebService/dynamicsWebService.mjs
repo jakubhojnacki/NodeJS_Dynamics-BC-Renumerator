@@ -3,6 +3,8 @@
  * @description Class for getting Dynamics information from Dynamics system (via web service)
  */
 
+"use strict";
+
 import { BasicAuthentication } from "network-library";
 import { Charset } from "network-library";
 import { ContentType } from "network-library";

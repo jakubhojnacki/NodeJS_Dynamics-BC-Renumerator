@@ -3,6 +3,8 @@
  * @description Information about file system item
  */
 
+"use strict";
+
 import { FileSystemItem } from "file-system-library";
 import { FileSystemItemType } from "file-system-library";
 

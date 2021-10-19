@@ -3,6 +3,8 @@
  * @description Creates renumberators
  */
 
+"use strict";
+
 import { DynamicsAlRenumberator } from "../dynamicsRenumberators/dynamicsAlRenumberator.mjs";
 import { DynamicsManifestRenumberator } from "../dynamicsRenumberators/dynamicsManifestRenumberator.mjs";
 import { DynamicsPermissionSetRenumberator } from "../dynamicsRenumberators/dynamicsPermissionSetRenumberator.mjs";

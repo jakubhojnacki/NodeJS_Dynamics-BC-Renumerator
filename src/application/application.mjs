@@ -3,6 +3,8 @@
  * @description Represents the main application class
  */
 
+"use strict";
+
 import { ArgName } from "../application/argName.mjs";
 import { ArgTemplateFactory } from "../application/argTemplateFactory.mjs";
 import { ConsoleApplication } from "console-library";

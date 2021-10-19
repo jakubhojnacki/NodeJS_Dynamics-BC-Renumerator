@@ -3,6 +3,8 @@
  * @description Class representing settings
  */
 
+"use strict";
+
 import { DynamicsWebServiceSettings } from "../settings/dynamicsWebServiceSettings.mjs";
 import { IgnoreSettings } from "../settings/ignoreSettings.mjs";
 import { GeneralSettings } from "../settings/generalSettings.mjs";

@@ -3,6 +3,8 @@
  * @description Represents Dynamics field extended for renumberator
  */
 
+"use strict";
+
 import { DynamicsField } from "dynamics-library";
 
 export class DynamicsFieldEx extends DynamicsField {

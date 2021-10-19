@@ -3,6 +3,8 @@
  * @description Represents a dependency of Dynamics application extended for renumberator
  */
 
+"use strict";
+
 import { DynamicsDependency } from "dynamics-library";
 import { Guid } from "core-library";
 

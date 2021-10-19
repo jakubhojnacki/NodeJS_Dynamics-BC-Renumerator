@@ -4,6 +4,8 @@
  * @version 0.0.1 (2021-08-12)
  */
 
+"use strict";
+
 import { ArgName } from "../application/argName.mjs";
 import { ArgTemplate } from "core-library";
 import { ArgTemplateFactoryBase } from "core-library";

@@ -3,6 +3,8 @@
  * @description Class with settings what (directories / files) to ignore
  */
 
+"use strict";
+
 import { IgnoreNamesSettings } from "../settings/ignoreNamesSettings.mjs";
 
 export class IgnoreSettings {

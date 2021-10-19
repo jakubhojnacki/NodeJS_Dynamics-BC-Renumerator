@@ -3,6 +3,8 @@
  * @description Dynamics range extended for renumberator
  */
 
+"use strict";
+
 import { DynamicsRange } from "dynamics-library";
 
 export class DynamicsRangeEx extends DynamicsRange {

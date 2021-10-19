@@ -3,6 +3,8 @@
  * @description Converting between Dynamics web service data and Dynamics objects
  */
 
+"use strict";
+
 import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
 import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
 import { DynamicsDependencies } from "dynamics-library";

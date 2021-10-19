@@ -3,6 +3,8 @@
  * @description Class representing argument names
  */
 
+"use strict";
+
 import { Enum } from "core-library";
 import { EnumItem } from "core-library";
 

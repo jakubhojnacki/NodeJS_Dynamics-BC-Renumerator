@@ -3,6 +3,8 @@
  * @description Represents Dynamics object extended for renumberator
  */
 
+"use strict";
+
 import { DynamicsObject } from "dynamics-library";
 
 export class DynamicsObjectEx extends DynamicsObject {

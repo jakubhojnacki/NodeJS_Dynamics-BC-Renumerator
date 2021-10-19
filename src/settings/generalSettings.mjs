@@ -3,8 +3,9 @@
  * @description Class holding general settings
  */
 
+"use strict";
+
 import { EndOfLineType } from "file-system-library";
-import { Validator } from "core-library";
 
 export class GeneralSettings {
     get renumberationCode() { return this.mRenumberationCode; }

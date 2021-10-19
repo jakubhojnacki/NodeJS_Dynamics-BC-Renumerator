@@ -3,6 +3,8 @@
  * @description Represents application logic
  */
 
+"use strict";
+
 import FileSystem from "fs";
 import Path from "path";
 

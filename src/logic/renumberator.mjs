@@ -3,6 +3,8 @@
  * @description Represents a (file) renumberator
  */
 
+"use strict";
+
 import FileSystem from "fs";
 
 import { TextFileBuffer } from "file-system-library";
