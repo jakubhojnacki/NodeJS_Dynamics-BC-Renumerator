@@ -8,8 +8,8 @@
             "program": "${workspaceFolder}/src/main.mjs",
             "args": [
                 "C:\\Projects\\The 365 People\\2021-10-06 Renumberation Testing\\Application",
-                "-de",
-                "-ddp", "C:\\Projects\\The 365 People\\2021-10-06 Renumberation Testing\\Log"
+                "-xde",
+                "-xddp", "C:\\Projects\\The 365 People\\2021-10-06 Renumberation Testing\\Log"
             ],
             "console": "integratedTerminal",
             "skipFiles": [

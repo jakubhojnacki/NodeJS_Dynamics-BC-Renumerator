@@ -8,15 +8,20 @@
 import { ArgName } from "../application/argName.mjs";
 import { ArgTemplateFactory } from "../application/argTemplateFactory.mjs";
 import { ConsoleApplication } from "console-library";
+import { ConsoleProgress } from "console-library";
 import { Logic } from "../logic/logic.mjs";
 import { Messages } from "core-library";
 import { Settings } from "../settings/settings.mjs";
 
 export class Application extends ConsoleApplication {
+    get progress() { return this.mProgress; }
+    set progress(pValue) { this.mProgress = pValue; }
+
     constructor(pRootDirectoryPath) {
         super(pRootDirectoryPath);
         this.argTemplates = (new ArgTemplateFactory()).create();
         this.settings = new Settings();
+        this.progress = null;
     }
 
     async runLogic() {
@@ -29,8 +34,8 @@ export class Application extends ConsoleApplication {
             logic.onDirectory = (lDirectoryEventInfo) => { __this.logic_onDirectory(lDirectoryEventInfo); };
             logic.onFile = (lFileSystemItemInfo) => { __this.logic_onFile(lFileSystemItemInfo); };
             logic.onOther = (lFileSystemItem) => { __this.logic_onOther(lFileSystemItem); }
-        } else
-            logic.onProgress = (lProgress) => { __this.logic_onProgress(lProgress); }
+        }
+        this.progress = new ConsoleProgress(null, null, (lProgress) => { __this.onProgress(lProgress); }, "[", "#", "]", 20, this.console.width);
         await logic.run(directoryPath);
         if (!this.diagnostics.enabled)
             this.console.newLine();
@@ -65,9 +70,8 @@ export class Application extends ConsoleApplication {
         this.console.writeLine(`<${pFileSystemItem.type}>::<${pFileSystemItem.name}> --> ignored`, pFileSystemItem.indentation);
     }
 
-    logic_onProgress(pProgress) {
-        this.console.moveLeft(1000);
-        this.console.clearLine();
-        this.console.write(pProgress.toString("[", "#", "]", 20, this.console.width));
+    onProgress(pProgress) {
+        if (!this.diagnostics.enabled)
+            pProgress.render(this.console);
     }    
 }

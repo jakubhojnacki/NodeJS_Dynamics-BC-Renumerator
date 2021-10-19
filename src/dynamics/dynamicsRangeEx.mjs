@@ -18,4 +18,11 @@ export class DynamicsRangeEx extends DynamicsRange {
         this.renumberedFrom = pRenumberedFrom;
         this.renumberedTo = pRenumberedTo;
     }
+
+    renumber() {
+        const renumbered = ((this.renumberedFrom > 0) && (this.renumberedTo > 0));
+        const newFrom = renumbered ? this.renumberedFrom : this.from;
+        const newTo = renumbered ? this.renumberedTo : this.to;
+        return new DynamicsRangeEx(newFrom, newTo);
+    }
 }

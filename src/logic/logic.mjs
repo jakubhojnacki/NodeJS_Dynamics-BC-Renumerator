@@ -8,7 +8,6 @@
 import FileSystem from "fs";
 import Path from "path";
 
-import { ConsoleProgress } from "console-library";
 import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
 import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
 import { DynamicsManifestAdapter } from "dynamics-library";
@@ -42,11 +41,7 @@ export class Logic {
     set directoryMatchers(pValue) { this.mDirectoryMatchers = pValue; }
     get fileMatchers() { return this.mFileMatchers; }
     set fileMatchers(pValue) { this.mFileMatchers = pValue; }
-    get progress() { return this.mProgress; }
-    set progress(pValue) { this.mProgress = pValue; }
 
-    get onProgress() { return this.mOnProgress; }
-    set onProgress(pValue) { this.mOnProgress = pValue; }
     get onDynamicsApplication() { return this.mOnDynamicsApplication; }
     set onDynamicsApplication(pValue) { this.mOnDynamicsApplication = pValue; }
     get onDynamicsWebService() { return this.mOnDynamicsWebService; }
@@ -67,8 +62,6 @@ export class Logic {
         this.renumberators = [];
         this.directoryMatchers = [];
         this.fileMatchers = [];
-        this.progress = null;
-        this.onProgress = null;
         this.onDynamicsApplication = null;
         this.onDynamicsWebService = null;
         this.onDirectory = null;
@@ -100,12 +93,6 @@ export class Logic {
             if (this.application.settings.ignore.files)
                 for (const ignoreFile of this.application.settings.ignore.files)
                     this.fileMatchers.push(new FileSystemMatcher(ignoreFile));
-
-            const __this = this;
-            this.progress = new ConsoleProgress(null, null, (lProgress) => {
-                if (__this.onProgress)
-                    __this.onProgress(lProgress);
-            })
         }
 
         return result;
@@ -124,7 +111,7 @@ export class Logic {
 
     readDynamicsApplication() {        
         let result = false;
-        this.progress.reset(1, "Reading Dynamics Application...");
+        this.application.progress.reset(1, "Reading Dynamics Application...");
         const filePath = Path.join(this.directoryPath, "app.json");
         if (FileSystem.existsSync(filePath)) {
             const rawData = FileSystem.readFileSync(filePath);
@@ -142,7 +129,7 @@ export class Logic {
             throw new Error("Dynamics application manifest (app.json) is missing.");
         const validator = new Validator(Logic.name);
         result = this.validateDynamicsApplication(validator);
-        this.progress.complete("Done");
+        this.application.progress.complete("Done");
         if (!result)
             this.application.console.writeMessages(validator.messages);
         return result;
@@ -157,14 +144,14 @@ export class Logic {
 
     async callRenumberWebService() {
         let result = false;
-        this.progress.reset(1, "Calling Web Service...");
+        this.application.progress.reset(1, "Calling Web Service...");
         const renumberationCode = this.application.settings.general.renumberationCode;
         const validator = new Validator();        
         if (await this.dynamicsWebService.renumber(this.dynamicsApplication, renumberationCode, validator)) {
             this.dynamicsWebService.finalise();
             if (this.onDynamicsWebService)
                 this.onDynamicsWebService(this.dynamicsWebService);
-            this.progress.complete("Done");
+            this.application.progress.complete("Done");
             result = true;
         } else
             this.application.console.writeMessages(validator.messages);
@@ -172,7 +159,7 @@ export class Logic {
     }
 
     processRenumberWebServiceResponse() {
-        this.progress.reset(1, "Processing Web Service Response...");
+        this.application.progress.reset(1, "Processing Web Service Response...");
         const webServiceDynamicsApplication = this.dynamicsWebService.dynamicsApplication;
         this.dynamicsApplication.renumberedId = webServiceDynamicsApplication.renumberedId;
         if (webServiceDynamicsApplication.dependencies)
@@ -187,16 +174,16 @@ export class Logic {
                 this.dynamicsApplication.ranges.push(range);
         this.dynamicsObjects = this.dynamicsWebService.dynamicsObjects;
         this.application.diagnostics.dumpJson("Objects", this.dynamicsObjects.toData(), true);
-        this.progress.complete("Done");
+        this.application.progress.complete("Done");
         return true;
     }
 
     async renumber() {
         const count = this.countDirectory(this.directoryPath, 0, 0);
-        this.progress.reset(count, "Renumbering...");
+        this.application.progress.reset(count, "Renumbering...");
         this.renumberators = RenumberatorFactory.create(this);
         await this.renumberDirectory(this.directoryPath, 0);
-        this.progress.complete("Completed");
+        this.application.progress.complete("Renumbering completed");
         return true;
     }
 
@@ -221,7 +208,7 @@ export class Logic {
         const directoryName = pIndentation > 0 ? Path.basename(pDirectoryPath) : "/";
         const shouldBeRenumbered = pIndentation > 0 ? this.shouldDirectoryBeRenumbered(directoryName) : true;
         if (shouldBeRenumbered) {
-            this.progress.move(0, pDirectoryPath);
+            this.application.progress.move(0, pDirectoryPath);
             if (this.onDirectory)
                 this.onDirectory(FileSystemItem.newDirectory(pDirectoryPath, directoryName, pIndentation));
             const directoryItems = FileSystemToolkit.readDirectory(pDirectoryPath);
@@ -256,7 +243,7 @@ export class Logic {
             let renumbered = false;
             let renumberator = null;
             if (this.shouldFileBeRenumbered(fileName)) {
-                this.progress.move(1, fileName);
+                this.application.progress.move(1, fileName);
                 renumberator = await this.findRenumberator(pFilePath);
                 if (renumberator) {
                     await renumberator.renumber(pFilePath);

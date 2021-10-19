@@ -11,7 +11,7 @@ The source of IDs for renumberation is nHanced ID Manager Dynamics application t
 ## Usage
 
 ```
-node main.js "{solution_folder_path}" [-s "{settings_file_path}"] [-d [-dd "{debug_folder_path}"]]
+node main.js "{solution_folder_path}" [-sfp "{settings_file_path}"] [-de [-ddp "{diagnostic_directory_path}"]]
 ```
 
 Where:
@@ -19,9 +19,9 @@ Where:
 | Parameter               | Description                                                  |
 | ----------------------- | ------------------------------------------------------------ |
 | {solution_folder_path}  | Path to a folder with solution to be renumbered              |
-| -s {settings_file_path} | Path to settings file (if not provided, "settings.json" file from "main.js" folder is used) |
-| -d                      | Debug mode - the application starts providing more detailed information about its activities |
-| -dd {debug_folder_path} | Optional debug folder path where the application dumps some extra debug information (as files) |
+| -sfp {settings_file_path} | Path to settings file (if not provided, "settings.json" file from "main.js" folder is used) |
+| -de                      | Diagnostics enabled - the application starts providing more detailed information about its activities |
+| -ddp {diagnostic_directory_path} | Optional diagnostic directory path where the application dumps some extra debug information (as files) |
 
 ## Settings
 
@@ -80,16 +80,11 @@ Where:
 
 ### Version 2
 
+#### 2.1.0 - 19/10/2021 - JH
+- Better progress information  
+- Using libraries (modules)
+
 #### 2.0.0 - 22/09/2021 - JH
 - First new generation version working
 - Connecting to ID manager via web services
 - Translating manifests, AL files, permission set files
-
-#### 2.1.0 - 22/09/2021 - JH
-- Better progress information  
-- Some housekeeping done
-
-#### 2.1.1 - 22/09/2021 - JH
-- Web service call bugfixes
-- Progress display fixed
-- ODATA filter fixed

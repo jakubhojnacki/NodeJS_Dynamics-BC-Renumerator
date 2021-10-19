@@ -1,6 +1,6 @@
 {
     "name": "dynamics-renumberator",
-    "version": "2.2.0",
+    "version": "2.1.0",
     "displayName": "Dynamics Renumberator",
     "description": "Renumbers Dynamics application into another ID range",
     "date": "October 2021",
