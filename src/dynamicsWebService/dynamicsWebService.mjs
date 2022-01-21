@@ -103,7 +103,7 @@ export class DynamicsWebService {
         const url = this.application.settings.dynamicsWebService.createUrl(pWebServiceName);
         const oDataFilter = new ODataFilter([ 
             new ODataFilterPart("extensionId", ODataOperator.equals, this.dynamicsApplication.id),
-            new ODataFilterPart("renumerationCode", ODataOperator.equals, this.renumerationCode, true)
+            new ODataFilterPart("renumberationCode", ODataOperator.equals, this.renumerationCode, true)
         ], ODataOperator.and);
         url.parameters = [ 
             new UrlParameter("$filter", oDataFilter.toString()),
