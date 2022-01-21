@@ -48,7 +48,7 @@ export class DynamicsWebService {
     initialise(pDynamicsApplication, pRenumerationCode, pValidator) {
         this.dynamicsApplication = pDynamicsApplication;
         this.renumerationCode = pRenumerationCode;
-        return this.verify(pValidator);
+        return this.validate(pValidator);
     }
 
     validate(pValidator) {
@@ -57,7 +57,7 @@ export class DynamicsWebService {
             this.application.settings.dynamicsWebService.validate(pValidator);
         pValidator.testNotEmpty("Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
-            this.dynamicsApplication.verify(pValidator);
+            this.dynamicsApplication.validate(pValidator);
         pValidator.testNotEmpty("Renumeration Code", this.renumerationCode);
         pValidator.restoreComponent();
         return !pValidator.errorMessagesExist;
