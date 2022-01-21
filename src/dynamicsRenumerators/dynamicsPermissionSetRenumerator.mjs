@@ -1,22 +1,22 @@
 /**
- * @module "DynamicsPermissionSetRenumberator" class
- * @description Handles renumberation of Dynamics permission set
+ * @module "DynamicsPermissionSetRenumerator" class
+ * @description Handles renumeration of Dynamics permission set
  */
 
 "use strict";
 
 import Path from "path";
 
-import { DynamicsObjectType } from "dynamics-library";
-import { Renumberator } from "../logic/renumberator.mjs";
-import { XmlToolkit } from "xml-library";
+import { DynamicsObjectType } from "fortah-dynamics-library";
+import { Renumerator } from "../logic/renumerator.mjs";
+import { XmlToolkit } from "fortah-xml-library";
 import { userInfo } from "os";
 
-export class DynamicsPermissionSetRenumberator extends Renumberator {
-    get name() { return "Permission Set Renumberator"; }
+export class DynamicsPermissionSetRenumerator extends Renumerator {
+    get name() { return "Permission Set Renumerator"; }
 
-    constructor(pRenumberation) {
-        super(pRenumberation);
+    constructor(pRenumeration) {
+        super(pRenumeration);
     }
     
     async canRenumber(pFilePath) {
@@ -38,8 +38,8 @@ export class DynamicsPermissionSetRenumberator extends Renumberator {
         const xmlDocument = await XmlToolkit.readFromFile(this.filePath);
         for (const permissionSet of xmlDocument.PermissionSets.PermissionSet)
             for (const permission of permissionSet.Permission) {
-                const objectType = DynamicsPermissionSetRenumberator.parseObjectType(permission.ObjectType[0]);
-                const objectNo = DynamicsPermissionSetRenumberator.parseObjectNo(permission.ObjectID[0]);
+                const objectType = DynamicsPermissionSetRenumerator.parseObjectType(permission.ObjectType[0]);
+                const objectNo = DynamicsPermissionSetRenumerator.parseObjectNo(permission.ObjectID[0]);
                 if ((objectType.length > 0) && (objectNo > 0)) {
                     const dynamicsObject = this.logic.dynamicsObjects.get(objectType, objectNo);
                     if (dynamicsObject)
@@ -77,6 +77,6 @@ export class DynamicsPermissionSetRenumberator extends Renumberator {
     }
 
     static parseObjectNo(pObjectNoText) {
-        return Number.validateAsInteger(pObjectNoText, 0);
+        return Number.verifyAsInteger(pObjectNoText, 0);
     }
 }

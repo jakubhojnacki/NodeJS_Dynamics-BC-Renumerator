@@ -1,16 +1,16 @@
 /**
  * @module "DynamicsDependencyEx" class
- * @description Represents a dependency of Dynamics application extended for renumberator
+ * @description Represents a dependency of Dynamics application extended for renumerator
  */
 
 "use strict";
 
-import { DynamicsDependency } from "dynamics-library";
-import { Guid } from "core-library";
+import { DynamicsDependency } from "fortah-dynamics-library";
+import { Guid } from "fortah-core-library";
 
 export class DynamicsDependencyEx extends DynamicsDependency {
     get renumberedId() { return this.mRenumberedId; }
-    set renumberedId(pValue) { this.mRenumberedId = Guid.validate(pValue); }
+    set renumberedId(pValue) { this.mRenumberedId = Guid.parse(pValue); }
 
     constructor(pId, pName, pPublisher, pVersion, pRenumberedId) {
         super(pId, pName, pPublisher, pVersion);

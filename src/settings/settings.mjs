@@ -8,15 +8,15 @@
 import { DynamicsWebServiceSettings } from "../settings/dynamicsWebServiceSettings.mjs";
 import { IgnoreSettings } from "../settings/ignoreSettings.mjs";
 import { GeneralSettings } from "../settings/generalSettings.mjs";
-import { SettingsBase } from "core-library";
+import { SettingsBase } from "fortah-core-library";
 
 export class Settings extends SettingsBase {
     get general() { return this.mGeneral; }
-    set general(pValue) { this.mGeneral = Object.validate(pValue, new GeneralSettings()); }
+    set general(pValue) { this.mGeneral = Object.verify(pValue, new GeneralSettings()); }
     get ignore() { return this.mIgnore; }
-    set ignore(pValue) { this.mIgnore = Object.validate(pValue, new IgnoreSettings()); }
+    set ignore(pValue) { this.mIgnore = Object.verify(pValue, new IgnoreSettings()); }
     get dynamicsWebService() { return this.mDynamicsWebService; }
-    set dynamicsWebService(pValue) { this.mDynamicsWebService = Object.validate(pValue, new DynamicsWebServiceSettings()); }
+    set dynamicsWebService(pValue) { this.mDynamicsWebService = Object.verify(pValue, new DynamicsWebServiceSettings()); }
 
     constructor(pGeneral, pIgnore, pDynamicsWebService) {
         super();

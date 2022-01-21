@@ -1,19 +1,19 @@
 /**
- * @module "Renumberator" class (abstract)
- * @description Represents a (file) renumberator
+ * @module "Renumerator" class (abstract)
+ * @description Represents a (file) renumerator
  */
 
 "use strict";
 
 import FileSystem from "fs";
 
-import { TextFileBuffer } from "file-system-library";
+import { TextFileBuffer } from "fortah-file-system-library";
 
-export class Renumberator {
+export class Renumerator {
     get logic() { return this.mLogic; }
     set logic(pValue) { this.mLogic = pValue; }
     get filePath() { return this.mFilePath; }
-    set filePath(pValue) { this.mFilePath = String.validate(pValue); }
+    set filePath(pValue) { this.mFilePath = String.verify(pValue); }
     get fileBuffer() { return this.mFileBuffer; }
     set fileBuffer(pValue) { this.mFileBuffer = pValue; }
 
@@ -25,7 +25,7 @@ export class Renumberator {
 
     initialise(pFilePath, pUseFileBuffer) {
         this.filePath = pFilePath;
-        if (Boolean.validate(pUseFileBuffer, false))
+        if (Boolean.verify(pUseFileBuffer, false))
             this.fileBuffer = new TextFileBuffer();
     }
 

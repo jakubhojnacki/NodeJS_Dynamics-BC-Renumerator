@@ -7,10 +7,10 @@
 
 import { ArgName } from "../application/argName.mjs";
 import { ArgTemplateFactory } from "../application/argTemplateFactory.mjs";
-import { ConsoleApplication } from "console-library";
-import { ConsoleProgress } from "console-library";
+import { ConsoleApplication } from "fortah-console-library";
+import { ConsoleProgress } from "fortah-console-library";
 import { Logic } from "../logic/logic.mjs";
-import { Messages } from "core-library";
+import { Messages } from "fortah-core-library";
 import { Settings } from "../settings/settings.mjs";
 
 export class Application extends ConsoleApplication {
@@ -61,7 +61,7 @@ export class Application extends ConsoleApplication {
 
     logic_onFile(pFileSystemItemInfo) {
         if (pFileSystemItemInfo.renumbered)
-            this.console.writeLine(`${pFileSystemItemInfo.name} ==> ${pFileSystemItemInfo.renumberator.name}`, pFileSystemItemInfo.indentation);
+            this.console.writeLine(`${pFileSystemItemInfo.name} ==> ${pFileSystemItemInfo.renumerator.name}`, pFileSystemItemInfo.indentation);
         else
             this.console.writeLine(`${pFileSystemItemInfo.name} --> ignored`, pFileSystemItemInfo.indentation);
     }

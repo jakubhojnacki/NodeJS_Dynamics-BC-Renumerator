@@ -1,6 +1,6 @@
 /**
- * @module "DynamicsAlRenumberator" class
- * @description Handles Dynamics AL renumberation
+ * @module "DynamicsAlRenumerator" class
+ * @description Handles Dynamics AL renumeration
  */
 
 "use strict";
@@ -9,53 +9,53 @@ import FileSystem from "fs";
 import Path from "path";
 import ReadLine from "readline";
  
-import { DynamicsAlRegExpTemplateName } from "../dynamicsRenumberators/dynamicsAlRegExpTemplateName.mjs";
+import { DynamicsAlRegExpTemplateName } from "../dynamicsRenumerators/dynamicsAlRegExpTemplateName.mjs";
 import { DynamicsObjectEx } from "../dynamics/dynamicsObjectEx.mjs";
 import { DynamicsFieldEx } from "../dynamics/dynamicsFieldEx.mjs";
-import { DynamicsObjectType } from "dynamics-library";
-import { EndOfLineType } from "file-system-library";
-import { RegExpFlag } from "reg-exp-library";
-import { RegExpSchema } from "reg-exp-library";
-import { RegExpTemplate } from "reg-exp-library";
-import { Renumberator } from "../logic/renumberator.mjs";
+import { DynamicsObjectType } from "fortah-dynamics-library";
+import { EndOfLineType } from "fortah-file-system-library";
+import { RegexFlag } from "fortah-regex-library";
+import { RegexTemplate } from "fortah-regex-library";
+import { RegexTemplates } from "fortah-regex-library";
+import { Renumerator } from "../logic/renumerator.mjs";
 
-export class DynamicsAlRenumberator extends Renumberator {
-    get name() { return "AL Renumberator"; }    
+export class DynamicsAlRenumerator extends Renumerator {
+    get name() { return "AL Renumerator"; }    
     get dynamicsManager() { return this.logic.dynamicsManager; }
-    get regExpSchema() { return this.mRegExpSchema; }
-    set regExpSchema(pValue) { this.mRegExpSchema = pValue; }
+    get regexTemplates() { return this.mRegexTemplates; }
+    set regexTemplates(pValue) { this.mRegexTemplates = pValue; }
     get dynamicsObject() { return this.mDynamicsObject; }
     set dynamicsObject(pValue) { this.mDynamicsObject = pValue; }
 
     constructor(pLogic) {
         super(pLogic);
-        this.regExpSchema = new RegExpSchema([
-            new RegExpTemplate(
+        this.regexTemplates = new RegexTemplates([
+            new RegexTemplate(
                 DynamicsAlRegExpTemplateName.object, 
                 "Object",
                 "(?<prefix>\\s*)(?<type>table|page|codeunit|report|xmlport|query|enum)\\s*(?<no>\\d+)\\s*(?<name>.+)", 
-                RegExpFlag.ignoreCase,
+                RegexFlag.ignoreCase,
                 "${prefix}${type} ${renumberedNo} \"${name}\""
             ),
-            new RegExpTemplate(
+            new RegexTemplate(
                 DynamicsAlRegExpTemplateName.objectExtension,
                 "Object Extension",
                 "(?<prefix>\\s*)(?<type>tableextension|pageextension|enumextension)\\s*(?<no>\\d+)\\s*(?<name>.+)\\s*extends\\s*(?<extendsName>.+)",
-                RegExpFlag.ignoreCase,
+                RegexFlag.ignoreCase,
                 "${prefix}${type} ${renumberedNo} \"${name}\" extends \"${extendsName}\""
             ),
-            new RegExpTemplate(
+            new RegexTemplate(
                 DynamicsAlRegExpTemplateName.tableField,
                 "Table Field",
                 "(?<prefix>\\s*)field\\(\\s*(?<no>\\d+);\\s*(?<name>.+);\\s*(?<dataType>.+)\\)",
-                RegExpFlag.ignoreCase,
+                RegexFlag.ignoreCase,
                 "${prefix}field(${renumberedNo}; \"${name}\"; ${dataType})"
             ),
-            new RegExpTemplate(
+            new RegexTemplate(
                 DynamicsAlRegExpTemplateName.enumValue,
                 "Enum Value",
                 "(?<prefix>\\s*)value\\(\\s*(?<no>\\d+);\\s*(?<name>.+)\\)",
-                RegExpFlag.ignoreCase,
+                RegexFlag.ignoreCase,
                 "${prefix}value(${renumberedNo}; \"${name}\")"
             )
         ]);
@@ -85,7 +85,7 @@ export class DynamicsAlRenumberator extends Renumberator {
 
     processLine(pLine) {
         let newLine = "";
-        const match = this.regExpSchema.tryToMatch(pLine);
+        const match = this.regexTemplates.match(pLine);
         if (match.success) {
             let object = null;
             switch (match.template.name) {
@@ -100,7 +100,7 @@ export class DynamicsAlRenumberator extends Renumberator {
             }
             if (object != null) {
                 const replacements = object.merge(match.namedGroups);
-                newLine = this.regExpSchema.replace(match.template.replaceWith, replacements);
+                newLine = this.regexTemplates.replace(match.template.replaceWith, replacements);
             }
         }
         return newLine ? newLine : pLine;
@@ -118,9 +118,9 @@ export class DynamicsAlRenumberator extends Renumberator {
 
     parseDynamicsObjectMatched(pMatch) {
         const type = DynamicsObjectType.parse(pMatch.namedGroups.type);
-        const no = Number.validateAsInteger(pMatch.namedGroups.no);
-        const name = DynamicsAlRenumberator.parseName(pMatch.namedGroups.name);
-        const extendsName = DynamicsAlRenumberator.parseName(pMatch.namedGroups.extendsName);
+        const no = Number.verifyAsInteger(pMatch.namedGroups.no);
+        const name = DynamicsAlRenumerator.parseName(pMatch.namedGroups.name);
+        const extendsName = DynamicsAlRenumerator.parseName(pMatch.namedGroups.extendsName);
         return new DynamicsObjectEx(type, no, name, null, null, extendsName);
     }
 
@@ -136,14 +136,14 @@ export class DynamicsAlRenumberator extends Renumberator {
     }
 
     parseDynamicsObjectFieldMatched(pMatch) {
-        const no = Number.validateAsInteger(pMatch.namedGroups.no);
-        const name = DynamicsAlRenumberator.parseName(pMatch.namedGroups.name);
+        const no = Number.verifyAsInteger(pMatch.namedGroups.no);
+        const name = DynamicsAlRenumerator.parseName(pMatch.namedGroups.name);
         const dataType = pMatch.namedGroups.dataType;
         return new DynamicsFieldEx(no, name, dataType);
     }
 
     static parseName(pName) {
-        const name = String.validate(pName);
+        const name = String.verify(pName);
         return (name.trim().removeIfStartsWith("\"").removeIfEndsWith("\"")).trim();
     }
 }

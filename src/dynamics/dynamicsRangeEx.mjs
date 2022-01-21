@@ -1,17 +1,17 @@
 /**
  * @module "DynamicsRangeEx" class
- * @description Dynamics range extended for renumberator
+ * @description Dynamics range extended for renumerator
  */
 
 "use strict";
 
-import { DynamicsRange } from "dynamics-library";
+import { DynamicsRange } from "fortah-dynamics-library";
 
 export class DynamicsRangeEx extends DynamicsRange {
     get renumberedFrom() { return this.mRenumberedFrom; }
-    set renumberedFrom(pValue) { this.mRenumberedFrom = Number.validateAsInteger(pValue); }
+    set renumberedFrom(pValue) { this.mRenumberedFrom = Number.verifyAsInteger(pValue); }
     get renumberedTo() { return this.mRenumberedTo; }
-    set renumberedTo(pValue) { this.mRenumberedTo = Number.validateAsInteger(pValue); }
+    set renumberedTo(pValue) { this.mRenumberedTo = Number.verifyAsInteger(pValue); }
 
     constructor(pFrom, pTo, pRenumberedFrom, pRenumberedTo) {
         super(pFrom, pTo);

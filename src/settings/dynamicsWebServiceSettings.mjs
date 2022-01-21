@@ -5,35 +5,35 @@
 
 "use strict";
 
-import { Guid } from "core-library";
-import { Protocol } from "network-library";
-import { Url } from "network-library";
+import { Guid } from "fortah-core-library";
+import { Protocol } from "fortah-network-library";
+import { Url } from "fortah-network-library";
 
 export class DynamicsWebServiceSettings {
     get protocol() { return this.mProtocol; }
     set protocol(pValue) { this.mProtocol = Protocol.parse(pValue); }
     get server() { return this.mServer; }
-    set server(pValue) { this.mServer = String.validate(pValue); }
+    set server(pValue) { this.mServer = String.verify(pValue); }
     get port() { return this.mPort; }
-    set port(pValue) { this.mPort = Number.validateAsInteger(pValue); }
+    set port(pValue) { this.mPort = Number.verifyAsInteger(pValue); }
     get instance() { return this.mInstance; }
-    set instance(pValue) { this.mInstance = String.validate(pValue); }
+    set instance(pValue) { this.mInstance = String.verify(pValue); }
     get user() { return this.mUser; }
-    set user(pValue) { this.mUser = String.validate(pValue); }
+    set user(pValue) { this.mUser = String.verify(pValue); }
     get password() { return this.mPassword; }
-    set password(pValue) { this.mPassword = String.validate(pValue); }
+    set password(pValue) { this.mPassword = String.verify(pValue); }
     get apiPublisher() { return this.mApiPublisher; }
-    set apiPublisher(pValue) { this.mApiPublisher = String.validate(pValue); }
+    set apiPublisher(pValue) { this.mApiPublisher = String.verify(pValue); }
     get apiGroup() { return this.mApiGroup; }
-    set apiGroup(pValue) { this.mApiGroup = String.validate(pValue); }
+    set apiGroup(pValue) { this.mApiGroup = String.verify(pValue); }
     get apiVersion() { return this.mApiVersion; }
-    set apiVersion(pValue) { this.mApiVersion = String.validate(pValue); }
+    set apiVersion(pValue) { this.mApiVersion = String.verify(pValue); }
     get companyName() { return this.mCompanyName; }
-    set companyName(pValue) { this.mCompanyName = String.validate(pValue); }
+    set companyName(pValue) { this.mCompanyName = String.verify(pValue); }
     get companyId() { return this.mCompanyId; }
     set companyId(pValue) { this.mCompanyId = Guid.parse(pValue); }
     get timeout() { return this.mTimeout; }
-    set timeout(pValue) { this.mTimeout = Number.validateAsInteger(pValue); }
+    set timeout(pValue) { this.mTimeout = Number.verifyAsInteger(pValue); }
 
     constructor(pProtocol, pServer, pPort, pInstance, pUser, pPassword, pApiPublisher, pApiGroup, pApiVersion, pCompanyName, pCompanyId, pTimeout) {
         this.protocol = pProtocol;

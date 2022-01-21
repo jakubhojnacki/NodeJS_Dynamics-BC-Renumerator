@@ -1,9 +1,9 @@
 @echo off
 
 set ApplicationDirectoryPath=c:\Temp\Product_nHanced-Base
-set RenumberatorDirectoryPath=c:\Development\Work\Tools\Tool_Dynamics-Renumberator
+set RenumeratorDirectoryPath=c:\Development\Work\Tools\Tool_Dynamics-Renumerator
 
-cd "%RenumberatorDirectoryPath%"
+cd "%RenumeratorDirectoryPath%"
 node "./src/main.mjs" "%ApplicationDirectoryPath%"
 
 pause

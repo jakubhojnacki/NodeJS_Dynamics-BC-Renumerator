@@ -7,15 +7,15 @@
 
 import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
 import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
-import { DynamicsDependencies } from "dynamics-library";
+import { DynamicsDependencies } from "fortah-dynamics-library";
 import { DynamicsObjectEx } from "../dynamics/dynamicsObjectEx.mjs";
-import { DynamicsObjects } from "dynamics-library";
+import { DynamicsObjects } from "fortah-dynamics-library";
 import { DynamicsFieldEx } from "../dynamics/dynamicsFieldEx.mjs";
-import { DynamicsFields } from "dynamics-library";
-import { DynamicsObjectType } from "dynamics-library";
+import { DynamicsFields } from "fortah-dynamics-library";
+import { DynamicsObjectType } from "fortah-dynamics-library";
 import { DynamicsRangeEx } from "../dynamics/dynamicsRangeEx.mjs";
-import { DynamicsRanges } from "dynamics-library";
-import { DynamicsVersion } from "dynamics-library";
+import { DynamicsRanges } from "fortah-dynamics-library";
+import { DynamicsVersion } from "fortah-dynamics-library";
 
 export class DynamicsWebServiceAdapter {
     static dynamicsApplicationFromData(pData) {
@@ -103,7 +103,7 @@ export class DynamicsWebServiceAdapter {
     }     
 
     static parseObjectType(pString) {
-        const string = String.validate(pString).replace(" ", "");
+        const string = String.verify(pString).replace(" ", "");
         return DynamicsObjectType.parse(string);
     }
 }

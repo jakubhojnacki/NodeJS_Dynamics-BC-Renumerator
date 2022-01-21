@@ -7,9 +7,9 @@
             "name": "Launch",
             "program": "${workspaceFolder}/src/main.mjs",
             "args": [
-                "C:\\Projects\\The 365 People\\2021-10-06 Renumberation Testing\\Application",
+                "C:\\Development\\Work\\Temp\\Product_nHanced-Web-Services",
                 "-xde",
-                "-xddp", "C:\\Projects\\The 365 People\\2021-10-06 Renumberation Testing\\Log"
+                "-xddp", "C:\\Development\\Work\\Temp\\Log"
             ],
             "console": "integratedTerminal",
             "skipFiles": [

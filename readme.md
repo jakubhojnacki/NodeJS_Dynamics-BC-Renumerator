@@ -1,12 +1,12 @@
-# Dynamics Renumberator
+# Dynamics Renumerator
 
-![Dynamics Renumberator](/res/img/logo120x120.png)
+![Dynamics Renumerator](/res/img/logo120x120.png)
 
 ## Overview
 
 Tool to renumber Dynamics (AL) solution from one range of IDs to another.
 
-The source of IDs for renumberation is nHanced ID Manager Dynamics application to which Dynamics Renumberator connects through API (REST web service).
+The source of IDs for renumeration is nHanced ID Manager Dynamics application to which Dynamics Renumerator connects through API (REST web service).
 
 ## Usage
 
@@ -30,7 +30,7 @@ Settings are stored in a JSON file. As default, "settings.json" file (from main 
 ```
 {
     "general" : {
-        "renumberationCode": "{renumberation_code}",
+        "renumerationCode": "{renumeration_code}",
         "endOfLineType": "{end_of_line_type}"
     },
     "ignore": {
@@ -64,7 +64,7 @@ Where:
 
 | Parameter                  | Description                                                  |
 | -------------------------- | ------------------------------------------------------------ |
-| {renumberation_code}       | Code of renumberation which has to exist in nHanced ID Manager. Renumberation holds information about target range used to renumber all objects |
+| {renumeration_code}       | Code of renumeration which has to exist in nHanced ID Manager. Renumeration holds information about target range used to renumber all objects |
 | {end_of_line_type}         | End of line type applied to renumbered files. There are the following choices:<br />- windows: Windows end of line is used (CR LF or  /r/n) <br />- linux: Linux end of line is used (LF or /n) |
 | {directory_ignore_pattern} | Pattern for a directory to be ignored. Characters like "*" and "?" can be used |
 | {file_ignore_pattern}      | SImilar pattern for files                                    |
@@ -79,6 +79,9 @@ Where:
 ## Changelog
 
 ### Version 2
+
+#### 2.2.0 - 21/01/2022 - JH
+- New dependencies, new libraries
 
 #### 2.1.0 - 19/10/2021 - JH
 - Better progress information  

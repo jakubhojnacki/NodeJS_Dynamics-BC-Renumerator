@@ -9,9 +9,9 @@ import { IgnoreNamesSettings } from "../settings/ignoreNamesSettings.mjs";
 
 export class IgnoreSettings {
     get directories() { return this.mDirectories; }
-    set directories(pValue) { this.mDirectories = Object.validate(pValue, new IgnoreNamesSettings()); }
+    set directories(pValue) { this.mDirectories = Object.verify(pValue, new IgnoreNamesSettings()); }
     get files() { return this.mFiles; }
-    set files(pValue) { this.mFiles = Object.validate(pValue, new IgnoreNamesSettings()); }
+    set files(pValue) { this.mFiles = Object.verify(pValue, new IgnoreNamesSettings()); }
 
     constructor(pDirectories, pFiles) {
         this.directories = pDirectories;

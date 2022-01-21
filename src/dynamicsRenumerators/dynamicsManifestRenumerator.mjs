@@ -1,6 +1,6 @@
 /**
- * @module "DynamicsManifestRenumberator" class
- * @description Handles Dynamics app manifest renumberation
+ * @module "DynamicsManifestRenumerator" class
+ * @description Handles Dynamics app manifest renumeration
  * @version 0.0.1 (2021-02-21)
  */
 
@@ -9,11 +9,11 @@
 import FileSystem from "fs";
 import Path from "path";
 
-import { DynamicsManifestAdapter } from "dynamics-library";
-import { Renumberator } from "../logic/renumberator.mjs";
+import { DynamicsManifestAdapter } from "fortah-dynamics-library";
+import { Renumerator } from "../logic/renumerator.mjs";
 
-export class DynamicsManifestRenumberator extends Renumberator {
-    get name() { return "Manifest Renumberator"; }
+export class DynamicsManifestRenumerator extends Renumerator {
+    get name() { return "Manifest Renumerator"; }
     get dynamicsApplication() { return this.logic.dynamicsApplication; }
 
     constructor(pLogic) {

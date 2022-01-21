@@ -1,1 +1,1 @@
-{{FullApiUrl}}/renumber?$filter=extensionId eq d4688c1b-70bd-47f3-8087-f462a8a88f0b and renumberationCode eq 'SAAS'&$expand=applications,applicationDependencies,objects,objectFields
+{{FullApiUrl}}/renumber?$filter=extensionId eq d4688c1b-70bd-47f3-8087-f462a8a88f0b and renumerationCode eq 'SAAS'&$expand=applications,applicationDependencies,objects,objectFields

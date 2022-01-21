@@ -10,17 +10,17 @@ import Path from "path";
 
 import { DynamicsApplicationEx } from "../dynamics/dynamicsApplicationEx.mjs";
 import { DynamicsDependencyEx } from "../dynamics/dynamicsDependencyEx.mjs";
-import { DynamicsManifestAdapter } from "dynamics-library";
-import { DynamicsRanges } from "dynamics-library";
+import { DynamicsManifestAdapter } from "fortah-dynamics-library";
+import { DynamicsRanges } from "fortah-dynamics-library";
 import { DynamicsRangeEx } from "../dynamics/dynamicsRangeEx.mjs";
 import { DynamicsWebService } from "../dynamicsWebService/dynamicsWebService.mjs";
-import { FileSystemItem } from "file-system-library";
+import { FileSystemItem } from "fortah-file-system-library";
 import { FileSystemItemInfo } from "../logic/fileSystemItemInfo.mjs";
-import { FileSystemItemType } from "file-system-library";
-import { FileSystemMatcher } from "file-system-library";
-import { FileSystemToolkit } from "file-system-library";
-import { RenumberatorFactory } from "../logic/renumberatorFactory.mjs";
-import { Validator } from "core-library";
+import { FileSystemItemType } from "fortah-file-system-library";
+import { FileSystemMatcher } from "fortah-file-system-library";
+import { FileSystemToolkit } from "fortah-file-system-library";
+import { RenumeratorFactory } from "../logic/renumeratorFactory.mjs";
+import { Validator } from "fortah-core-library";
 
 export class Logic {
     get application() { return this.mApplication; }
@@ -35,8 +35,8 @@ export class Logic {
     get dynamicsObjects() { return this.mDynamicsObjects; }
     set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
     
-    get renumberators() { return this.mRenumberators; }
-    set renumberators(pValue) { this.mRenumberators = pValue; }
+    get renumerators() { return this.mRenumerators; }
+    set renumerators(pValue) { this.mRenumerators = pValue; }
     get directoryMatchers() { return this.mDirectoryMatchers; }
     set directoryMatchers(pValue) { this.mDirectoryMatchers = pValue; }
     get fileMatchers() { return this.mFileMatchers; }
@@ -59,7 +59,7 @@ export class Logic {
         this.dynamicsWebService = new DynamicsWebService(this.application);
         this.dynamicsApplication = null;
         this.dynamicsObjects = [];
-        this.renumberators = [];
+        this.renumerators = [];
         this.directoryMatchers = [];
         this.fileMatchers = [];
         this.onDynamicsApplication = null;
@@ -145,9 +145,9 @@ export class Logic {
     async callRenumberWebService() {
         let result = false;
         this.application.progress.reset(1, "Calling Web Service...");
-        const renumberationCode = this.application.settings.general.renumberationCode;
+        const renumerationCode = this.application.settings.general.renumerationCode;
         const validator = new Validator();        
-        if (await this.dynamicsWebService.renumber(this.dynamicsApplication, renumberationCode, validator)) {
+        if (await this.dynamicsWebService.renumber(this.dynamicsApplication, renumerationCode, validator)) {
             this.dynamicsWebService.finalise();
             if (this.onDynamicsWebService)
                 this.onDynamicsWebService(this.dynamicsWebService);
@@ -181,7 +181,7 @@ export class Logic {
     async renumber() {
         const count = this.countDirectory(this.directoryPath, 0, 0);
         this.application.progress.reset(count, "Renumbering...");
-        this.renumberators = RenumberatorFactory.create(this);
+        this.renumerators = RenumeratorFactory.create(this);
         await this.renumberDirectory(this.directoryPath, 0);
         this.application.progress.complete("Renumbering completed");
         return true;
@@ -241,28 +241,28 @@ export class Logic {
         if (Path.extname(pFilePath).trim().toLowerCase() !== this.tempExtension) {
             const fileName = Path.basename(pFilePath);
             let renumbered = false;
-            let renumberator = null;
+            let renumerator = null;
             if (this.shouldFileBeRenumbered(fileName)) {
                 this.application.progress.move(1, fileName);
-                renumberator = await this.findRenumberator(pFilePath);
-                if (renumberator) {
-                    await renumberator.renumber(pFilePath);
+                renumerator = await this.findRenumerator(pFilePath);
+                if (renumerator) {
+                    await renumerator.renumber(pFilePath);
                     renumbered = true;
                 }
             }
             if (this.onFile)
-                this.onFile(new FileSystemItemInfo(pFilePath, fileName, renumbered, renumberator, pIndentation));
+                this.onFile(new FileSystemItemInfo(pFilePath, fileName, renumbered, renumerator, pIndentation));
         }
     }
 
-    async findRenumberator(pFilePath) {
-        let renumberatorFound = null;
-        for (const renumberator of this.renumberators)
-            if (await renumberator.canRenumber(pFilePath)) {
-                renumberatorFound = renumberator;
+    async findRenumerator(pFilePath) {
+        let renumeratorFound = null;
+        for (const renumerator of this.renumerators)
+            if (await renumerator.canRenumber(pFilePath)) {
+                renumeratorFound = renumerator;
                 break;
             }
-        return renumberatorFound;
+        return renumeratorFound;
     }
 
     shouldFileBeRenumbered(pFileName) {

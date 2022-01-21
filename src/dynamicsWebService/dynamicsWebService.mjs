@@ -5,25 +5,25 @@
 
 "use strict";
 
-import { BasicAuthentication } from "network-library";
-import { Charset } from "network-library";
-import { ContentType } from "network-library";
+import { BasicAuthentication } from "fortah-network-library";
+import { Charset } from "fortah-network-library";
+import { ContentType } from "fortah-network-library";
 import { DynamicsWebServiceAdapter } from "../dynamicsWebService/dynamicsWebServiceAdapter.mjs";
-import { MediaType } from "network-library";
-import { Method } from "network-library";
-import { ODataFilter } from "network-library";
-import { ODataOperator } from "network-library";
-import { ODataFilterPart } from "network-library";
-import { RestWebService } from "network-library";
-import { UrlParameter } from "network-library";
+import { MediaType } from "fortah-network-library";
+import { Method } from "fortah-network-library";
+import { ODataFilter } from "fortah-network-library";
+import { ODataOperator } from "fortah-network-library";
+import { ODataFilterPart } from "fortah-network-library";
+import { RestWebService } from "fortah-network-library";
+import { UrlParameter } from "fortah-network-library";
 
 export class DynamicsWebService {
     get dynamicsApplication() { return this.mDynamicsApplication; }
     set dynamicsApplication(pValue) { this.mDynamicsApplication = pValue; }
     get webService() { return this.mWebService; }
     set webService(pValue) { this.mWebService = pValue; }
-    get renumberationCode() { return this.mRenumberationCode; }
-    set renumberationCode(pValue) { this.mRenumberationCode = String.validate(pValue); }
+    get renumerationCode() { return this.mRenumerationCode; }
+    set renumerationCode(pValue) { this.mRenumerationCode = String.verify(pValue); }
     get dynamicsObjects() { return this.mDynamicsObjects; }
     set dynamicsObjects(pValue) { this.mDynamicsObjects = pValue; }
 
@@ -31,13 +31,13 @@ export class DynamicsWebService {
         this.application = pApplication;
         this.webService = null;
         this.dynamicsApplication = null;
-        this.renumberationCode = "";
+        this.renumerationCode = "";
         this.dynamicsObjects = null;
     }
 
-    async renumber(pDynamicsApplication, pRenumberationCode, pValidator) {
+    async renumber(pDynamicsApplication, pRenumerationCode, pValidator) {
         let result = false;
-        if (this.initialise(pDynamicsApplication, pRenumberationCode, pValidator)) {
+        if (this.initialise(pDynamicsApplication, pRenumerationCode, pValidator)) {
             await this.runWebService("renumber");
             this.finalise();
             result = true;
@@ -45,10 +45,10 @@ export class DynamicsWebService {
         return result;
     }
 
-    initialise(pDynamicsApplication, pRenumberationCode, pValidator) {
+    initialise(pDynamicsApplication, pRenumerationCode, pValidator) {
         this.dynamicsApplication = pDynamicsApplication;
-        this.renumberationCode = pRenumberationCode;
-        return this.validate(pValidator);
+        this.renumerationCode = pRenumerationCode;
+        return this.verify(pValidator);
     }
 
     validate(pValidator) {
@@ -57,8 +57,8 @@ export class DynamicsWebService {
             this.application.settings.dynamicsWebService.validate(pValidator);
         pValidator.testNotEmpty("Application", this.dynamicsApplication);
         if (this.dynamicsApplication)
-            this.dynamicsApplication.validate(pValidator);
-        pValidator.testNotEmpty("Renumberation Code", this.renumberationCode);
+            this.dynamicsApplication.verify(pValidator);
+        pValidator.testNotEmpty("Renumeration Code", this.renumerationCode);
         pValidator.restoreComponent();
         return !pValidator.errorMessagesExist;
     }
@@ -103,7 +103,7 @@ export class DynamicsWebService {
         const url = this.application.settings.dynamicsWebService.createUrl(pWebServiceName);
         const oDataFilter = new ODataFilter([ 
             new ODataFilterPart("extensionId", ODataOperator.equals, this.dynamicsApplication.id),
-            new ODataFilterPart("renumberationCode", ODataOperator.equals, this.renumberationCode, true)
+            new ODataFilterPart("renumerationCode", ODataOperator.equals, this.renumerationCode, true)
         ], ODataOperator.and);
         url.parameters = [ 
             new UrlParameter("$filter", oDataFilter.toString()),

@@ -1,18 +1,18 @@
 /**
  * @module "DynamicsApplicationEx" class
- * @description Represents Dynamics application (extension) extended for renumberator
+ * @description Represents Dynamics application (extension) extended for renumerator
  */
 
 "use strict";
 
-import { DynamicsApplication } from "dynamics-library";
-import { DynamicsDependencies } from "dynamics-library";
-import { DynamicsRanges } from "dynamics-library";
-import { Guid } from "core-library";
+import { DynamicsApplication } from "fortah-dynamics-library";
+import { DynamicsDependencies } from "fortah-dynamics-library";
+import { DynamicsRanges } from "fortah-dynamics-library";
+import { Guid } from "fortah-core-library";
 
 export class DynamicsApplicationEx extends DynamicsApplication {
     get renumberedId() { return this.mRenumberedId; }
-    set renumberedId(pValue) { this.mRenumberedId = Guid.validate(pValue); }
+    set renumberedId(pValue) { this.mRenumberedId = Guid.parse(pValue); }
 
     constructor(pId, pName, pPublisher, pVersion, pDependencies, pRanges, pRenumberedId) {
         super(pId, pName, pPublisher, pVersion, pDependencies, pRanges);

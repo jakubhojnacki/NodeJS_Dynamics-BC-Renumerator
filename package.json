@@ -1,9 +1,9 @@
 {
-    "name": "dynamics-renumberator",
-    "version": "2.1.0",
-    "displayName": "Dynamics Renumberator",
-    "description": "Renumbers Dynamics application into another ID range",
-    "date": "October 2021",
+    "name": "dynamics-bc-renumerator",
+    "version": "2.2.0",
+    "displayName": "Dynamics BC Renumerator",
+    "description": "Renumbers Dynamics 365 Business Central application into another ID range",
+    "date": "January 2022",
     "author": "The NAV People - Jakub Hojnacki <jakub.hojnacki@thenavpeople.com>",
     "keywords": [
         "dynamics",
@@ -15,12 +15,12 @@
     "license": "ISC",
     "icon": "/res/img/logo240x240.png",
     "dependencies": {
-        "console-library": "file:../lib/console-library",
-        "core-library": "file:../lib/core-library",
-        "dynamics-library": "file:../lib/dynamics-library",
-        "file-system-library": "file:../lib/file-system-library",
-        "network-library": "file:../lib/network-library",
-        "reg-exp-library": "file:../lib/reg-exp-library",
-        "xml-library": "file:../lib/xml-library"
+        "fortah-console-library": "file:../FortahConsoleLibrary",
+        "fortah-core-library": "file:../FortahCoreLibrary",
+        "fortah-dynamics-library": "file:../FortahDynamicsLibrary",
+        "fortah-file-system-library": "file:../FortahFileSystemLibrary",
+        "fortah-network-library": "file:../FortahNetworkLibrary",
+        "fortah-regex-library": "file:../FortahRegexLibrary",
+        "fortah-xml-library": "file:../FortahXmlLibrary"
     }
 }

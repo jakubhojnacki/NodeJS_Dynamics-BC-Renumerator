@@ -5,35 +5,35 @@
 
 "use strict";
 
-import { EndOfLineType } from "file-system-library";
+import { EndOfLineType } from "fortah-file-system-library";
 
 export class GeneralSettings {
-    get renumberationCode() { return this.mRenumberationCode; }
-    set renumberationCode(pValue) { this.mRenumberationCode = String.validate(pValue); }
+    get renumerationCode() { return this.mRenumerationCode; }
+    set renumerationCode(pValue) { this.mRenumerationCode = String.verify(pValue); }
     get endOfLineType() { return this.mEndOfLineType; }
     set endOfLineType(pValue) { this.mEndOfLineType = EndOfLineType.parse(pValue); }
 
-    constructor(pRenumberationCode, pEndOfLineType) {
-        this.renumberationCode = pRenumberationCode;
+    constructor(pRenumerationCode, pEndOfLineType) {
+        this.renumerationCode = pRenumerationCode;
         this.endOfLineType = pEndOfLineType;
     }
 
     validate(pValidator) {
         pValidator.setComponent(GeneralSettings);
-        pValidator.testNotEmpty("renumberationCode", this.renumberationCode);
+        pValidator.testNotEmpty("renumerationCode", this.renumerationCode);
         pValidator.restoreComponent();
     }
 
     toData() {
         let data = {};
-        data.renumberationCode = this.renumberationCode; 
+        data.renumerationCode = this.renumerationCode; 
         data.endOfLineType = this.endOfLineType; 
         return data;
     }
     
     fromData(pData) {
         if (pData != null) {
-            this.renumberationCode = pData.renumberationCode;
+            this.renumerationCode = pData.renumerationCode;
             this.endOfLineType = pData.endOfLineType;
         }
         return this;        

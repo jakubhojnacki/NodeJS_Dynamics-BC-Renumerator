@@ -5,18 +5,18 @@
 
 "use strict";
 
-import { FileSystemItem } from "file-system-library";
-import { FileSystemItemType } from "file-system-library";
+import { FileSystemItem } from "fortah-file-system-library";
+import { FileSystemItemType } from "fortah-file-system-library";
 
 export class FileSystemItemInfo extends FileSystemItem {
     get renumbered() { return this.mRenumbered; }
-    set renumbered(pValue) { this.mRenumbered = Boolean.validate(pValue); }
-    get renumberator() { return this.mRenumberator; }
-    set renumberator(pValue) { this.mRenumberator = pValue; }
+    set renumbered(pValue) { this.mRenumbered = Boolean.verify(pValue); }
+    get renumerator() { return this.mRenumerator; }
+    set renumerator(pValue) { this.mRenumerator = pValue; }
 
-    constructor(pPath, pName, pRenumbered, pRenumberator, pIndentation) {
+    constructor(pPath, pName, pRenumbered, pRenumerator, pIndentation) {
         super(FileSystemItemType.file, pPath, pName, pIndentation);
         this.renumbered = pRenumbered;
-        this.renumberator = pRenumberator;
+        this.renumerator = pRenumerator;
     }
 }
