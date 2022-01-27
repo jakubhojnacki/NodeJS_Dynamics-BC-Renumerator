@@ -8,8 +8,8 @@
             "program": "${workspaceFolder}/src/main.mjs",
             "args": [
                 "C:\\Development\\Work\\Temp\\Product_nHanced-Web-Services",
-                "-xde",
-                "-xddp", "C:\\Development\\Work\\Temp\\Log"
+                "-_de",
+                "-_ddp", "C:\\Development\\Work\\Temp\\Log"
             ],
             "console": "integratedTerminal",
             "skipFiles": [

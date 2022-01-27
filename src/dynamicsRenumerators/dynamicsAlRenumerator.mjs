@@ -32,28 +32,24 @@ export class DynamicsAlRenumerator extends Renumerator {
         this.regexTemplates = new RegexTemplates([
             new RegexTemplate(
                 DynamicsAlRegExpTemplateName.object, 
-                "Object",
                 "(?<prefix>\\s*)(?<type>table|page|codeunit|report|xmlport|query|enum)\\s*(?<no>\\d+)\\s*(?<name>.+)", 
                 RegexFlag.ignoreCase,
-                "${prefix}${type} ${renumberedNo} \"${name}\""
+                "${prefix}${typeText} ${renumberedNo} \"${name}\""
             ),
             new RegexTemplate(
                 DynamicsAlRegExpTemplateName.objectExtension,
-                "Object Extension",
                 "(?<prefix>\\s*)(?<type>tableextension|pageextension|enumextension)\\s*(?<no>\\d+)\\s*(?<name>.+)\\s*extends\\s*(?<extendsName>.+)",
                 RegexFlag.ignoreCase,
-                "${prefix}${type} ${renumberedNo} \"${name}\" extends \"${extendsName}\""
+                "${prefix}${typeText} ${renumberedNo} \"${name}\" extends \"${extendsName}\""
             ),
             new RegexTemplate(
                 DynamicsAlRegExpTemplateName.tableField,
-                "Table Field",
                 "(?<prefix>\\s*)field\\(\\s*(?<no>\\d+);\\s*(?<name>.+);\\s*(?<dataType>.+)\\)",
                 RegexFlag.ignoreCase,
                 "${prefix}field(${renumberedNo}; \"${name}\"; ${dataType})"
             ),
             new RegexTemplate(
                 DynamicsAlRegExpTemplateName.enumValue,
-                "Enum Value",
                 "(?<prefix>\\s*)value\\(\\s*(?<no>\\d+);\\s*(?<name>.+)\\)",
                 RegexFlag.ignoreCase,
                 "${prefix}value(${renumberedNo}; \"${name}\")"
@@ -86,7 +82,7 @@ export class DynamicsAlRenumerator extends Renumerator {
     processLine(pLine) {
         let newLine = "";
         const match = this.regexTemplates.match(pLine);
-        if (match.success) {
+        if (match) {
             let object = null;
             switch (match.template.name) {
                 case DynamicsAlRegExpTemplateName.object:

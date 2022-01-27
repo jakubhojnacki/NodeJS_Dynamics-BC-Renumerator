@@ -18,9 +18,7 @@ export class Application extends ConsoleApplication {
     set progress(pValue) { this.mProgress = pValue; }
 
     constructor(pRootDirectoryPath) {
-        super(pRootDirectoryPath);
-        this.argTemplates = (new ArgTemplateFactory()).create();
-        this.settings = new Settings();
+        super(pRootDirectoryPath, (new ArgTemplateFactory()).create(), new Settings());
         this.progress = null;
     }
 

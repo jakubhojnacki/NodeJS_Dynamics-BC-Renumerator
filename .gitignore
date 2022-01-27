@@ -86,3 +86,7 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Misc
+desktop.ini
+desktop.bak.ini

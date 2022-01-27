@@ -15,10 +15,10 @@ export class DynamicsAlRegExpTemplateName {
     static get enumValue() { return "enumValue"; }
 
     static get items() { return [
-        new EnumItem(DynamicsAlRegExpTemplateName.object),
-        new EnumItem(DynamicsAlRegExpTemplateName.objectExtension),
-        new EnumItem(DynamicsAlRegExpTemplateName.tableField),
-        new EnumItem(DynamicsAlRegExpTemplateName.enumValue)
+        new EnumItem(DynamicsAlRegExpTemplateName.object, "Object"),
+        new EnumItem(DynamicsAlRegExpTemplateName.objectExtension, "Object Extension"),
+        new EnumItem(DynamicsAlRegExpTemplateName.tableField, "Table Field"),
+        new EnumItem(DynamicsAlRegExpTemplateName.enumValue, "Enum Value")
     ]; }
 
     static parse(pString) {
